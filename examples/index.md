@@ -1,4 +1,5 @@
-# rc-form-validation@1.x
+# rc-form-validation@0.x
+---
 
 ````html
 <div id='ex1'>

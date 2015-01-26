@@ -18,7 +18,12 @@
     "url": "http://github.com/react-component/form-validation/issues"
   },
   "licenses": "MIT",
-  "spm": {},
+  "spm": {
+    "dependencies": {
+      "react": "~0.12.2",
+      "revalidator": "^0.3.1"
+    }
+  },
   "config": {
     "port": 8010
   },
