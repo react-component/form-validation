@@ -14,48 +14,63 @@ var React = require('react');
 var Form = React.createClass({
   getInitialState: function () {
     return {
-      values: {},
-      errors: [],
-      errorsMap: {},
-      valid: true
+      result: {
+        i1: {
+          value: ''
+        },
+        i2: {
+          value: ''
+        }
+      }
     };
   },
 
   handleValidate: function (result) {
-    this.setState(result);
+    this.setState({result: result});
   },
 
   handleSubmit: function (e) {
     e.preventDefault();
     var validation = this.refs.validation;
-    validation.validate();
-    if (!validation.getResult().valid) {
-      return;
-    }
-    console.log('submit');
-    console.log(validation.getValues());
+    validation.validate(function (valid) {
+      if (!valid) {
+        return;
+      }
+      console.log('submit');
+      console.log(validation.getResult());
+    });
+  },
+
+  userExists: function (rule, value, callback) {
+    setTimeout(function () {
+      if (value === 'yiminghe') {
+        callback([{field: rule.field, message: 'forbid yiminghe'}]);
+      } else {
+        callback();
+      }
+    }, 1000);
   },
 
   render: function () {
-    var errorsMap = this.state.errorsMap;
-    var values = this.state.values;
+    var result = this.state.result;
     return <form onSubmit={this.handleSubmit}>
       <Validation ref='validation' onValidate={this.handleValidate}>
         <p>
           <label>name:
-            <Validator required={true} minLength={5} description="minLength 5 and required">
-              <input name='i1' value={values.i1}/>
+            <Validator type="string" required={true} min={5} func={this.userExists}>
+              <input name='i1' value={result.i1.value}/>
             </Validator>
           </label>
-          {errorsMap.i1 ? <span> {errorsMap.i1.message}</span> : null}
+          {result.i1.isValidating ? <span> isValidating </span> : null}
+          {result.i1.errors ? <span> {result.i1.errors.join(',')}</span> : null}
         </p>
         <p>
           <label>email:
-            <Validator type='string' format='email' description="email">
-              <input name='i2' value={values.i2}/>
+            <Validator {...Validation.rules.email}>
+              <input name='i2' value={result.i2.value}/>
             </Validator>
           </label>
-             {errorsMap.i2 ? <span> {errorsMap.i2.message}</span> : null}
+            {result.i2.errors ? <span> {result.i2.errors.join(',')}</span> : null}
         </p>
         <p>
           <button type="submit">submit</button>
