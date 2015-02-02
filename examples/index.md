@@ -1,6 +1,8 @@
 # rc-form-validation@0.x
 ---
 
+<link type="text/css" rel="stylesheet" href="index.css">
+
 ````html
 <div id='ex1'>
 </div>
@@ -11,6 +13,10 @@
 var Validation = require('../');
 var Validator = Validation.Validator;
 var React = require('react');
+var Calendar = require('rc-calendar');
+var DatePicker = Calendar.Picker;
+var DateTimeFormat = require('gregorian-calendar-format');
+
 var Form = React.createClass({
   getInitialState: function () {
     return {
@@ -20,9 +26,16 @@ var Form = React.createClass({
         },
         i2: {
           value: ''
-        }
+        },
+        i3:{}
       }
     };
+  },
+
+  getDefaultProps: function () {
+    return {
+      formatter: new DateTimeFormat('yyyy-MM-dd')
+    }
   },
 
   handleValidate: function (result) {
@@ -51,6 +64,14 @@ var Form = React.createClass({
     }, 1000);
   },
 
+  validateDate:function(rule,value,callback){
+    if(!value || value.getDayOfWeek()!==0){
+      callback([{field: rule.field, message: 'can only select sunday'}])
+    } else {
+      callback();
+    }
+  },
+
   render: function () {
     var result = this.state.result;
     return <form onSubmit={this.handleSubmit}>
@@ -71,6 +92,17 @@ var Form = React.createClass({
             </Validator>
           </label>
             {result.i2.errors ? <span> {result.i2.errors.join(',')}</span> : null}
+        </p>
+        <p>
+          <label>date:
+            <Validator func={this.validateDate}>
+              <DatePicker name='i3' formatter={this.props.formatter} calendar={<Calendar />}
+                        value={result.i3.value}>
+                <input type="text" style={{background:'white',color:'black',cursor:'pointer'}}/>
+              </DatePicker>
+            </Validator>
+          </label>
+            {result.i3.errors ? <span> {result.i3.errors.join(',')}</span> : null}
         </p>
         <p>
           <button type="submit">submit</button>
