@@ -20,14 +20,15 @@ var DateTimeFormat = require('gregorian-calendar-format');
 var Form = React.createClass({
   getInitialState: function () {
     return {
-      result: {
-        i1: {
+      formData: {
+        name: {
           value: ''
         },
-        i2: {
+        email: {
           value: ''
         },
-        i3: {}
+        startDate: {},
+        endDate: {}
       }
     };
   },
@@ -38,8 +39,8 @@ var Form = React.createClass({
     }
   },
 
-  handleValidate: function (result) {
-    this.setState({result: result});
+  handleValidate: function (formData) {
+    this.setState({formData: formData});
   },
 
   handleSubmit: function (e) {
@@ -51,7 +52,7 @@ var Form = React.createClass({
         return;
       }
       console.log('submit');
-      console.log(validation.getResult());
+      console.log(validation.getformData());
     });
   },
 
@@ -69,11 +70,32 @@ var Form = React.createClass({
   },
 
   validateDate: function (rule, value, callback) {
+    var self = this;
+    var formData = this.state.formData;
+    var errors=[];
+    var field = rule.field;
+    var startValue = field === 'startDate'?value:formData.startDate.value;
+    var endValue = field === 'endDate'?value:formData.endDate.value;
     if (!value || value.getDayOfWeek() !== 0) {
-      callback([{field: rule.field, message: 'can only select sunday'}])
-    } else {
-      callback();
+      errors.push({field: rule.field, message: 'can only select sunday'});
     }
+    if(startValue && endValue && startValue.getTime()>endValue.getTime()) {
+      errors.push({field: rule.field, message: 'start date can not be larger than end date'});
+    }
+    // ok
+    if(startValue && endValue && startValue.getTime()<=endValue.getTime()) {
+      if(rule.field ==='startDate' && formData.endDate.errors && formData.endDate.errors.length){
+        setTimeout(function(){
+          self.refs.validation.forceValidate(['endDate']);
+        },0);
+      }
+      if(rule.field ==='endDate' && formData.startDate.errors && formData.startDate.errors.length){
+        setTimeout(function(){
+          self.refs.validation.forceValidate(['startDate']);
+        },0);
+      }
+    }
+    callback(errors.length?errors:undefined);
   },
 
   toggleEmail: function (e) {
@@ -84,16 +106,16 @@ var Form = React.createClass({
   },
 
   render: function () {
-    var result = this.state.result;
+    var formData = this.state.formData;
     var field;
     if (!this.state.remove) {
       field = <p>
         <label>email:
           <Validator rules={{type: 'email', message: '错误的 email 格式'}}>
-            <input name='i2' value={result.i2.value}/>
+            <input name='email' value={formData.email.value}/>
           </Validator>
         </label>
-        {result.i2.errors ? <span> {result.i2.errors.join(', ')}</span> : null}
+        {formData.email.errors ? <span> {formData.email.errors.join(', ')}</span> : null}
       </p>;
     }
     return <form onSubmit={this.handleSubmit}>
@@ -101,23 +123,34 @@ var Form = React.createClass({
         <p>
           <label>name:
             <Validator rules={[{type: 'string', requires: true, min: 5}, {validator: this.userExists}]}>
-              <input name='i1' value={result.i1.value}/>
+              <input name='name' value={formData.name.value}/>
             </Validator>
           </label>
-              {result.i1.isValidating ? <span> isValidating </span> : null}
-              {result.i1.errors ? <span> {result.i1.errors.join(', ')}</span> : null}
+              {formData.name.isValidating ? <span> isValidating </span> : null}
+              {formData.name.errors ? <span> {formData.name.errors.join(', ')}</span> : null}
         </p>
         {field}
         <p>
-          <label>date:
+          <label>start date:
             <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
-              <DatePicker name='i3' formatter={this.props.formatter} calendar={<Calendar />}
-                value={result.i3.value}>
+              <DatePicker name='startDate' formatter={this.props.formatter} calendar={<Calendar />}
+                value={formData.startDate.value}>
                 <input type="text" style={{background: 'white', color: 'black', cursor: 'pointer'}}/>
               </DatePicker>
             </Validator>
           </label>
-            {result.i3.errors ? <span> {result.i3.errors.join(', ')}</span> : null}
+            {formData.startDate.errors ? <span> {formData.startDate.errors.join(', ')}</span> : null}
+        </p>
+        <p>
+          <label>end date:
+            <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
+              <DatePicker name='endDate' formatter={this.props.formatter} calendar={<Calendar />}
+                value={formData.endDate.value}>
+                <input type="text" style={{background: 'white', color: 'black', cursor: 'pointer'}}/>
+              </DatePicker>
+            </Validator>
+          </label>
+            {formData.endDate.errors ? <span> {formData.endDate.errors.join(', ')}</span> : null}
         </p>
         <p>
           <button type="submit">submit</button>
