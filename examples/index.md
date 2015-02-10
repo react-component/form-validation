@@ -2,9 +2,10 @@
 ---
 
 <link type="text/css" rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="https://a.alipayobjects.com/bootstrap/3.3.1/css/bootstrap.css">
 
 ````html
-<div id='ex1'>
+<div id='ex1' style='width:600px;margin:20px;'>
 </div>
 ````
 
@@ -52,7 +53,7 @@ var Form = React.createClass({
         return;
       }
       console.log('submit');
-      console.log(validation.getformData());
+      console.log(validation.getFormData());
     });
   },
 
@@ -72,30 +73,30 @@ var Form = React.createClass({
   validateDate: function (rule, value, callback) {
     var self = this;
     var formData = this.state.formData;
-    var errors=[];
+    var errors = [];
     var field = rule.field;
-    var startValue = field === 'startDate'?value:formData.startDate.value;
-    var endValue = field === 'endDate'?value:formData.endDate.value;
+    var startValue = field === 'startDate' ? value : formData.startDate.value;
+    var endValue = field === 'endDate' ? value : formData.endDate.value;
     if (!value || value.getDayOfWeek() !== 0) {
       errors.push({field: rule.field, message: 'can only select sunday'});
     }
-    if(startValue && endValue && startValue.getTime()>endValue.getTime()) {
+    if (startValue && endValue && startValue.getTime() > endValue.getTime()) {
       errors.push({field: rule.field, message: 'start date can not be larger than end date'});
     }
     // ok
-    if(startValue && endValue && startValue.getTime()<=endValue.getTime()) {
-      if(rule.field ==='startDate' && formData.endDate.errors && formData.endDate.errors.length){
-        setTimeout(function(){
+    if (startValue && endValue && startValue.getTime() <= endValue.getTime()) {
+      if (rule.field === 'startDate' && formData.endDate.errors && formData.endDate.errors.length) {
+        setTimeout(function () {
           self.refs.validation.forceValidate(['endDate']);
-        },0);
+        }, 0);
       }
-      if(rule.field ==='endDate' && formData.startDate.errors && formData.startDate.errors.length){
-        setTimeout(function(){
+      if (rule.field === 'endDate' && formData.startDate.errors && formData.startDate.errors.length) {
+        setTimeout(function () {
           self.refs.validation.forceValidate(['startDate']);
-        },0);
+        }, 0);
       }
     }
-    callback(errors.length?errors:undefined);
+    callback(errors.length ? errors : undefined);
   },
 
   toggleEmail: function (e) {
@@ -108,56 +109,77 @@ var Form = React.createClass({
   render: function () {
     var formData = this.state.formData;
     var field;
+    var errorStyle = {color: 'red', fontWeight: 'bold'};
     if (!this.state.remove) {
-      field = <p>
-        <label>email:
+      field = <div className="form-group">
+        <label className="col-sm-2 control-label">email:</label>
+        <div className="col-sm-10">
           <Validator rules={{type: 'email', message: '错误的 email 格式'}}>
-            <input name='email' value={formData.email.value}/>
+            <input name='email' className="form-control" value={formData.email.value}/>
           </Validator>
-        </label>
-        {formData.email.errors ? <span> {formData.email.errors.join(', ')}</span> : null}
-      </p>;
+        {formData.email.errors ? <span style={errorStyle}> {formData.email.errors.join(', ')}</span> : null}
+        </div>
+      </div>;
     }
-    return <form onSubmit={this.handleSubmit}>
+    return <form onSubmit={this.handleSubmit} className="form-horizontal">
       <Validation ref='validation' onValidate={this.handleValidate}>
-        <p>
-          <label>name:
+        <div className="form-group">
+          <label className="col-sm-2 control-label">name:</label>
+          <div className="col-sm-10">
             <Validator rules={[{type: 'string', requires: true, min: 5}, {validator: this.userExists}]}>
-              <input name='name' value={formData.name.value}/>
+              <input name='name' className="form-control"  value={formData.name.value}/>
             </Validator>
-          </label>
-              {formData.name.isValidating ? <span> isValidating </span> : null}
-              {formData.name.errors ? <span> {formData.name.errors.join(', ')}</span> : null}
-        </p>
+           {formData.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
+           {formData.name.errors ? <span style={errorStyle}> {formData.name.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
         {field}
-        <p>
-          <label>start date:
+
+        <div className="form-group">
+          <label className="col-sm-2 control-label">start date:</label>
+          <div className="col-sm-10">
             <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
-              <DatePicker name='startDate' formatter={this.props.formatter} calendar={<Calendar />}
+              <DatePicker name='startDate' formatter={this.props.formatter} calendar={<Calendar showTime={true}/>}
                 value={formData.startDate.value}>
-                <input type="text" style={{background: 'white', color: 'black', cursor: 'pointer'}}/>
+                <input type="text" className="form-control" style={{
+                  background: 'white',
+                  color: 'black',
+                  cursor: 'pointer'
+                }}/>
               </DatePicker>
             </Validator>
-          </label>
-            {formData.startDate.errors ? <span> {formData.startDate.errors.join(', ')}</span> : null}
-        </p>
-        <p>
-          <label>end date:
+            {formData.startDate.errors ? <span style={errorStyle}> {formData.startDate.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 control-label">end date:</label>
+          <div className="col-sm-10">
             <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
               <DatePicker name='endDate' formatter={this.props.formatter} calendar={<Calendar />}
                 value={formData.endDate.value}>
-                <input type="text" style={{background: 'white', color: 'black', cursor: 'pointer'}}/>
+                <input type="text" className="form-control" style={{
+                  background: 'white',
+                  color: 'black',
+                  cursor: 'pointer'
+                }}/>
               </DatePicker>
             </Validator>
-          </label>
-            {formData.endDate.errors ? <span> {formData.endDate.errors.join(', ')}</span> : null}
-        </p>
-        <p>
-          <button type="submit">submit</button>
-        </p>
+            {formData.endDate.errors ? <span style={errorStyle}> {formData.endDate.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <div className="col-sm-offset-2 col-sm-10">
+            <button type="submit" className="btn btn-default">submit</button>
+          </div>
+        </div>
       </Validation>
     </form>;
   }
 });
 React.render(<Form/>, document.getElementById('ex1'));
+
+
 ````
