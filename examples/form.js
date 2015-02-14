@@ -1,17 +1,7 @@
-# rc-form-validation@0.x
----
-
-<link type="text/css" rel="stylesheet" href="index.css">
-<link rel="stylesheet" href="https://a.alipayobjects.com/bootstrap/3.3.1/css/bootstrap.css">
-
-````html
-<div id='ex1' style='width:600px;margin:20px;'>
-</div>
-````
-
-````js
-/** @jsx React.DOM */
-var Validation = require('../');
+// blank
+require('bootstrap/dist/css/bootstrap.css');
+require('rc-calendar/assets/bootstrap.css');
+var Validation = require('rc-form-validation');
 var Validator = Validation.Validator;
 var React = require('react');
 var Calendar = require('rc-calendar');
@@ -83,7 +73,7 @@ var Form = React.createClass({
     if (startValue && endValue && startValue.getTime() > endValue.getTime()) {
       errors.push({field: rule.field, message: 'start date can not be larger than end date'});
     }
-    // ok
+// ok
     if (startValue && endValue && startValue.getTime() <= endValue.getTime()) {
       if (rule.field === 'startDate' && formData.endDate.errors && formData.endDate.errors.length) {
         setTimeout(function () {
@@ -129,8 +119,8 @@ var Form = React.createClass({
             <Validator rules={[{type: 'string', requires: true, min: 5}, {validator: this.userExists}]}>
               <input name='name' className="form-control"  value={formData.name.value}/>
             </Validator>
-           {formData.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
-           {formData.name.errors ? <span style={errorStyle}> {formData.name.errors.join(', ')}</span> : null}
+                {formData.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
+                {formData.name.errors ? <span style={errorStyle}> {formData.name.errors.join(', ')}</span> : null}
           </div>
         </div>
 
@@ -149,7 +139,7 @@ var Form = React.createClass({
                 }}/>
               </DatePicker>
             </Validator>
-            {formData.startDate.errors ? <span style={errorStyle}> {formData.startDate.errors.join(', ')}</span> : null}
+                {formData.startDate.errors ? <span style={errorStyle}> {formData.startDate.errors.join(', ')}</span> : null}
           </div>
         </div>
 
@@ -166,7 +156,7 @@ var Form = React.createClass({
                 }}/>
               </DatePicker>
             </Validator>
-            {formData.endDate.errors ? <span style={errorStyle}> {formData.endDate.errors.join(', ')}</span> : null}
+                {formData.endDate.errors ? <span style={errorStyle}> {formData.endDate.errors.join(', ')}</span> : null}
           </div>
         </div>
 
@@ -179,7 +169,7 @@ var Form = React.createClass({
     </form>;
   }
 });
-React.render(<Form/>, document.getElementById('ex1'));
-
-
-````
+React.render(<div>
+  <h1>Form</h1>
+  <Form/>
+</div>, document.getElementById('__react-content'));

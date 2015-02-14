@@ -67,9 +67,6 @@ see: examples/index.md
     </tbody>
 </table>
 
-
-online docs: http://spmjs.io/docs/rc-form-validation/
-
 ## Development
 
 ```
@@ -79,9 +76,9 @@ npm start
 
 ## Example
 
-http://localhost:8010/examples/index.md
+http://localhost:8010/examples/
 
-online example: http://spmjs.io/docs/rc-form-validation/examples/
+online example: http://react-component.github.io/form-validation/build/examples/
 
 ## Test Case
 
