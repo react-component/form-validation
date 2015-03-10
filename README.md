@@ -27,14 +27,9 @@ FormValidation For React. <span style='color:red'>This is experimental for 0.x, 
 [download-image]: https://img.shields.io/npm/dm/rc-form-validation.svg?style=flat-square
 [download-url]: https://npmjs.org/package/rc-form-validation
 
-## Screenshots
-
-
-
 ## Feature
 
 * support ie8,ie8+,chrome,firefox,safari
-
 
 ## install
 
@@ -42,11 +37,26 @@ FormValidation For React. <span style='color:red'>This is experimental for 0.x, 
 
 ## Usage
 
-see: examples/index.md
+```js
+var Validation = require('../');
+var Validator = Validation.Validator;
+React.render(<Validation ref='validation' onValidate={this.onValidate}>
+        <Validator ref='validator' rules={[{type: 'string', min: 5, max: 10}, {validator: validateInput}]}>
+          <input name="name" value={state.formData.name.value} ref="input" onChange={this.onInputChange}/>
+        </Validator>
+        <Validator rules={[{type: 'string', required:true, whitespace:true}]}>
+          <input name="pass" value={state.formData.pass.value}/>
+        </Validator>
+      {state.formData.name.errors && state.formData.name.errors.length ? <div ref='error'>{state.formData.name.errors.join(',')}</div> : null}
+        {state.formData.pass.errors && state.formData.pass.errors.length ? <div ref='error2'>{state.formData.pass.errors.join(',')}</div> : null}
+      </Validation>,container);
+```
 
 ## API
 
-### props
+### Validation
+
+#### props
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -59,13 +69,45 @@ see: examples/index.md
     </thead>
     <tbody>
         <tr>
+          <td>onValidate</td>
+          <td>Function</td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>called when validator inside it starts to validate</td>
         </tr>
     </tbody>
 </table>
+
+#### methods
+
+- validate(callback:function): validate all fields, call callback with isValid as parameter
+- forceValidate(fields:String[],callback:Function): validate specified fields, call callback with isValid as parameter. fields is component's name which is wrapped by Validator
+
+
+### Validator
+
+Validator 's children must be one component which support onChange handler and value/name prop such as <input />
+
+#### props
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th style="width: 100px;">name</th>
+        <th style="width: 50px;">type</th>
+        <th style="width: 50px;">default</th>
+        <th>description</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>rules</td>
+          <td>Object|Array</td>
+          <td></td>
+          <td>see https://github.com/yiminghe/async-validator,for example: {type:'string',min:4},[{type:'string',whitespace:true,required:true},{validator:validateFn}] </td>
+        </tr>
+    </tbody>
+</table>
+
 
 ## Development
 
