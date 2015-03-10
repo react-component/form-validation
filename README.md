@@ -1,12 +1,12 @@
 # rc-form-validation
 ---
 
-FormValidation For React. <span style='color:red'>This is experimental for 0.x, do not use for production</span>
+FormValidation For React.
 
 [![NPM version][npm-image]][npm-url]
 [![SPM version](http://spmjs.io/badge/rc-form-validation)](http://spmjs.io/package/rc-form-validation)
 [![build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
+[![Coverage Status](https://coveralls.io/repos/react-component/form-validation/badge.svg)](https://coveralls.io/r/react-component/form-validation)
 [![gemnasium deps][gemnasium-image]][gemnasium-url]
 [![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
@@ -18,8 +18,6 @@ FormValidation For React. <span style='color:red'>This is experimental for 0.x, 
 [npm-url]: http://npmjs.org/package/rc-form-validation
 [travis-image]: https://img.shields.io/travis/react-component/form-validation.svg?style=flat-square
 [travis-url]: https://travis-ci.org/react-component/form-validation
-[coveralls-image]: https://img.shields.io/coveralls/react-component/form-validation.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/react-component/form-validation?branch=master
 [gemnasium-image]: http://img.shields.io/gemnasium/react-component/form-validation.svg?style=flat-square
 [gemnasium-url]: https://gemnasium.com/react-component/form-validation
 [node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
