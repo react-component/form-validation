@@ -1,6 +1,6 @@
 {
   "name": "rc-form-validation",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "form-validation ui component for react",
   "keywords": [
     "react",
@@ -21,11 +21,8 @@
   "spm": {
     "dependencies": {
       "react": "*",
+      "async-validator": "^1.0.0",
       "rc-util": "^1.0.0"
-    },
-    "devDependencies": {
-      "gregorian-calendar-format": "^2.1.1",
-      "rc-calendar": "^1.5.3"
     }
   },
   "config": {
@@ -63,23 +60,8 @@
     "lint",
     "less"
   ],
-  "browserify-shim": {
-    "react": "global:React",
-    "jquery": "global:jQuery"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "browserify-jsx"
-      ],
-      [
-        "browserify-shim"
-      ]
-    ]
-  },
   "dependencies": {
-    "browserify-jsx": "^0.1.0",
-    "browserify-shim": "^3.8.0",
+    "async-validator": "^1.0.0",
     "rc-util": "^1.0.0"
   }
 }

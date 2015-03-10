@@ -50,10 +50,10 @@ var Form = React.createClass({
   userExists: function (rule, value, callback) {
     setTimeout(function () {
       if (value === '1') {
-        callback([{field: rule.field, message: 'are you kidding?'}]);
+        callback([new Error('are you kidding?')]);
       }
       else if (value === 'yiminghe') {
-        callback([{field: rule.field, message: 'forbid yiminghe'}]);
+        callback([new Error('forbid yiminghe')]);
       } else {
         callback();
       }
@@ -68,19 +68,19 @@ var Form = React.createClass({
     var startValue = field === 'startDate' ? value : formData.startDate.value;
     var endValue = field === 'endDate' ? value : formData.endDate.value;
     if (!value || value.getDayOfWeek() !== 0) {
-      errors.push({field: rule.field, message: 'can only select sunday'});
+      errors.push(new Error('can only select sunday'));
     }
     if (startValue && endValue && startValue.getTime() > endValue.getTime()) {
-      errors.push({field: rule.field, message: 'start date can not be larger than end date'});
+      errors.push(new Error('start date can not be larger than end date'));
     }
 // ok
     if (startValue && endValue && startValue.getTime() <= endValue.getTime()) {
-      if (rule.field === 'startDate' && formData.endDate.errors && formData.endDate.errors.length) {
+      if (field === 'startDate' && formData.endDate.errors && formData.endDate.errors.length) {
         setTimeout(function () {
           self.refs.validation.forceValidate(['endDate']);
         }, 0);
       }
-      if (rule.field === 'endDate' && formData.startDate.errors && formData.startDate.errors.length) {
+      if (field === 'endDate' && formData.startDate.errors && formData.startDate.errors.length) {
         setTimeout(function () {
           self.refs.validation.forceValidate(['startDate']);
         }, 0);
