@@ -147,6 +147,7 @@
             padding: 0;
         }
     </style>
+    <!--[if lt IE 9]>
     <script>
     // Console-polyfill. MIT license.
     // https://github.com/paulmillr/console-polyfill
@@ -172,6 +173,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.0/es5-shim.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.0/es5-sham.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.min.js"></script>
 </head>
 <body>
 <div id="__react-content"></div>
@@ -231,10 +234,10 @@ require(<span class="hljs-string">'rc-calendar/assets/bootstrap.css'</span>);
   userExists: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(rule, value, callback)</span> </span>{
     setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
       <span class="hljs-keyword">if</span> (value === <span class="hljs-string">'1'</span>) {
-        <span class="hljs-keyword">callback</span>([{field: rule.field, message: <span class="hljs-string">'are you kidding?'</span>}]);
+        <span class="hljs-keyword">callback</span>([<span class="hljs-keyword">new</span> Error(<span class="hljs-string">'are you kidding?'</span>)]);
       }
       <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value === <span class="hljs-string">'yiminghe'</span>) {
-        <span class="hljs-keyword">callback</span>([{field: rule.field, message: <span class="hljs-string">'forbid yiminghe'</span>}]);
+        <span class="hljs-keyword">callback</span>([<span class="hljs-keyword">new</span> Error(<span class="hljs-string">'forbid yiminghe'</span>)]);
       } <span class="hljs-keyword">else</span> {
         <span class="hljs-keyword">callback</span>();
       }
@@ -249,19 +252,19 @@ require(<span class="hljs-string">'rc-calendar/assets/bootstrap.css'</span>);
     <span class="hljs-keyword">var</span> startValue = field === <span class="hljs-string">'startDate'</span> ? value : formData.startDate.value;
     <span class="hljs-keyword">var</span> endValue = field === <span class="hljs-string">'endDate'</span> ? value : formData.endDate.value;
     <span class="hljs-keyword">if</span> (!value || value.getDayOfWeek() !== <span class="hljs-number">0</span>) {
-      errors.push({field: rule.field, message: <span class="hljs-string">'can only select sunday'</span>});
+      errors.push(<span class="hljs-keyword">new</span> Error(<span class="hljs-string">'can only select sunday'</span>));
     }
     <span class="hljs-keyword">if</span> (startValue &amp;&amp; endValue &amp;&amp; startValue.getTime() &gt; endValue.getTime()) {
-      errors.push({field: rule.field, message: <span class="hljs-string">'start date can not be larger than end date'</span>});
+      errors.push(<span class="hljs-keyword">new</span> Error(<span class="hljs-string">'start date can not be larger than end date'</span>));
     }
 <span class="hljs-comment">// ok</span>
     <span class="hljs-keyword">if</span> (startValue &amp;&amp; endValue &amp;&amp; startValue.getTime() &lt;= endValue.getTime()) {
-      <span class="hljs-keyword">if</span> (rule.field === <span class="hljs-string">'startDate'</span> &amp;&amp; formData.endDate.errors &amp;&amp; formData.endDate.errors.length) {
+      <span class="hljs-keyword">if</span> (field === <span class="hljs-string">'startDate'</span> &amp;&amp; formData.endDate.errors &amp;&amp; formData.endDate.errors.length) {
         setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
           self.refs.validation.forceValidate([<span class="hljs-string">'endDate'</span>]);
         }, <span class="hljs-number">0</span>);
       }
-      <span class="hljs-keyword">if</span> (rule.field === <span class="hljs-string">'endDate'</span> &amp;&amp; formData.startDate.errors &amp;&amp; formData.startDate.errors.length) {
+      <span class="hljs-keyword">if</span> (field === <span class="hljs-string">'endDate'</span> &amp;&amp; formData.startDate.errors &amp;&amp; formData.startDate.errors.length) {
         setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
           self.refs.validation.forceValidate([<span class="hljs-string">'startDate'</span>]);
         }, <span class="hljs-number">0</span>);
