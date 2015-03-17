@@ -22,7 +22,7 @@
     "dependencies": {
       "react": "*",
       "async-validator": "^1.0.0",
-      "rc-util": "^1.0.0"
+      "rc-util": "2.x"
     }
   },
   "config": {
