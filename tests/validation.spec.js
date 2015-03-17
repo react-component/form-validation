@@ -5,6 +5,10 @@ var React = require('react/addons');
 var TestUtils = React.addons.TestUtils;
 var Simulate = TestUtils.Simulate;
 
+function getInnerText(node){
+  return node.textContent || node.innerText;
+}
+
 describe('validation works', () => {
   var div = document.createElement('div');
   document.body.appendChild(div);
@@ -74,10 +78,10 @@ describe('validation works', () => {
   it('onValidate works', ()=> {
     var nativeInput = React.findDOMNode(form.refs.input);
     Simulate.change(nativeInput);
-    expect(React.findDOMNode(form.refs.error).innerText).to.be('name must be between 5 and 10 characters');
+    expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters');
     nativeInput.value = '1111';
     Simulate.change(nativeInput);
-    expect(React.findDOMNode(form.refs.error).innerText).to.be('name must be between 5 and 10 characters,junk');
+    expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters,junk');
     nativeInput.value = '11111';
     Simulate.change(nativeInput);
     expect(form.refs.error).to.be(undefined);
@@ -85,15 +89,15 @@ describe('validation works', () => {
 
   it('validate method works', (done)=> {
     form.refs.validation.validate(()=> {
-      expect(React.findDOMNode(form.refs.error).innerText).to.be('name must be between 5 and 10 characters');
-      expect(React.findDOMNode(form.refs.error2).innerText).to.be('pass cannot be empty');
+      expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters');
+      expect(getInnerText(React.findDOMNode(form.refs.error2))).to.be('pass cannot be empty');
       done();
     });
   });
 
   it('forceValidate works', (done)=> {
     form.refs.validation.forceValidate(['name'], ()=> {
-      expect(React.findDOMNode(form.refs.error).innerText).to.be('name must be between 5 and 10 characters');
+      expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters');
       expect(form.refs.error2).to.be(undefined);
       done();
     });
