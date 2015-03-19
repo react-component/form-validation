@@ -260,13 +260,13 @@ webpackJsonp([0,1],[
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(17);
+	module.exports = __webpack_require__(16);
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(16);
+	module.exports = __webpack_require__(18);
 
 /***/ },
 /* 8 */
@@ -518,7 +518,7 @@ webpackJsonp([0,1],[
 	var content = __webpack_require__(11);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(18)(content, {});
+	var update = __webpack_require__(17)(content, {});
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
@@ -548,7 +548,7 @@ webpackJsonp([0,1],[
 	var content = __webpack_require__(13);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(18)(content, {});
+	var update = __webpack_require__(17)(content, {});
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
@@ -580,9 +580,9 @@ webpackJsonp([0,1],[
 	var React = __webpack_require__(2);
 	var DATE_ROW_COUNT = 6;
 	var DATE_COL_COUNT = 7;
-	var DateTimeFormat = __webpack_require__(32);
+	var DateTimeFormat = __webpack_require__(30);
 	var GregorianCalendar = __webpack_require__(7);
-	var rcUtil = __webpack_require__(30);
+	var rcUtil = __webpack_require__(31);
 	var KeyCode = rcUtil.KeyCode;
 	var MonthPanel = __webpack_require__(23);
 	var Time = __webpack_require__(24);
@@ -764,9 +764,9 @@ webpackJsonp([0,1],[
 	  });
 	}
 
-	var ____Class1=React.Component;for(var ____Class1____Key in ____Class1){if(____Class1.hasOwnProperty(____Class1____Key)){Calendar[____Class1____Key]=____Class1[____Class1____Key];}}var ____SuperProtoOf____Class1=____Class1===null?null:____Class1.prototype;Calendar.prototype=Object.create(____SuperProtoOf____Class1);Calendar.prototype.constructor=Calendar;Calendar.__superConstructor__=____Class1;
+	var ____Class2=React.Component;for(var ____Class2____Key in ____Class2){if(____Class2.hasOwnProperty(____Class2____Key)){Calendar[____Class2____Key]=____Class2[____Class2____Key];}}var ____SuperProtoOf____Class2=____Class2===null?null:____Class2.prototype;Calendar.prototype=Object.create(____SuperProtoOf____Class2);Calendar.prototype.constructor=Calendar;Calendar.__superConstructor__=____Class2;
 	  function Calendar(props) {"use strict";
-	    ____Class1.call(this,props);
+	    ____Class2.call(this,props);
 	    var value = props.value || props.defaultValue;
 	    if (!value) {
 	      value = new GregorianCalendar();
@@ -1100,10 +1100,10 @@ webpackJsonp([0,1],[
 	/** @jsx React.DOM */
 
 	var React = __webpack_require__(2);
-	var DateTimeFormat = __webpack_require__(32);
-	var rcUtil = __webpack_require__(30);
-	var KeyCode = __webpack_require__(30).KeyCode;
-	var domAlign = __webpack_require__(31);
+	var DateTimeFormat = __webpack_require__(30);
+	var rcUtil = __webpack_require__(31);
+	var KeyCode = __webpack_require__(31).KeyCode;
+	var domAlign = __webpack_require__(32);
 	var orientMap = {
 	  tl: ['top', 'left'],
 	  tr: ['top', 'right'],
@@ -1129,9 +1129,9 @@ webpackJsonp([0,1],[
 	/**
 	 * DatePicker = wrap input using Calendar
 	 */
-	var ____Class2=React.Component;for(var ____Class2____Key in ____Class2){if(____Class2.hasOwnProperty(____Class2____Key)){Picker[____Class2____Key]=____Class2[____Class2____Key];}}var ____SuperProtoOf____Class2=____Class2===null?null:____Class2.prototype;Picker.prototype=Object.create(____SuperProtoOf____Class2);Picker.prototype.constructor=Picker;Picker.__superConstructor__=____Class2;
+	var ____Class1=React.Component;for(var ____Class1____Key in ____Class1){if(____Class1.hasOwnProperty(____Class1____Key)){Picker[____Class1____Key]=____Class1[____Class1____Key];}}var ____SuperProtoOf____Class1=____Class1===null?null:____Class1.prototype;Picker.prototype=Object.create(____SuperProtoOf____Class1);Picker.prototype.constructor=Picker;Picker.__superConstructor__=____Class1;
 	  function Picker(props) {"use strict";
-	    ____Class2.call(this,props);
+	    ____Class1.call(this,props);
 	    this.state = {
 	      open: props.open,
 	      value: props.value || props.defaultValue
@@ -1323,6 +1323,1033 @@ webpackJsonp([0,1],[
 
 /***/ },
 /* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @ignore
+	 * DateTimeFormat for
+	 * Inspired by DateTimeFormat from JDK.
+	 * @author yiminghe@gmail.com
+	 */
+
+	var GregorianCalendar = __webpack_require__(33);
+	var MAX_VALUE = Number.MAX_VALUE,
+	  /**
+	   * date or time style enum
+	   * @enum {Number} Date.Formatter.Style
+	   */
+	  DateTimeStyle = {
+	    /**
+	     * full style
+	     */
+	    FULL: 0,
+	    /**
+	     * long style
+	     */
+	    LONG: 1,
+	    /**
+	     * medium style
+	     */
+	    MEDIUM: 2,
+	    /**
+	     * short style
+	     */
+	    SHORT: 3
+	  };
+
+	/*
+	 Letter    Date or Time Component    Presentation    Examples
+	 G    Era designator    Text    AD
+	 y    Year    Year    1996; 96
+	 M    Month in year    Month    July; Jul; 07
+	 w    Week in year    Number    27
+	 W    Week in month    Number    2
+	 D    Day in year    Number    189
+	 d    Day in month    Number    10
+	 F    Day of week in month    Number    2
+	 E    Day in week    Text    Tuesday; Tue
+	 a    Am/pm marker    Text    PM
+	 H    Hour in day (0-23)    Number    0
+	 k    Hour in day (1-24)    Number    24
+	 K    Hour in am/pm (0-11)    Number    0
+	 h    Hour in am/pm (1-12)    Number    12
+	 m    Minute in hour    Number    30
+	 s    Second in minute    Number    55
+	 S    Millisecond    Number    978
+	 x z    Time zone    General time zone    Pacific Standard Time; PST; GMT-08:00
+	 Z    Time zone    RFC 822 time zone    -0800
+	 */
+
+	var patternChars = new Array(GregorianCalendar.DAY_OF_WEEK_IN_MONTH + 2).
+	  join('1');
+
+	var ERA = 0;
+
+	var calendarIndexMap = {};
+
+	patternChars = patternChars.split('');
+	patternChars[ERA] = 'G';
+	patternChars[GregorianCalendar.YEAR] = 'y';
+	patternChars[GregorianCalendar.MONTH] = 'M';
+	patternChars[GregorianCalendar.DAY_OF_MONTH] = 'd';
+	patternChars[GregorianCalendar.HOUR_OF_DAY] = 'H';
+	patternChars[GregorianCalendar.MINUTES] = 'm';
+	patternChars[GregorianCalendar.SECONDS] = 's';
+	patternChars[GregorianCalendar.MILLISECONDS] = 'S';
+	patternChars[GregorianCalendar.WEEK_OF_YEAR] = 'w';
+	patternChars[GregorianCalendar.WEEK_OF_MONTH] = 'W';
+	patternChars[GregorianCalendar.DAY_OF_YEAR] = 'D';
+	patternChars[GregorianCalendar.DAY_OF_WEEK_IN_MONTH] = 'F';
+
+	(function () {
+	  for (var index in patternChars) {
+	    calendarIndexMap[patternChars[index]] = index;
+	  }
+	})();
+
+	function mix(t, s) {
+	  for (var p in s) {
+	    t[p] = s[p];
+	  }
+	}
+
+	var SUBSTITUTE_REG = /\\?\{([^{}]+)\}/g,
+	  EMPTY = '';
+
+	function substitute(str, o, regexp) {
+	  if (typeof str !== 'string' || !o) {
+	    return str;
+	  }
+
+	  return str.replace(regexp || SUBSTITUTE_REG, function (match, name) {
+	    if (match.charAt(0) === '\\') {
+	      return match.slice(1);
+	    }
+	    return (o[name] === undefined) ? EMPTY : o[name];
+	  });
+	}
+
+	patternChars = patternChars.join('') + 'ahkKZE';
+
+	function encode(lastField, count, compiledPattern) {
+	  compiledPattern.push({
+	    field: lastField,
+	    count: count
+	  });
+	}
+
+	function compile(pattern) {
+	  var length = pattern.length;
+	  var inQuote = false;
+	  var compiledPattern = [];
+	  var tmpBuffer = null;
+	  var count = 0;
+	  var lastField = -1;
+
+	  for (var i = 0; i < length; i++) {
+	    var c = pattern.charAt(i);
+
+	    if (c === '\'') {
+	      // '' is treated as a single quote regardless of being
+	      // in a quoted section.
+	      if ((i + 1) < length) {
+	        c = pattern.charAt(i + 1);
+	        if (c === '\'') {
+	          i++;
+	          if (count !== 0) {
+	            encode(lastField, count, compiledPattern);
+	            lastField = -1;
+	            count = 0;
+	          }
+	          if (inQuote) {
+	            tmpBuffer += c;
+	          }
+	          continue;
+	        }
+	      }
+	      if (!inQuote) {
+	        if (count !== 0) {
+	          encode(lastField, count, compiledPattern);
+	          lastField = -1;
+	          count = 0;
+	        }
+	        tmpBuffer = '';
+	        inQuote = true;
+	      } else {
+	        compiledPattern.push({
+	          text: tmpBuffer
+	        });
+	        inQuote = false;
+	      }
+	      continue;
+	    }
+	    if (inQuote) {
+	      tmpBuffer += c;
+	      continue;
+	    }
+	    if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')) {
+	      if (count !== 0) {
+	        encode(lastField, count, compiledPattern);
+	        lastField = -1;
+	        count = 0;
+	      }
+	      compiledPattern.push({
+	        text: c
+	      });
+	      continue;
+	    }
+
+	    if (patternChars.indexOf(c) === -1) {
+	      throw new Error('Illegal pattern character "' + c + '"');
+	    }
+
+	    if (lastField === -1 || lastField === c) {
+	      lastField = c;
+	      count++;
+	      continue;
+	    }
+	    encode(lastField, count, compiledPattern);
+	    lastField = c;
+	    count = 1;
+	  }
+
+	  if (inQuote) {
+	    throw new Error('Unterminated quote');
+	  }
+
+	  if (count !== 0) {
+	    encode(lastField, count, compiledPattern);
+	  }
+
+	  return compiledPattern;
+	}
+
+	var zeroDigit = '0';
+
+	// TODO zeroDigit localization??
+	function zeroPaddingNumber(value, minDigits, maxDigits, buffer) {
+	  // Optimization for 1, 2 and 4 digit numbers. This should
+	  // cover most cases of formatting date/time related items.
+	  // Note: This optimization code assumes that maxDigits is
+	  // either 2 or Integer.MAX_VALUE (maxIntCount in format()).
+	  buffer = buffer || [];
+	  maxDigits = maxDigits || MAX_VALUE;
+	  if (value >= 0) {
+	    if (value < 100 && minDigits >= 1 && minDigits <= 2) {
+	      if (value < 10 && minDigits === 2) {
+	        buffer.push(zeroDigit);
+	      }
+	      buffer.push(value);
+	      return buffer.join('');
+	    } else if (value >= 1000 && value < 10000) {
+	      if (minDigits === 4) {
+	        buffer.push(value);
+	        return buffer.join('');
+	      }
+	      if (minDigits === 2 && maxDigits === 2) {
+	        return zeroPaddingNumber(value % 100, 2, 2, buffer);
+	      }
+	    }
+	  }
+	  buffer.push(value + '');
+	  return buffer.join('');
+	}
+
+	/**
+	 *
+	 * date time formatter for KISSY gregorian date.
+	 *
+	 *      @example
+	 *      use('date/format,date/gregorian',function(S, DateFormat, GregorianCalendar){
+	     *          var calendar = new GregorianCalendar(2013,9,24);
+	     *          // ' to escape
+	     *          var formatter = new DateFormat("'today is' ''yyyy/MM/dd a''");
+	     *          document.write(formatter.format(calendar));
+	     *      });
+	 *
+	 * @class Date.Formatter
+	 * @param {String} pattern patter string of date formatter
+	 *
+	 * <table border="1">
+	 * <thead valign="bottom">
+	 * <tr><th class="head">Letter</th>
+	 * <th class="head">Date or Time Component</th>
+	 * <th class="head">Presentation</th>
+	 * <th class="head">Examples</th>
+	 * </tr>
+	 * </thead>
+	 * <tbody valign="top">
+	 * <tr><td>G</td>
+	 * <td>Era designator</td>
+	 * <td>Text</td>
+	 * <td>AD</td>
+	 * </tr>
+	 * <tr><td>y</td>
+	 * <td>Year</td>
+	 * <td>Year</td>
+	 * <td>1996; 96</td>
+	 * </tr>
+	 * <tr><td>M</td>
+	 * <td>Month in year</td>
+	 * <td>Month</td>
+	 * <td>July; Jul; 07</td>
+	 * </tr>
+	 * <tr><td>w</td>
+	 * <td>Week in year</td>
+	 * <td>Number</td>
+	 * <td>27</td>
+	 * </tr>
+	 * <tr><td>W</td>
+	 * <td>Week in month</td>
+	 * <td>Number</td>
+	 * <td>2</td>
+	 * </tr>
+	 * <tr><td>D</td>
+	 * <td>Day in year</td>
+	 * <td>Number</td>
+	 * <td>189</td>
+	 * </tr>
+	 * <tr><td>d</td>
+	 * <td>Day in month</td>
+	 * <td>Number</td>
+	 * <td>10</td>
+	 * </tr>
+	 * <tr><td>F</td>
+	 * <td>Day of week in month</td>
+	 * <td>Number</td>
+	 * <td>2</td>
+	 * </tr>
+	 * <tr><td>E</td>
+	 * <td>Day in week</td>
+	 * <td>Text</td>
+	 * <td>Tuesday; Tue</td>
+	 * </tr>
+	 * <tr><td>a</td>
+	 * <td>Am/pm marker</td>
+	 * <td>Text</td>
+	 * <td>PM</td>
+	 * </tr>
+	 * <tr><td>H</td>
+	 *       <td>Hour in day (0-23)</td>
+	 * <td>Number</td>
+	 * <td>0</td>
+	 * </tr>
+	 * <tr><td>k</td>
+	 *       <td>Hour in day (1-24)</td>
+	 * <td>Number</td>
+	 * <td>24</td>
+	 * </tr>
+	 * <tr><td>K</td>
+	 * <td>Hour in am/pm (0-11)</td>
+	 * <td>Number</td>
+	 * <td>0</td>
+	 * </tr>
+	 * <tr><td>h</td>
+	 * <td>Hour in am/pm (1-12)</td>
+	 * <td>Number</td>
+	 * <td>12</td>
+	 * </tr>
+	 * <tr><td>m</td>
+	 * <td>Minute in hour</td>
+	 * <td>Number</td>
+	 * <td>30</td>
+	 * </tr>
+	 * <tr><td>s</td>
+	 * <td>Second in minute</td>
+	 * <td>Number</td>
+	 * <td>55</td>
+	 * </tr>
+	 * <tr><td>S</td>
+	 * <td>Millisecond</td>
+	 * <td>Number</td>
+	 * <td>978</td>
+	 * </tr>
+	 * <tr><td>x/z</td>
+	 * <td>Time zone</td>
+	 * <td>General time zone</td>
+	 * <td>Pacific Standard Time; PST; GMT-08:00</td>
+	 * </tr>
+	 * <tr><td>Z</td>
+	 * <td>Time zone</td>
+	 * <td>RFC 822 time zone</td>
+	 * <td>-0800</td>
+	 * </tr>
+	 * </tbody>
+	 * </table>
+
+	 * @param {Object} locale locale object
+	 * @param {Number} timeZoneOffset time zone offset by minutes
+	 */
+	function DateTimeFormat(pattern, locale, timeZoneOffset) {
+	  this.locale = locale;
+	  this.pattern = compile(pattern);
+	  this.timezoneOffset = timeZoneOffset;
+	}
+
+	function formatField(field, count, locale, calendar) {
+	  var current,
+	    value;
+	  switch (field) {
+	    case 'G':
+	      value = calendar.getYear() > 0 ? 1 : 0;
+	      current = locale.eras[value];
+	      break;
+	    case 'y':
+	      value = calendar.getYear();
+	      if (value <= 0) {
+	        value = 1 - value;
+	      }
+	      current = (zeroPaddingNumber(value, 2, count !== 2 ? MAX_VALUE : 2));
+	      break;
+	    case 'M':
+	      value = calendar.getMonth();
+	      if (count >= 4) {
+	        current = locale.months[value];
+	      } else if (count === 3) {
+	        current = locale.shortMonths[value];
+	      } else {
+	        current = zeroPaddingNumber(value + 1, count);
+	      }
+	      break;
+	    case 'k':
+	      current = zeroPaddingNumber(calendar.getHourOfDay() || 24,
+	        count);
+	      break;
+	    case 'E':
+	      value = calendar.getDayOfWeek();
+	      current = count >= 4 ?
+	        locale.weekdays[value] :
+	        locale.shortWeekdays[value];
+	      break;
+	    case 'a':
+	      current = locale.ampms[calendar.getHourOfDay() >= 12 ?
+	        1 :
+	        0];
+	      break;
+	    case 'h':
+	      current = zeroPaddingNumber(calendar.
+	        getHourOfDay() % 12 || 12, count);
+	      break;
+	    case 'K':
+	      current = zeroPaddingNumber(calendar.
+	        getHourOfDay() % 12, count);
+	      break;
+	    case 'Z':
+	      var offset = calendar.getTimezoneOffset();
+	      var parts = [offset < 0 ? '-' : '+'];
+	      offset = Math.abs(offset);
+	      parts.push(zeroPaddingNumber(Math.floor(offset / 60) % 100, 2),
+	        zeroPaddingNumber(offset % 60, 2));
+	      current = parts.join('');
+	      break;
+	    default :
+	      // case 'd':
+	      // case 'H':
+	      // case 'm':
+	      // case 's':
+	      // case 'S':
+	      // case 'D':
+	      // case 'F':
+	      // case 'w':
+	      // case 'W':
+	      var index = calendarIndexMap[field];
+	      value = calendar.get(index);
+	      current = zeroPaddingNumber(value, count);
+	  }
+	  return current;
+	}
+
+	function matchField(dateStr, startIndex, matches) {
+	  var matchedLen = -1,
+	    index = -1,
+	    i,
+	    len = matches.length;
+	  for (i = 0; i < len; i++) {
+	    var m = matches[i];
+	    var mLen = m.length;
+	    if (mLen > matchedLen &&
+	      matchPartString(dateStr, startIndex, m, mLen)) {
+	      matchedLen = mLen;
+	      index = i;
+	    }
+	  }
+	  return index >= 0 ? {
+	    value: index,
+	    startIndex: startIndex + matchedLen
+	  } : null;
+	}
+
+	function matchPartString(dateStr, startIndex, match, mLen) {
+	  for (var i = 0; i < mLen; i++) {
+	    if (dateStr.charAt(startIndex + i) !== match.charAt(i)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	function getLeadingNumberLen(str) {
+	  var i, c,
+	    len = str.length;
+	  for (i = 0; i < len; i++) {
+	    c = str.charAt(i);
+	    if (c < '0' || c > '9') {
+	      break;
+	    }
+	  }
+	  return i;
+	}
+
+	function matchNumber(dateStr, startIndex, count, obeyCount) {
+	  var str = dateStr, n;
+	  if (obeyCount) {
+	    if (dateStr.length <= startIndex + count) {
+	      return null;
+	    }
+	    str = dateStr.substring(startIndex, count);
+	    if (!str.match(/^\d+$/)) {
+	      return null;
+	    }
+	  } else {
+	    str = str.substring(startIndex);
+	  }
+	  n = parseInt(str, 10);
+	  if (isNaN(n)) {
+	    return null;
+	  }
+	  return {
+	    value: n,
+	    startIndex: startIndex + getLeadingNumberLen(str)
+	  };
+	}
+
+	function parseField(calendar, dateStr, startIndex, field, count, locale, obeyCount, tmp) {
+	  var match, year, hour;
+	  if (dateStr.length <= startIndex) {
+	    return startIndex;
+	  }
+	  switch (field) {
+	    case 'G':
+	      if ((match = matchField(dateStr, startIndex, locale.eras))) {
+	        if (calendar.isSetYear()) {
+	          if (match.value === 0) {
+	            year = calendar.getYear();
+	            calendar.setYear(1 - year);
+	          }
+	        } else {
+	          tmp.era = match.value;
+	        }
+	      }
+	      break;
+	    case 'y':
+	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
+	        year = match.value;
+	        if ('era' in tmp) {
+	          if (tmp.era === 0) {
+	            year = 1 - year;
+	          }
+	        }
+	        calendar.setYear(year);
+	      }
+	      break;
+	    case 'M':
+	      var month;
+	      if (count >= 3) {
+	        if ((match = matchField(dateStr, startIndex, locale[count === 3 ?
+	            'shortMonths' : 'months']))) {
+	          month = match.value;
+	        }
+	      } else {
+	        if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
+	          month = match.value - 1;
+	        }
+	      }
+	      if (match) {
+	        calendar.setMonth(month);
+	      }
+	      break;
+	    case 'k':
+	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
+	        calendar.setHourOfDay(match.value % 24);
+	      }
+	      break;
+	    case 'E':
+	      if ((match = matchField(dateStr, startIndex, locale[count > 3 ?
+	          'weekdays' :
+	          'shortWeekdays']))) {
+	        calendar.setDayOfWeek(match.value);
+	      }
+	      break;
+	    case 'a':
+	      if ((match = matchField(dateStr, startIndex, locale.ampms))) {
+	        if (calendar.isSetHourOfDay()) {
+	          if (match.value) {
+	            hour = calendar.getHourOfDay();
+	            if (hour < 12) {
+	              calendar.setHourOfDay((hour + 12) % 24);
+	            }
+	          }
+	        } else {
+	          tmp.ampm = match.value;
+	        }
+	      }
+	      break;
+	    case 'h':
+	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
+	        hour = match.value %= 12;
+	        if (tmp.ampm) {
+	          hour += 12;
+	        }
+	        calendar.setHourOfDay(hour);
+	      }
+	      break;
+	    case 'K':
+	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
+	        hour = match.value;
+	        if (tmp.ampm) {
+	          hour += 12;
+	        }
+	        calendar.setHourOfDay(hour);
+	      }
+	      break;
+	    case 'Z':
+	      var sign = 1,
+	        zoneChar = dateStr.charAt(startIndex);
+	      if (zoneChar === '-') {
+	        sign = -1;
+	        startIndex++;
+	      } else if (zoneChar === '+') {
+	        startIndex++;
+	      } else {
+	        break;
+	      }
+	      if ((match = matchNumber(dateStr, startIndex, 2, true))) {
+	        var zoneOffset = match.value * 60;
+	        startIndex = match.startIndex;
+	        if ((match = matchNumber(dateStr, startIndex, 2, true))) {
+	          zoneOffset += match.value;
+	        }
+	        calendar.setTimezoneOffset(zoneOffset);
+	      }
+	      break;
+	    default :
+	      // case 'd':
+	      // case 'H':
+	      // case 'm':
+	      // case 's':
+	      // case 'S':
+	      // case 'D':
+	      // case 'F':
+	      // case 'w':
+	      // case 'W'
+	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
+	        var index = calendarIndexMap[field];
+	        calendar.set(index, match.value);
+	      }
+	  }
+	  if (match) {
+	    startIndex = match.startIndex;
+	  }
+	  return startIndex;
+	}
+
+	mix(DateTimeFormat.prototype, {
+	  getLocale: function (calendar) {
+	    if (this.locale) {
+	      return this.locale;
+	    }
+	    if (calendar) {
+	      return calendar.locale;
+	    }
+	    return GregorianCalendar.defaultLocale;
+	  },
+
+	  getTimezoneOffset: function (calendar) {
+	    if (typeof this.timezoneOffset !== 'undefined') {
+	      return this.timezoneOffset;
+	    }
+	    return this.getLocale(calendar).timezoneOffset;
+	  },
+
+	  /**
+	   * format a GregorianDate instance according to specified pattern
+	   * @param {Date.Gregorian} calendar GregorianDate instance
+	   * @returns {string} formatted string of GregorianDate instance
+	   */
+	  format: function (calendar) {
+	    if (calendar.isGregorianCalendar) {
+
+	    } else {
+	      var time = calendar.getTime();
+	      calendar = /**@type {Date.Gregorian}
+	       @ignore*/new GregorianCalendar(this.getTimezoneOffset(), this.getLocale());
+	      calendar.setTime(time);
+	    }
+	    var i,
+	      ret = [],
+	      pattern = this.pattern,
+	      len = pattern.length;
+	    for (i = 0; i < len; i++) {
+	      var comp = pattern[i];
+	      if (comp.text) {
+	        ret.push(comp.text);
+	      } else if ('field' in comp) {
+	        ret.push(formatField(comp.field, comp.count, this.getLocale(calendar), calendar));
+	      }
+	    }
+	    return ret.join('');
+	  },
+
+	  /**
+	   * parse a formatted string of GregorianDate instance according to specified pattern
+	   * @param {String} dateStr formatted string of GregorianDate
+	   * @returns {Date.Gregorian}
+	   */
+	  parse: function (dateStr) {
+	    var calendar = /**@type {Date.Gregorian}
+	       @ignore*/new GregorianCalendar(this.getTimezoneOffset(), this.getLocale()),
+	      i,
+	      j,
+	      tmp = {},
+	      obeyCount = false,
+	      dateStrLen = dateStr.length,
+	      errorIndex = -1,
+	      startIndex = 0,
+	      oldStartIndex = 0,
+	      pattern = this.pattern,
+	      len = pattern.length;
+
+	    loopPattern: {
+	      for (i = 0; errorIndex < 0 && i < len; i++) {
+	        var comp = pattern[i], text, textLen;
+	        oldStartIndex = startIndex;
+	        if ((text = comp.text)) {
+	          textLen = text.length;
+	          if ((textLen + startIndex) > dateStrLen) {
+	            errorIndex = startIndex;
+	          } else {
+	            for (j = 0; j < textLen; j++) {
+	              if (text.charAt(j) !== dateStr.charAt(j + startIndex)) {
+	                errorIndex = startIndex;
+	                break loopPattern;
+	              }
+	            }
+	            startIndex += textLen;
+	          }
+	        } else if ('field' in comp) {
+	          obeyCount = false;
+	          var nextComp = pattern[i + 1];
+	          if (nextComp) {
+	            if ('field' in nextComp) {
+	              obeyCount = true;
+	            } else {
+	              var c = nextComp.text.charAt(0);
+	              if (c >= '0' && c <= '9') {
+	                obeyCount = true;
+	              }
+	            }
+	          }
+	          startIndex = parseField(calendar,
+	            dateStr,
+	            startIndex,
+	            comp.field,
+	            comp.count,
+	            this.getLocale(calendar),
+	            obeyCount,
+	            tmp);
+	          if (startIndex === oldStartIndex) {
+	            errorIndex = startIndex;
+	          }
+	        }
+	      }
+	    }
+
+	    if (errorIndex >= 0) {
+	      console.error('error when parsing date');
+	      console.error(dateStr);
+	      console.error(dateStr.substring(0, errorIndex) + '^');
+	      return undefined;
+	    }
+	    return calendar;
+	  }
+	});
+
+	mix(DateTimeFormat, {
+	  Style: DateTimeStyle,
+
+	  /**
+	   * get a formatter instance of short style pattern.
+	   * en-us: M/d/yy h:mm a
+	   * zh-cn: yy-M-d ah:mm
+	   * @param {Object} locale locale object
+	   * @param {Number} timeZoneOffset time zone offset by minutes
+	   * @returns {Date.Gregorian}
+	   * @static
+	   */
+	  getInstance: function (locale, timeZoneOffset) {
+	    return this.getDateTimeInstance(DateTimeStyle.SHORT, DateTimeStyle.SHORT, locale, timeZoneOffset);
+	  },
+
+	  /**
+	   * get a formatter instance of specified date style.
+	   * @param {Date.Formatter.Style} dateStyle date format style
+	   * @param {Object} locale
+	   * @param {Number} timeZoneOffset time zone offset by minutes
+	   * @returns {Date.Gregorian}
+	   * @static
+	   */
+	  getDateInstance: function (dateStyle, locale, timeZoneOffset) {
+	    return this.getDateTimeInstance(dateStyle, undefined, locale, timeZoneOffset);
+	  },
+
+	  /**
+	   * get a formatter instance of specified date style and time style.
+	   * @param {Date.Formatter.Style} dateStyle date format style
+	   * @param {Date.Formatter.Style} timeStyle time format style
+	   * @param {Object} locale
+	   * @param {Number} timeZoneOffset time zone offset by minutes
+	   * @returns {Date.Gregorian}
+	   * @static
+	   */
+	  getDateTimeInstance: function (dateStyle, timeStyle, locale, timeZoneOffset) {
+	    locale = locale || GregorianCalendar.defaultLocale;
+	    var datePattern = '';
+	    if (dateStyle !== undefined) {
+	      datePattern = locale.datePatterns[dateStyle];
+	    }
+	    var timePattern = '';
+	    if (timeStyle !== undefined) {
+	      timePattern = locale.timePatterns[timeStyle];
+	    }
+	    var pattern = datePattern;
+	    if (timePattern) {
+	      if (datePattern) {
+	        pattern = substitute(locale.dateTimePattern, {
+	          date: datePattern,
+	          time: timePattern
+	        });
+	      } else {
+	        pattern = timePattern;
+	      }
+	    }
+	    return new DateTimeFormat(pattern, locale, timeZoneOffset);
+	  },
+
+	  /**
+	   * get a formatter instance of specified time style.
+	   * @param {Date.Formatter.Style} timeStyle time format style
+	   * @param {Object} locale
+	   * @param {Number} timeZoneOffset time zone offset by minutes
+	   * @returns {Date.Gregorian}
+	   * @static
+	   */
+	  getTimeInstance: function (timeStyle, locale, timeZoneOffset) {
+	    return this.getDateTimeInstance(undefined, timeStyle, locale, timeZoneOffset);
+	  }
+	});
+
+	module.exports = DateTimeFormat;
+
+	DateTimeFormat.version = '@VERSION@';
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isIE9 = memoize(function() {
+			return /msie 9\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0;
+
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+
+		options = options || {};
+		// Force single-tag solution on IE9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isIE9();
+
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+
+	function createStyleElement() {
+		var styleElement = document.createElement("style");
+		var head = getHeadElement();
+		styleElement.type = "text/css";
+		head.appendChild(styleElement);
+		return styleElement;
+	}
+
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement());
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else {
+			styleElement = createStyleElement();
+			update = applyToTag.bind(null, styleElement);
+			remove = function () {
+				styleElement.parentNode.removeChild(styleElement);
+			};
+		}
+
+		update(obj);
+
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+
+	function replaceText(source, id, replacement) {
+		var boundaries = ["/** >>" + id + " **/", "/** " + id + "<< **/"];
+		var start = source.lastIndexOf(boundaries[0]);
+		var wrappedReplacement = replacement
+			? (boundaries[0] + replacement + boundaries[1])
+			: "";
+		if (source.lastIndexOf(boundaries[0]) >= 0) {
+			var end = source.lastIndexOf(boundaries[1]) + boundaries[1].length;
+			return source.slice(0, start) + wrappedReplacement + source.slice(end);
+		} else {
+			return source + wrappedReplacement;
+		}
+	}
+
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(styleElement.styleSheet.cssText, index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+		var sourceMap = obj.sourceMap;
+
+		if(sourceMap && typeof btoa === "function") {
+			try {
+				css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(JSON.stringify(sourceMap)) + " */";
+				css = "@import url(\"data:text/css;base64," + btoa(css) + "\")";
+			} catch(e) {}
+		}
+
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+
+
+/***/ },
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2652,1040 +3679,13 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @ignore
-	 * DateTimeFormat for
-	 * Inspired by DateTimeFormat from JDK.
-	 * @author yiminghe@gmail.com
-	 */
-
-	var GregorianCalendar = __webpack_require__(33);
-	var MAX_VALUE = Number.MAX_VALUE,
-	  /**
-	   * date or time style enum
-	   * @enum {Number} Date.Formatter.Style
-	   */
-	  DateTimeStyle = {
-	    /**
-	     * full style
-	     */
-	    FULL: 0,
-	    /**
-	     * long style
-	     */
-	    LONG: 1,
-	    /**
-	     * medium style
-	     */
-	    MEDIUM: 2,
-	    /**
-	     * short style
-	     */
-	    SHORT: 3
-	  };
-
-	/*
-	 Letter    Date or Time Component    Presentation    Examples
-	 G    Era designator    Text    AD
-	 y    Year    Year    1996; 96
-	 M    Month in year    Month    July; Jul; 07
-	 w    Week in year    Number    27
-	 W    Week in month    Number    2
-	 D    Day in year    Number    189
-	 d    Day in month    Number    10
-	 F    Day of week in month    Number    2
-	 E    Day in week    Text    Tuesday; Tue
-	 a    Am/pm marker    Text    PM
-	 H    Hour in day (0-23)    Number    0
-	 k    Hour in day (1-24)    Number    24
-	 K    Hour in am/pm (0-11)    Number    0
-	 h    Hour in am/pm (1-12)    Number    12
-	 m    Minute in hour    Number    30
-	 s    Second in minute    Number    55
-	 S    Millisecond    Number    978
-	 x z    Time zone    General time zone    Pacific Standard Time; PST; GMT-08:00
-	 Z    Time zone    RFC 822 time zone    -0800
-	 */
-
-	var patternChars = new Array(GregorianCalendar.DAY_OF_WEEK_IN_MONTH + 2).
-	  join('1');
-
-	var ERA = 0;
-
-	var calendarIndexMap = {};
-
-	patternChars = patternChars.split('');
-	patternChars[ERA] = 'G';
-	patternChars[GregorianCalendar.YEAR] = 'y';
-	patternChars[GregorianCalendar.MONTH] = 'M';
-	patternChars[GregorianCalendar.DAY_OF_MONTH] = 'd';
-	patternChars[GregorianCalendar.HOUR_OF_DAY] = 'H';
-	patternChars[GregorianCalendar.MINUTES] = 'm';
-	patternChars[GregorianCalendar.SECONDS] = 's';
-	patternChars[GregorianCalendar.MILLISECONDS] = 'S';
-	patternChars[GregorianCalendar.WEEK_OF_YEAR] = 'w';
-	patternChars[GregorianCalendar.WEEK_OF_MONTH] = 'W';
-	patternChars[GregorianCalendar.DAY_OF_YEAR] = 'D';
-	patternChars[GregorianCalendar.DAY_OF_WEEK_IN_MONTH] = 'F';
-
-	(function () {
-	  for (var index in patternChars) {
-	    calendarIndexMap[patternChars[index]] = index;
-	  }
-	})();
-
-	function mix(t, s) {
-	  for (var p in s) {
-	    t[p] = s[p];
-	  }
-	}
-
-	var SUBSTITUTE_REG = /\\?\{([^{}]+)\}/g,
-	  EMPTY = '';
-
-	function substitute(str, o, regexp) {
-	  if (typeof str !== 'string' || !o) {
-	    return str;
-	  }
-
-	  return str.replace(regexp || SUBSTITUTE_REG, function (match, name) {
-	    if (match.charAt(0) === '\\') {
-	      return match.slice(1);
-	    }
-	    return (o[name] === undefined) ? EMPTY : o[name];
-	  });
-	}
-
-	patternChars = patternChars.join('') + 'ahkKZE';
-
-	function encode(lastField, count, compiledPattern) {
-	  compiledPattern.push({
-	    field: lastField,
-	    count: count
-	  });
-	}
-
-	function compile(pattern) {
-	  var length = pattern.length;
-	  var inQuote = false;
-	  var compiledPattern = [];
-	  var tmpBuffer = null;
-	  var count = 0;
-	  var lastField = -1;
-
-	  for (var i = 0; i < length; i++) {
-	    var c = pattern.charAt(i);
-
-	    if (c === '\'') {
-	      // '' is treated as a single quote regardless of being
-	      // in a quoted section.
-	      if ((i + 1) < length) {
-	        c = pattern.charAt(i + 1);
-	        if (c === '\'') {
-	          i++;
-	          if (count !== 0) {
-	            encode(lastField, count, compiledPattern);
-	            lastField = -1;
-	            count = 0;
-	          }
-	          if (inQuote) {
-	            tmpBuffer += c;
-	          }
-	          continue;
-	        }
-	      }
-	      if (!inQuote) {
-	        if (count !== 0) {
-	          encode(lastField, count, compiledPattern);
-	          lastField = -1;
-	          count = 0;
-	        }
-	        tmpBuffer = '';
-	        inQuote = true;
-	      } else {
-	        compiledPattern.push({
-	          text: tmpBuffer
-	        });
-	        inQuote = false;
-	      }
-	      continue;
-	    }
-	    if (inQuote) {
-	      tmpBuffer += c;
-	      continue;
-	    }
-	    if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')) {
-	      if (count !== 0) {
-	        encode(lastField, count, compiledPattern);
-	        lastField = -1;
-	        count = 0;
-	      }
-	      compiledPattern.push({
-	        text: c
-	      });
-	      continue;
-	    }
-
-	    if (patternChars.indexOf(c) === -1) {
-	      throw new Error('Illegal pattern character "' + c + '"');
-	    }
-
-	    if (lastField === -1 || lastField === c) {
-	      lastField = c;
-	      count++;
-	      continue;
-	    }
-	    encode(lastField, count, compiledPattern);
-	    lastField = c;
-	    count = 1;
-	  }
-
-	  if (inQuote) {
-	    throw new Error('Unterminated quote');
-	  }
-
-	  if (count !== 0) {
-	    encode(lastField, count, compiledPattern);
-	  }
-
-	  return compiledPattern;
-	}
-
-	var zeroDigit = '0';
-
-	// TODO zeroDigit localization??
-	function zeroPaddingNumber(value, minDigits, maxDigits, buffer) {
-	  // Optimization for 1, 2 and 4 digit numbers. This should
-	  // cover most cases of formatting date/time related items.
-	  // Note: This optimization code assumes that maxDigits is
-	  // either 2 or Integer.MAX_VALUE (maxIntCount in format()).
-	  buffer = buffer || [];
-	  maxDigits = maxDigits || MAX_VALUE;
-	  if (value >= 0) {
-	    if (value < 100 && minDigits >= 1 && minDigits <= 2) {
-	      if (value < 10 && minDigits === 2) {
-	        buffer.push(zeroDigit);
-	      }
-	      buffer.push(value);
-	      return buffer.join('');
-	    } else if (value >= 1000 && value < 10000) {
-	      if (minDigits === 4) {
-	        buffer.push(value);
-	        return buffer.join('');
-	      }
-	      if (minDigits === 2 && maxDigits === 2) {
-	        return zeroPaddingNumber(value % 100, 2, 2, buffer);
-	      }
-	    }
-	  }
-	  buffer.push(value + '');
-	  return buffer.join('');
-	}
-
-	/**
-	 *
-	 * date time formatter for KISSY gregorian date.
-	 *
-	 *      @example
-	 *      use('date/format,date/gregorian',function(S, DateFormat, GregorianCalendar){
-	     *          var calendar = new GregorianCalendar(2013,9,24);
-	     *          // ' to escape
-	     *          var formatter = new DateFormat("'today is' ''yyyy/MM/dd a''");
-	     *          document.write(formatter.format(calendar));
-	     *      });
-	 *
-	 * @class Date.Formatter
-	 * @param {String} pattern patter string of date formatter
-	 *
-	 * <table border="1">
-	 * <thead valign="bottom">
-	 * <tr><th class="head">Letter</th>
-	 * <th class="head">Date or Time Component</th>
-	 * <th class="head">Presentation</th>
-	 * <th class="head">Examples</th>
-	 * </tr>
-	 * </thead>
-	 * <tbody valign="top">
-	 * <tr><td>G</td>
-	 * <td>Era designator</td>
-	 * <td>Text</td>
-	 * <td>AD</td>
-	 * </tr>
-	 * <tr><td>y</td>
-	 * <td>Year</td>
-	 * <td>Year</td>
-	 * <td>1996; 96</td>
-	 * </tr>
-	 * <tr><td>M</td>
-	 * <td>Month in year</td>
-	 * <td>Month</td>
-	 * <td>July; Jul; 07</td>
-	 * </tr>
-	 * <tr><td>w</td>
-	 * <td>Week in year</td>
-	 * <td>Number</td>
-	 * <td>27</td>
-	 * </tr>
-	 * <tr><td>W</td>
-	 * <td>Week in month</td>
-	 * <td>Number</td>
-	 * <td>2</td>
-	 * </tr>
-	 * <tr><td>D</td>
-	 * <td>Day in year</td>
-	 * <td>Number</td>
-	 * <td>189</td>
-	 * </tr>
-	 * <tr><td>d</td>
-	 * <td>Day in month</td>
-	 * <td>Number</td>
-	 * <td>10</td>
-	 * </tr>
-	 * <tr><td>F</td>
-	 * <td>Day of week in month</td>
-	 * <td>Number</td>
-	 * <td>2</td>
-	 * </tr>
-	 * <tr><td>E</td>
-	 * <td>Day in week</td>
-	 * <td>Text</td>
-	 * <td>Tuesday; Tue</td>
-	 * </tr>
-	 * <tr><td>a</td>
-	 * <td>Am/pm marker</td>
-	 * <td>Text</td>
-	 * <td>PM</td>
-	 * </tr>
-	 * <tr><td>H</td>
-	 *       <td>Hour in day (0-23)</td>
-	 * <td>Number</td>
-	 * <td>0</td>
-	 * </tr>
-	 * <tr><td>k</td>
-	 *       <td>Hour in day (1-24)</td>
-	 * <td>Number</td>
-	 * <td>24</td>
-	 * </tr>
-	 * <tr><td>K</td>
-	 * <td>Hour in am/pm (0-11)</td>
-	 * <td>Number</td>
-	 * <td>0</td>
-	 * </tr>
-	 * <tr><td>h</td>
-	 * <td>Hour in am/pm (1-12)</td>
-	 * <td>Number</td>
-	 * <td>12</td>
-	 * </tr>
-	 * <tr><td>m</td>
-	 * <td>Minute in hour</td>
-	 * <td>Number</td>
-	 * <td>30</td>
-	 * </tr>
-	 * <tr><td>s</td>
-	 * <td>Second in minute</td>
-	 * <td>Number</td>
-	 * <td>55</td>
-	 * </tr>
-	 * <tr><td>S</td>
-	 * <td>Millisecond</td>
-	 * <td>Number</td>
-	 * <td>978</td>
-	 * </tr>
-	 * <tr><td>x/z</td>
-	 * <td>Time zone</td>
-	 * <td>General time zone</td>
-	 * <td>Pacific Standard Time; PST; GMT-08:00</td>
-	 * </tr>
-	 * <tr><td>Z</td>
-	 * <td>Time zone</td>
-	 * <td>RFC 822 time zone</td>
-	 * <td>-0800</td>
-	 * </tr>
-	 * </tbody>
-	 * </table>
-
-	 * @param {Object} locale locale object
-	 * @param {Number} timeZoneOffset time zone offset by minutes
-	 */
-	function DateTimeFormat(pattern, locale, timeZoneOffset) {
-	  this.locale = locale;
-	  this.pattern = compile(pattern);
-	  this.timezoneOffset = timeZoneOffset;
-	}
-
-	function formatField(field, count, locale, calendar) {
-	  var current,
-	    value;
-	  switch (field) {
-	    case 'G':
-	      value = calendar.getYear() > 0 ? 1 : 0;
-	      current = locale.eras[value];
-	      break;
-	    case 'y':
-	      value = calendar.getYear();
-	      if (value <= 0) {
-	        value = 1 - value;
-	      }
-	      current = (zeroPaddingNumber(value, 2, count !== 2 ? MAX_VALUE : 2));
-	      break;
-	    case 'M':
-	      value = calendar.getMonth();
-	      if (count >= 4) {
-	        current = locale.months[value];
-	      } else if (count === 3) {
-	        current = locale.shortMonths[value];
-	      } else {
-	        current = zeroPaddingNumber(value + 1, count);
-	      }
-	      break;
-	    case 'k':
-	      current = zeroPaddingNumber(calendar.getHourOfDay() || 24,
-	        count);
-	      break;
-	    case 'E':
-	      value = calendar.getDayOfWeek();
-	      current = count >= 4 ?
-	        locale.weekdays[value] :
-	        locale.shortWeekdays[value];
-	      break;
-	    case 'a':
-	      current = locale.ampms[calendar.getHourOfDay() >= 12 ?
-	        1 :
-	        0];
-	      break;
-	    case 'h':
-	      current = zeroPaddingNumber(calendar.
-	        getHourOfDay() % 12 || 12, count);
-	      break;
-	    case 'K':
-	      current = zeroPaddingNumber(calendar.
-	        getHourOfDay() % 12, count);
-	      break;
-	    case 'Z':
-	      var offset = calendar.getTimezoneOffset();
-	      var parts = [offset < 0 ? '-' : '+'];
-	      offset = Math.abs(offset);
-	      parts.push(zeroPaddingNumber(Math.floor(offset / 60) % 100, 2),
-	        zeroPaddingNumber(offset % 60, 2));
-	      current = parts.join('');
-	      break;
-	    default :
-	      // case 'd':
-	      // case 'H':
-	      // case 'm':
-	      // case 's':
-	      // case 'S':
-	      // case 'D':
-	      // case 'F':
-	      // case 'w':
-	      // case 'W':
-	      var index = calendarIndexMap[field];
-	      value = calendar.get(index);
-	      current = zeroPaddingNumber(value, count);
-	  }
-	  return current;
-	}
-
-	function matchField(dateStr, startIndex, matches) {
-	  var matchedLen = -1,
-	    index = -1,
-	    i,
-	    len = matches.length;
-	  for (i = 0; i < len; i++) {
-	    var m = matches[i];
-	    var mLen = m.length;
-	    if (mLen > matchedLen &&
-	      matchPartString(dateStr, startIndex, m, mLen)) {
-	      matchedLen = mLen;
-	      index = i;
-	    }
-	  }
-	  return index >= 0 ? {
-	    value: index,
-	    startIndex: startIndex + matchedLen
-	  } : null;
-	}
-
-	function matchPartString(dateStr, startIndex, match, mLen) {
-	  for (var i = 0; i < mLen; i++) {
-	    if (dateStr.charAt(startIndex + i) !== match.charAt(i)) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	function getLeadingNumberLen(str) {
-	  var i, c,
-	    len = str.length;
-	  for (i = 0; i < len; i++) {
-	    c = str.charAt(i);
-	    if (c < '0' || c > '9') {
-	      break;
-	    }
-	  }
-	  return i;
-	}
-
-	function matchNumber(dateStr, startIndex, count, obeyCount) {
-	  var str = dateStr, n;
-	  if (obeyCount) {
-	    if (dateStr.length <= startIndex + count) {
-	      return null;
-	    }
-	    str = dateStr.substring(startIndex, count);
-	    if (!str.match(/^\d+$/)) {
-	      return null;
-	    }
-	  } else {
-	    str = str.substring(startIndex);
-	  }
-	  n = parseInt(str, 10);
-	  if (isNaN(n)) {
-	    return null;
-	  }
-	  return {
-	    value: n,
-	    startIndex: startIndex + getLeadingNumberLen(str)
-	  };
-	}
-
-	function parseField(calendar, dateStr, startIndex, field, count, locale, obeyCount, tmp) {
-	  var match, year, hour;
-	  if (dateStr.length <= startIndex) {
-	    return startIndex;
-	  }
-	  switch (field) {
-	    case 'G':
-	      if ((match = matchField(dateStr, startIndex, locale.eras))) {
-	        if (calendar.isSetYear()) {
-	          if (match.value === 0) {
-	            year = calendar.getYear();
-	            calendar.setYear(1 - year);
-	          }
-	        } else {
-	          tmp.era = match.value;
-	        }
-	      }
-	      break;
-	    case 'y':
-	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
-	        year = match.value;
-	        if ('era' in tmp) {
-	          if (tmp.era === 0) {
-	            year = 1 - year;
-	          }
-	        }
-	        calendar.setYear(year);
-	      }
-	      break;
-	    case 'M':
-	      var month;
-	      if (count >= 3) {
-	        if ((match = matchField(dateStr, startIndex, locale[count === 3 ?
-	            'shortMonths' : 'months']))) {
-	          month = match.value;
-	        }
-	      } else {
-	        if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
-	          month = match.value - 1;
-	        }
-	      }
-	      if (match) {
-	        calendar.setMonth(month);
-	      }
-	      break;
-	    case 'k':
-	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
-	        calendar.setHourOfDay(match.value % 24);
-	      }
-	      break;
-	    case 'E':
-	      if ((match = matchField(dateStr, startIndex, locale[count > 3 ?
-	          'weekdays' :
-	          'shortWeekdays']))) {
-	        calendar.setDayOfWeek(match.value);
-	      }
-	      break;
-	    case 'a':
-	      if ((match = matchField(dateStr, startIndex, locale.ampms))) {
-	        if (calendar.isSetHourOfDay()) {
-	          if (match.value) {
-	            hour = calendar.getHourOfDay();
-	            if (hour < 12) {
-	              calendar.setHourOfDay((hour + 12) % 24);
-	            }
-	          }
-	        } else {
-	          tmp.ampm = match.value;
-	        }
-	      }
-	      break;
-	    case 'h':
-	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
-	        hour = match.value %= 12;
-	        if (tmp.ampm) {
-	          hour += 12;
-	        }
-	        calendar.setHourOfDay(hour);
-	      }
-	      break;
-	    case 'K':
-	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
-	        hour = match.value;
-	        if (tmp.ampm) {
-	          hour += 12;
-	        }
-	        calendar.setHourOfDay(hour);
-	      }
-	      break;
-	    case 'Z':
-	      var sign = 1,
-	        zoneChar = dateStr.charAt(startIndex);
-	      if (zoneChar === '-') {
-	        sign = -1;
-	        startIndex++;
-	      } else if (zoneChar === '+') {
-	        startIndex++;
-	      } else {
-	        break;
-	      }
-	      if ((match = matchNumber(dateStr, startIndex, 2, true))) {
-	        var zoneOffset = match.value * 60;
-	        startIndex = match.startIndex;
-	        if ((match = matchNumber(dateStr, startIndex, 2, true))) {
-	          zoneOffset += match.value;
-	        }
-	        calendar.setTimezoneOffset(zoneOffset);
-	      }
-	      break;
-	    default :
-	      // case 'd':
-	      // case 'H':
-	      // case 'm':
-	      // case 's':
-	      // case 'S':
-	      // case 'D':
-	      // case 'F':
-	      // case 'w':
-	      // case 'W'
-	      if ((match = matchNumber(dateStr, startIndex, count, obeyCount))) {
-	        var index = calendarIndexMap[field];
-	        calendar.set(index, match.value);
-	      }
-	  }
-	  if (match) {
-	    startIndex = match.startIndex;
-	  }
-	  return startIndex;
-	}
-
-	mix(DateTimeFormat.prototype, {
-	  getLocale: function (calendar) {
-	    if (this.locale) {
-	      return this.locale;
-	    }
-	    if (calendar) {
-	      return calendar.locale;
-	    }
-	    return GregorianCalendar.defaultLocale;
-	  },
-
-	  getTimezoneOffset: function (calendar) {
-	    if (typeof this.timezoneOffset !== 'undefined') {
-	      return this.timezoneOffset;
-	    }
-	    return this.getLocale(calendar).timezoneOffset;
-	  },
-
-	  /**
-	   * format a GregorianDate instance according to specified pattern
-	   * @param {Date.Gregorian} calendar GregorianDate instance
-	   * @returns {string} formatted string of GregorianDate instance
-	   */
-	  format: function (calendar) {
-	    if (calendar.isGregorianCalendar) {
-
-	    } else {
-	      var time = calendar.getTime();
-	      calendar = /**@type {Date.Gregorian}
-	       @ignore*/new GregorianCalendar(this.getTimezoneOffset(), this.getLocale());
-	      calendar.setTime(time);
-	    }
-	    var i,
-	      ret = [],
-	      pattern = this.pattern,
-	      len = pattern.length;
-	    for (i = 0; i < len; i++) {
-	      var comp = pattern[i];
-	      if (comp.text) {
-	        ret.push(comp.text);
-	      } else if ('field' in comp) {
-	        ret.push(formatField(comp.field, comp.count, this.getLocale(calendar), calendar));
-	      }
-	    }
-	    return ret.join('');
-	  },
-
-	  /**
-	   * parse a formatted string of GregorianDate instance according to specified pattern
-	   * @param {String} dateStr formatted string of GregorianDate
-	   * @returns {Date.Gregorian}
-	   */
-	  parse: function (dateStr) {
-	    var calendar = /**@type {Date.Gregorian}
-	       @ignore*/new GregorianCalendar(this.getTimezoneOffset(), this.getLocale()),
-	      i,
-	      j,
-	      tmp = {},
-	      obeyCount = false,
-	      dateStrLen = dateStr.length,
-	      errorIndex = -1,
-	      startIndex = 0,
-	      oldStartIndex = 0,
-	      pattern = this.pattern,
-	      len = pattern.length;
-
-	    loopPattern: {
-	      for (i = 0; errorIndex < 0 && i < len; i++) {
-	        var comp = pattern[i], text, textLen;
-	        oldStartIndex = startIndex;
-	        if ((text = comp.text)) {
-	          textLen = text.length;
-	          if ((textLen + startIndex) > dateStrLen) {
-	            errorIndex = startIndex;
-	          } else {
-	            for (j = 0; j < textLen; j++) {
-	              if (text.charAt(j) !== dateStr.charAt(j + startIndex)) {
-	                errorIndex = startIndex;
-	                break loopPattern;
-	              }
-	            }
-	            startIndex += textLen;
-	          }
-	        } else if ('field' in comp) {
-	          obeyCount = false;
-	          var nextComp = pattern[i + 1];
-	          if (nextComp) {
-	            if ('field' in nextComp) {
-	              obeyCount = true;
-	            } else {
-	              var c = nextComp.text.charAt(0);
-	              if (c >= '0' && c <= '9') {
-	                obeyCount = true;
-	              }
-	            }
-	          }
-	          startIndex = parseField(calendar,
-	            dateStr,
-	            startIndex,
-	            comp.field,
-	            comp.count,
-	            this.getLocale(calendar),
-	            obeyCount,
-	            tmp);
-	          if (startIndex === oldStartIndex) {
-	            errorIndex = startIndex;
-	          }
-	        }
-	      }
-	    }
-
-	    if (errorIndex >= 0) {
-	      console.error('error when parsing date');
-	      console.error(dateStr);
-	      console.error(dateStr.substring(0, errorIndex) + '^');
-	      return undefined;
-	    }
-	    return calendar;
-	  }
-	});
-
-	mix(DateTimeFormat, {
-	  Style: DateTimeStyle,
-
-	  /**
-	   * get a formatter instance of short style pattern.
-	   * en-us: M/d/yy h:mm a
-	   * zh-cn: yy-M-d ah:mm
-	   * @param {Object} locale locale object
-	   * @param {Number} timeZoneOffset time zone offset by minutes
-	   * @returns {Date.Gregorian}
-	   * @static
-	   */
-	  getInstance: function (locale, timeZoneOffset) {
-	    return this.getDateTimeInstance(DateTimeStyle.SHORT, DateTimeStyle.SHORT, locale, timeZoneOffset);
-	  },
-
-	  /**
-	   * get a formatter instance of specified date style.
-	   * @param {Date.Formatter.Style} dateStyle date format style
-	   * @param {Object} locale
-	   * @param {Number} timeZoneOffset time zone offset by minutes
-	   * @returns {Date.Gregorian}
-	   * @static
-	   */
-	  getDateInstance: function (dateStyle, locale, timeZoneOffset) {
-	    return this.getDateTimeInstance(dateStyle, undefined, locale, timeZoneOffset);
-	  },
-
-	  /**
-	   * get a formatter instance of specified date style and time style.
-	   * @param {Date.Formatter.Style} dateStyle date format style
-	   * @param {Date.Formatter.Style} timeStyle time format style
-	   * @param {Object} locale
-	   * @param {Number} timeZoneOffset time zone offset by minutes
-	   * @returns {Date.Gregorian}
-	   * @static
-	   */
-	  getDateTimeInstance: function (dateStyle, timeStyle, locale, timeZoneOffset) {
-	    locale = locale || GregorianCalendar.defaultLocale;
-	    var datePattern = '';
-	    if (dateStyle !== undefined) {
-	      datePattern = locale.datePatterns[dateStyle];
-	    }
-	    var timePattern = '';
-	    if (timeStyle !== undefined) {
-	      timePattern = locale.timePatterns[timeStyle];
-	    }
-	    var pattern = datePattern;
-	    if (timePattern) {
-	      if (datePattern) {
-	        pattern = substitute(locale.dateTimePattern, {
-	          date: datePattern,
-	          time: timePattern
-	        });
-	      } else {
-	        pattern = timePattern;
-	      }
-	    }
-	    return new DateTimeFormat(pattern, locale, timeZoneOffset);
-	  },
-
-	  /**
-	   * get a formatter instance of specified time style.
-	   * @param {Date.Formatter.Style} timeStyle time format style
-	   * @param {Object} locale
-	   * @param {Number} timeZoneOffset time zone offset by minutes
-	   * @returns {Date.Gregorian}
-	   * @static
-	   */
-	  getTimeInstance: function (timeStyle, locale, timeZoneOffset) {
-	    return this.getDateTimeInstance(undefined, timeStyle, locale, timeZoneOffset);
-	  }
-	});
-
-	module.exports = DateTimeFormat;
-
-	DateTimeFormat.version = '@VERSION@';
-
-/***/ },
-/* 18 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	var stylesInDom = {},
-		memoize = function(fn) {
-			var memo;
-			return function () {
-				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-				return memo;
-			};
-		},
-		isIE9 = memoize(function() {
-			return /msie 9\b/.test(window.navigator.userAgent.toLowerCase());
-		}),
-		getHeadElement = memoize(function () {
-			return document.head || document.getElementsByTagName("head")[0];
-		}),
-		singletonElement = null,
-		singletonCounter = 0;
-
-	module.exports = function(list, options) {
-		if(false) {
-			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-		}
-
-		options = options || {};
-		// Force single-tag solution on IE9, which has a hard limit on the # of <style>
-		// tags it will allow on a page
-		if (typeof options.singleton === "undefined") options.singleton = isIE9();
-
-		var styles = listToStyles(list);
-		addStylesToDom(styles, options);
-
-		return function update(newList) {
-			var mayRemove = [];
-			for(var i = 0; i < styles.length; i++) {
-				var item = styles[i];
-				var domStyle = stylesInDom[item.id];
-				domStyle.refs--;
-				mayRemove.push(domStyle);
-			}
-			if(newList) {
-				var newStyles = listToStyles(newList);
-				addStylesToDom(newStyles, options);
-			}
-			for(var i = 0; i < mayRemove.length; i++) {
-				var domStyle = mayRemove[i];
-				if(domStyle.refs === 0) {
-					for(var j = 0; j < domStyle.parts.length; j++)
-						domStyle.parts[j]();
-					delete stylesInDom[domStyle.id];
-				}
-			}
-		};
-	}
-
-	function addStylesToDom(styles, options) {
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			if(domStyle) {
-				domStyle.refs++;
-				for(var j = 0; j < domStyle.parts.length; j++) {
-					domStyle.parts[j](item.parts[j]);
-				}
-				for(; j < item.parts.length; j++) {
-					domStyle.parts.push(addStyle(item.parts[j], options));
-				}
-			} else {
-				var parts = [];
-				for(var j = 0; j < item.parts.length; j++) {
-					parts.push(addStyle(item.parts[j], options));
-				}
-				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-			}
-		}
-	}
-
-	function listToStyles(list) {
-		var styles = [];
-		var newStyles = {};
-		for(var i = 0; i < list.length; i++) {
-			var item = list[i];
-			var id = item[0];
-			var css = item[1];
-			var media = item[2];
-			var sourceMap = item[3];
-			var part = {css: css, media: media, sourceMap: sourceMap};
-			if(!newStyles[id])
-				styles.push(newStyles[id] = {id: id, parts: [part]});
-			else
-				newStyles[id].parts.push(part);
-		}
-		return styles;
-	}
-
-	function createStyleElement() {
-		var styleElement = document.createElement("style");
-		var head = getHeadElement();
-		styleElement.type = "text/css";
-		head.appendChild(styleElement);
-		return styleElement;
-	}
-
-	function addStyle(obj, options) {
-		var styleElement, update, remove;
-
-		if (options.singleton) {
-			var styleIndex = singletonCounter++;
-			styleElement = singletonElement || (singletonElement = createStyleElement());
-			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-		} else {
-			styleElement = createStyleElement();
-			update = applyToTag.bind(null, styleElement);
-			remove = function () {
-				styleElement.parentNode.removeChild(styleElement);
-			};
-		}
-
-		update(obj);
-
-		return function updateStyle(newObj) {
-			if(newObj) {
-				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-					return;
-				update(obj = newObj);
-			} else {
-				remove();
-			}
-		};
-	}
-
-	function replaceText(source, id, replacement) {
-		var boundaries = ["/** >>" + id + " **/", "/** " + id + "<< **/"];
-		var start = source.lastIndexOf(boundaries[0]);
-		var wrappedReplacement = replacement
-			? (boundaries[0] + replacement + boundaries[1])
-			: "";
-		if (source.lastIndexOf(boundaries[0]) >= 0) {
-			var end = source.lastIndexOf(boundaries[1]) + boundaries[1].length;
-			return source.slice(0, start) + wrappedReplacement + source.slice(end);
-		} else {
-			return source + wrappedReplacement;
-		}
-	}
-
-	function applyToSingletonTag(styleElement, index, remove, obj) {
-		var css = remove ? "" : obj.css;
-
-		if(styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = replaceText(styleElement.styleSheet.cssText, index, css);
-		} else {
-			var cssNode = document.createTextNode(css);
-			var childNodes = styleElement.childNodes;
-			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-			if (childNodes.length) {
-				styleElement.insertBefore(cssNode, childNodes[index]);
-			} else {
-				styleElement.appendChild(cssNode);
-			}
-		}
-	}
-
-	function applyToTag(styleElement, obj) {
-		var css = obj.css;
-		var media = obj.media;
-		var sourceMap = obj.sourceMap;
-
-		if(sourceMap && typeof btoa === "function") {
-			try {
-				css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(JSON.stringify(sourceMap)) + " */";
-				css = "@import url(\"data:text/css;base64," + btoa(css) + "\")";
-			} catch(e) {}
-		}
-
-		if(media) {
-			styleElement.setAttribute("media", media)
-		}
-
-		if(styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = css;
-		} else {
-			while(styleElement.firstChild) {
-				styleElement.removeChild(styleElement.firstChild);
-			}
-			styleElement.appendChild(document.createTextNode(css));
-		}
-	}
-
-
-/***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM */
 
 	var React = __webpack_require__(2);
-	var createChainedFunction = __webpack_require__(30).createChainedFunction;
+	var createChainedFunction = __webpack_require__(31).createChainedFunction;
 
 	var ____Class3=React.Component;for(var ____Class3____Key in ____Class3){if(____Class3.hasOwnProperty(____Class3____Key)){Validator[____Class3____Key]=____Class3[____Class3____Key];}}var ____SuperProtoOf____Class3=____Class3===null?null:____Class3.prototype;Validator.prototype=Object.create(____SuperProtoOf____Class3);Validator.prototype.constructor=Validator;Validator.__superConstructor__=____Class3;
 	  function Validator(props) {"use strict";
@@ -3777,8 +3777,8 @@ webpackJsonp([0,1],[
 
 	  handleValidate:function(status, formData) {
 	    this.setState({
-	      status: status,
-	      formData: formData
+	      status: merge(this.state.status, status),
+	      formData: merge(this.state.formData, formData)
 	    });
 	  }
 	};
@@ -3821,11 +3821,11 @@ webpackJsonp([0,1],[
 	/** @jsx React.DOM */
 
 	var React = __webpack_require__(2);
-	var DateTimeFormat = __webpack_require__(32);
+	var DateTimeFormat = __webpack_require__(30);
 	var ROW = 3;
 	var COL = 4;
-	var cx = __webpack_require__(30).classSet;
-	var YearPanel = __webpack_require__(39);
+	var cx = __webpack_require__(31).classSet;
+	var YearPanel = __webpack_require__(40);
 
 	function goYear(direction) {
 	  var next = this.state.value.clone();
@@ -3854,9 +3854,9 @@ webpackJsonp([0,1],[
 	  });
 	}
 
-	var ____Class4=React.Component;for(var ____Class4____Key in ____Class4){if(____Class4.hasOwnProperty(____Class4____Key)){MonthPanel[____Class4____Key]=____Class4[____Class4____Key];}}var ____SuperProtoOf____Class4=____Class4===null?null:____Class4.prototype;MonthPanel.prototype=Object.create(____SuperProtoOf____Class4);MonthPanel.prototype.constructor=MonthPanel;MonthPanel.__superConstructor__=____Class4;
+	var ____Class5=React.Component;for(var ____Class5____Key in ____Class5){if(____Class5.hasOwnProperty(____Class5____Key)){MonthPanel[____Class5____Key]=____Class5[____Class5____Key];}}var ____SuperProtoOf____Class5=____Class5===null?null:____Class5.prototype;MonthPanel.prototype=Object.create(____SuperProtoOf____Class5);MonthPanel.prototype.constructor=MonthPanel;MonthPanel.__superConstructor__=____Class5;
 	  function MonthPanel(props) {"use strict";
-	    ____Class4.call(this,props);
+	    ____Class5.call(this,props);
 	    this.state = {
 	      value: this.props.value,
 	      prefixCls: this.props.rootPrefixCls + '-month-panel'
@@ -3987,9 +3987,9 @@ webpackJsonp([0,1],[
 	 */
 
 	var React = __webpack_require__(2);
-	var rcUtil = __webpack_require__(30);
-	var KeyCode = __webpack_require__(30).KeyCode;
-	var TimePanel = __webpack_require__(40);
+	var rcUtil = __webpack_require__(31);
+	var KeyCode = __webpack_require__(31).KeyCode;
+	var TimePanel = __webpack_require__(39);
 
 	function padding(number) {
 	  if (number < 10) {
@@ -4033,9 +4033,9 @@ webpackJsonp([0,1],[
 	  };
 	}
 
-	var ____Class5=React.Component;for(var ____Class5____Key in ____Class5){if(____Class5.hasOwnProperty(____Class5____Key)){Time[____Class5____Key]=____Class5[____Class5____Key];}}var ____SuperProtoOf____Class5=____Class5===null?null:____Class5.prototype;Time.prototype=Object.create(____SuperProtoOf____Class5);Time.prototype.constructor=Time;Time.__superConstructor__=____Class5;
+	var ____Class4=React.Component;for(var ____Class4____Key in ____Class4){if(____Class4.hasOwnProperty(____Class4____Key)){Time[____Class4____Key]=____Class4[____Class4____Key];}}var ____SuperProtoOf____Class4=____Class4===null?null:____Class4.prototype;Time.prototype=Object.create(____SuperProtoOf____Class4);Time.prototype.constructor=Time;Time.__superConstructor__=____Class4;
 	  function Time(props) {"use strict";
-	    ____Class5.call(this,props);
+	    ____Class4.call(this,props);
 	    this.state = {
 	      showHourPanel: 0,
 	      showMinutePanel: 0,
@@ -4466,26 +4466,32 @@ webpackJsonp([0,1],[
 /* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = __webpack_require__(43);
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
 	module.exports = {
-	  guid: __webpack_require__(45),
-	  classSet: __webpack_require__(46),
-	  joinClasses: __webpack_require__(47),
-	  KeyCode: __webpack_require__(48),
-	  PureRenderMixin: __webpack_require__(49),
-	  shallowEqual: __webpack_require__(50),
-	  createChainedFunction: __webpack_require__(51),
+	  guid: __webpack_require__(44),
+	  classSet: __webpack_require__(45),
+	  joinClasses: __webpack_require__(46),
+	  KeyCode: __webpack_require__(47),
+	  PureRenderMixin: __webpack_require__(48),
+	  shallowEqual: __webpack_require__(49),
+	  createChainedFunction: __webpack_require__(50),
 	  Dom: {
-	    addEventListener: __webpack_require__(52),
-	    contains: __webpack_require__(53)
+	    addEventListener: __webpack_require__(51),
+	    contains: __webpack_require__(52)
 	  },
 	  Children: {
-	    toArray: __webpack_require__(54)
+	    toArray: __webpack_require__(53)
 	  }
 	};
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4493,7 +4499,7 @@ webpackJsonp([0,1],[
 	 * @author yiminghe@gmail.com
 	 */
 
-	var utils = __webpack_require__(43);
+	var utils = __webpack_require__(54);
 
 	// http://yiminghe.iteye.com/blog/1124720
 
@@ -4865,16 +4871,10 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(55);
-
-/***/ },
 /* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(44);
+	module.exports = __webpack_require__(55);
 
 /***/ },
 /* 34 */
@@ -4913,10 +4913,99 @@ webpackJsonp([0,1],[
 	/** @jsx React.DOM */
 
 	var React = __webpack_require__(2);
-	var DateTimeFormat = __webpack_require__(32);
+	var cx = __webpack_require__(31).classSet;
+
+	function choose(hour, e) {
+	  var next = this.state.value.clone();
+	  var method = this.props.setter;
+	  next[method](hour);
+	  this.props.onSelect(next);
+	  e.preventDefault();
+	}
+
+	var ____Class6=React.Component;for(var ____Class6____Key in ____Class6){if(____Class6.hasOwnProperty(____Class6____Key)){TimePanel[____Class6____Key]=____Class6[____Class6____Key];}}var ____SuperProtoOf____Class6=____Class6===null?null:____Class6.prototype;TimePanel.prototype=Object.create(____SuperProtoOf____Class6);TimePanel.prototype.constructor=TimePanel;TimePanel.__superConstructor__=____Class6;
+	  function TimePanel(props) {"use strict";
+	    ____Class6.call(this,props);
+	    this.state = {
+	      value: props.value,
+	      prefixCls: props.rootPrefixCls + '-time-panel'
+	    };
+	    this.prefixClsFn = __webpack_require__(25).bind(this);
+	  }
+
+	  Object.defineProperty(TimePanel.prototype,"render",{writable:true,configurable:true,value:function() {"use strict";
+	    var value = this.state.value;
+	    var props = this.props;
+	    var method = props.getter;
+	    var currentHour = value[method]();
+	    var data = [];
+	    var prefixClsFn = this.prefixClsFn;
+	    var ROW = props.rowCount;
+	    var COL = props.colCount;
+
+	    for (var i = 0; i < ROW; i++) {
+	      data[i] = [];
+	      for (var j = 0; j < COL; j++) {
+	        data[i][j] = i * COL + j;
+	      }
+	    }
+
+	    var hoursEls = data.map(function(row, index) {
+	      var tds = row.map(function(d) {
+	        var classNameMap = {};
+	        classNameMap[prefixClsFn('cell')] = 1;
+	        classNameMap[prefixClsFn('selected-cell')] = d === currentHour;
+	        return (React.createElement("td", {
+	          key: d, 
+	          onClick: choose.bind(this, d), 
+	          role: "gridcell", 
+	          className: cx(classNameMap)}, 
+	          React.createElement("a", {
+	            className: prefixClsFn('time')}, 
+	          d
+	          )
+	        ));
+	      }.bind(this));
+	      return (React.createElement("tr", {key: index, role: "row"}, tds));
+	    }.bind(this));
+
+	    return (
+	      React.createElement("div", {className: this.state.prefixCls}, 
+	        React.createElement("div", {className: prefixClsFn('header')}, 
+	          React.createElement("div", {className: prefixClsFn('title')}, 
+	                props.title
+	          )
+	        ), 
+	        React.createElement("div", {className: prefixClsFn('body')}, 
+	          React.createElement("table", {className: prefixClsFn('table'), cellSpacing: "0", role: "grid"}, 
+	            React.createElement("tbody", {className: prefixClsFn('tbody')}, 
+	            hoursEls
+	            )
+	          )
+	        )
+	      ));
+	  }});
+
+
+	TimePanel.defaultProps = {
+	  onSelect:function() {
+	  }
+	};
+
+	module.exports = TimePanel;
+
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM */
+
+	var React = __webpack_require__(2);
+	var DateTimeFormat = __webpack_require__(30);
 	var ROW = 3;
 	var COL = 4;
-	var cx = __webpack_require__(30).classSet;
+	var cx = __webpack_require__(31).classSet;
 	var DecadePanel = __webpack_require__(56);
 
 	function goYear(direction) {
@@ -5069,95 +5158,6 @@ webpackJsonp([0,1],[
 	};
 
 	module.exports = YearPanel;
-
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM */
-
-	var React = __webpack_require__(2);
-	var cx = __webpack_require__(30).classSet;
-
-	function choose(hour, e) {
-	  var next = this.state.value.clone();
-	  var method = this.props.setter;
-	  next[method](hour);
-	  this.props.onSelect(next);
-	  e.preventDefault();
-	}
-
-	var ____Class6=React.Component;for(var ____Class6____Key in ____Class6){if(____Class6.hasOwnProperty(____Class6____Key)){TimePanel[____Class6____Key]=____Class6[____Class6____Key];}}var ____SuperProtoOf____Class6=____Class6===null?null:____Class6.prototype;TimePanel.prototype=Object.create(____SuperProtoOf____Class6);TimePanel.prototype.constructor=TimePanel;TimePanel.__superConstructor__=____Class6;
-	  function TimePanel(props) {"use strict";
-	    ____Class6.call(this,props);
-	    this.state = {
-	      value: props.value,
-	      prefixCls: props.rootPrefixCls + '-time-panel'
-	    };
-	    this.prefixClsFn = __webpack_require__(25).bind(this);
-	  }
-
-	  Object.defineProperty(TimePanel.prototype,"render",{writable:true,configurable:true,value:function() {"use strict";
-	    var value = this.state.value;
-	    var props = this.props;
-	    var method = props.getter;
-	    var currentHour = value[method]();
-	    var data = [];
-	    var prefixClsFn = this.prefixClsFn;
-	    var ROW = props.rowCount;
-	    var COL = props.colCount;
-
-	    for (var i = 0; i < ROW; i++) {
-	      data[i] = [];
-	      for (var j = 0; j < COL; j++) {
-	        data[i][j] = i * COL + j;
-	      }
-	    }
-
-	    var hoursEls = data.map(function(row, index) {
-	      var tds = row.map(function(d) {
-	        var classNameMap = {};
-	        classNameMap[prefixClsFn('cell')] = 1;
-	        classNameMap[prefixClsFn('selected-cell')] = d === currentHour;
-	        return (React.createElement("td", {
-	          key: d, 
-	          onClick: choose.bind(this, d), 
-	          role: "gridcell", 
-	          className: cx(classNameMap)}, 
-	          React.createElement("a", {
-	            className: prefixClsFn('time')}, 
-	          d
-	          )
-	        ));
-	      }.bind(this));
-	      return (React.createElement("tr", {key: index, role: "row"}, tds));
-	    }.bind(this));
-
-	    return (
-	      React.createElement("div", {className: this.state.prefixCls}, 
-	        React.createElement("div", {className: prefixClsFn('header')}, 
-	          React.createElement("div", {className: prefixClsFn('title')}, 
-	                props.title
-	          )
-	        ), 
-	        React.createElement("div", {className: prefixClsFn('body')}, 
-	          React.createElement("table", {className: prefixClsFn('table'), cellSpacing: "0", role: "grid"}, 
-	            React.createElement("tbody", {className: prefixClsFn('tbody')}, 
-	            hoursEls
-	            )
-	          )
-	        )
-	      ));
-	  }});
-
-
-	TimePanel.defaultProps = {
-	  onSelect:function() {
-	  }
-	};
-
-	module.exports = TimePanel;
 
 
 /***/ },
@@ -5455,6 +5455,1620 @@ webpackJsonp([0,1],[
 
 /***/ },
 /* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @ignore
+	 * DateTimeFormat for
+	 * Inspired by DateTimeFormat from JDK.
+	 * @author yiminghe@gmail.com
+	 */
+
+	var GregorianCalendar = __webpack_require__(7);
+	var enUsLocale = __webpack_require__(42);
+	var MAX_VALUE = Number.MAX_VALUE;
+	/**
+	 * date or time style enum
+	 * @enum {Number} Date.Formatter.Style
+	 */
+	var DateTimeStyle = {
+	  /**
+	   * full style
+	   */
+	  FULL: 0,
+	  /**
+	   * long style
+	   */
+	  LONG: 1,
+	  /**
+	   * medium style
+	   */
+	  MEDIUM: 2,
+	  /**
+	   * short style
+	   */
+	  SHORT: 3
+	};
+
+	/*
+	 Letter    Date or Time Component    Presentation    Examples
+	 G    Era designator    Text    AD
+	 y    Year    Year    1996; 96
+	 M    Month in year    Month    July; Jul; 07
+	 w    Week in year    Number    27
+	 W    Week in month    Number    2
+	 D    Day in year    Number    189
+	 d    Day in month    Number    10
+	 F    Day of week in month    Number    2
+	 E    Day in week    Text    Tuesday; Tue
+	 a    Am/pm marker    Text    PM
+	 H    Hour in day (0-23)    Number    0
+	 k    Hour in day (1-24)    Number    24
+	 K    Hour in am/pm (0-11)    Number    0
+	 h    Hour in am/pm (1-12)    Number    12
+	 m    Minute in hour    Number    30
+	 s    Second in minute    Number    55
+	 S    Millisecond    Number    978
+	 x z    Time zone    General time zone    Pacific Standard Time; PST; GMT-08:00
+	 Z    Time zone    RFC 822 time zone    -0800
+	 */
+
+	var patternChars = new Array(GregorianCalendar.DAY_OF_WEEK_IN_MONTH + 2).join('1');
+	var ERA = 0;
+	var calendarIndexMap = {};
+
+	patternChars = patternChars.split('');
+	patternChars[ERA] = 'G';
+	patternChars[GregorianCalendar.YEAR] = 'y';
+	patternChars[GregorianCalendar.MONTH] = 'M';
+	patternChars[GregorianCalendar.DAY_OF_MONTH] = 'd';
+	patternChars[GregorianCalendar.HOUR_OF_DAY] = 'H';
+	patternChars[GregorianCalendar.MINUTES] = 'm';
+	patternChars[GregorianCalendar.SECONDS] = 's';
+	patternChars[GregorianCalendar.MILLISECONDS] = 'S';
+	patternChars[GregorianCalendar.WEEK_OF_YEAR] = 'w';
+	patternChars[GregorianCalendar.WEEK_OF_MONTH] = 'W';
+	patternChars[GregorianCalendar.DAY_OF_YEAR] = 'D';
+	patternChars[GregorianCalendar.DAY_OF_WEEK_IN_MONTH] = 'F';
+
+	(function () {
+	  for (var index in patternChars) {
+	    calendarIndexMap[patternChars[index]] = index;
+	  }
+	})();
+
+	function mix(t, s) {
+	  for (var p in s) {
+	    t[p] = s[p];
+	  }
+	}
+
+	var SUBSTITUTE_REG = /\\?\{([^{}]+)\}/g;
+	var EMPTY = '';
+
+	function substitute(str, o, regexp) {
+	  if (typeof str !== 'string' || !o) {
+	    return str;
+	  }
+
+	  return str.replace(regexp || SUBSTITUTE_REG, function (match, name) {
+	    if (match.charAt(0) === '\\') {
+	      return match.slice(1);
+	    }
+	    return (o[name] === undefined) ? EMPTY : o[name];
+	  });
+	}
+
+	patternChars = patternChars.join('') + 'ahkKZE';
+
+	function encode(lastField, count, compiledPattern) {
+	  compiledPattern.push({
+	    field: lastField,
+	    count: count
+	  });
+	}
+
+	function compile(pattern) {
+	  var length = pattern.length;
+	  var inQuote = false;
+	  var compiledPattern = [];
+	  var tmpBuffer = null;
+	  var count = 0;
+	  var lastField = -1;
+
+	  for (var i = 0; i < length; i++) {
+	    var c = pattern.charAt(i);
+
+	    if (c === '\'') {
+	      // '' is treated as a single quote regardless of being
+	      // in a quoted section.
+	      if ((i + 1) < length) {
+	        c = pattern.charAt(i + 1);
+	        if (c === '\'') {
+	          i++;
+	          if (count !== 0) {
+	            encode(lastField, count, compiledPattern);
+	            lastField = -1;
+	            count = 0;
+	          }
+	          if (inQuote) {
+	            tmpBuffer += c;
+	          }
+	          continue;
+	        }
+	      }
+	      if (!inQuote) {
+	        if (count !== 0) {
+	          encode(lastField, count, compiledPattern);
+	          lastField = -1;
+	          count = 0;
+	        }
+	        tmpBuffer = '';
+	        inQuote = true;
+	      } else {
+	        compiledPattern.push({
+	          text: tmpBuffer
+	        });
+	        inQuote = false;
+	      }
+	      continue;
+	    }
+	    if (inQuote) {
+	      tmpBuffer += c;
+	      continue;
+	    }
+	    if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')) {
+	      if (count !== 0) {
+	        encode(lastField, count, compiledPattern);
+	        lastField = -1;
+	        count = 0;
+	      }
+	      compiledPattern.push({
+	        text: c
+	      });
+	      continue;
+	    }
+
+	    if (patternChars.indexOf(c) === -1) {
+	      throw new Error('Illegal pattern character "' + c + '"');
+	    }
+
+	    if (lastField === -1 || lastField === c) {
+	      lastField = c;
+	      count++;
+	      continue;
+	    }
+	    encode(lastField, count, compiledPattern);
+	    lastField = c;
+	    count = 1;
+	  }
+
+	  if (inQuote) {
+	    throw new Error('Unterminated quote');
+	  }
+
+	  if (count !== 0) {
+	    encode(lastField, count, compiledPattern);
+	  }
+
+	  return compiledPattern;
+	}
+
+	var zeroDigit = '0';
+
+	// TODO zeroDigit localization??
+	function zeroPaddingNumber(value, minDigits, maxDigits, buffer) {
+	  // Optimization for 1, 2 and 4 digit numbers. This should
+	  // cover most cases of formatting date/time related items.
+	  // Note: This optimization code assumes that maxDigits is
+	  // either 2 or Integer.MAX_VALUE (maxIntCount in format()).
+	  buffer = buffer || [];
+	  maxDigits = maxDigits || MAX_VALUE;
+	  if (value >= 0) {
+	    if (value < 100 && minDigits >= 1 && minDigits <= 2) {
+	      if (value < 10 && minDigits === 2) {
+	        buffer.push(zeroDigit);
+	      }
+	      buffer.push(value);
+	      return buffer.join('');
+	    } else if (value >= 1000 && value < 10000) {
+	      if (minDigits === 4) {
+	        buffer.push(value);
+	        return buffer.join('');
+	      }
+	      if (minDigits === 2 && maxDigits === 2) {
+	        return zeroPaddingNumber(value % 100, 2, 2, buffer);
+	      }
+	    }
+	  }
+	  buffer.push(value + '');
+	  return buffer.join('');
+	}
+
+	/**
+	 *
+	 * date time formatter for GregorianCalendar
+	 *
+	 *      @example
+	 *
+	 *          var calendar = new GregorianCalendar(2013,9,24);
+	 *          // ' to escape
+	 *          var formatter = new GregorianCalendarFormat("'today is' ''yyyy/MM/dd a''");
+	 *          document.write(formatter.format(calendar));
+	 *
+	 * @class GregorianCalendarFormat
+	 * @param {String} pattern patter string of date formatter
+	 *
+	 * <table border="1">
+	 * <thead valign="bottom">
+	 * <tr><th class="head">Letter</th>
+	 * <th class="head">Date or Time Component</th>
+	 * <th class="head">Presentation</th>
+	 * <th class="head">Examples</th>
+	 * </tr>
+	 * </thead>
+	 * <tbody valign="top">
+	 * <tr><td>G</td>
+	 * <td>Era designator</td>
+	 * <td>Text</td>
+	 * <td>AD</td>
+	 * </tr>
+	 * <tr><td>y</td>
+	 * <td>Year</td>
+	 * <td>Year</td>
+	 * <td>1996; 96</td>
+	 * </tr>
+	 * <tr><td>M</td>
+	 * <td>Month in year</td>
+	 * <td>Month</td>
+	 * <td>July; Jul; 07</td>
+	 * </tr>
+	 * <tr><td>w</td>
+	 * <td>Week in year</td>
+	 * <td>Number</td>
+	 * <td>27</td>
+	 * </tr>
+	 * <tr><td>W</td>
+	 * <td>Week in month</td>
+	 * <td>Number</td>
+	 * <td>2</td>
+	 * </tr>
+	 * <tr><td>D</td>
+	 * <td>Day in year</td>
+	 * <td>Number</td>
+	 * <td>189</td>
+	 * </tr>
+	 * <tr><td>d</td>
+	 * <td>Day in month</td>
+	 * <td>Number</td>
+	 * <td>10</td>
+	 * </tr>
+	 * <tr><td>F</td>
+	 * <td>Day of week in month</td>
+	 * <td>Number</td>
+	 * <td>2</td>
+	 * </tr>
+	 * <tr><td>E</td>
+	 * <td>Day in week</td>
+	 * <td>Text</td>
+	 * <td>Tuesday; Tue</td>
+	 * </tr>
+	 * <tr><td>a</td>
+	 * <td>Am/pm marker</td>
+	 * <td>Text</td>
+	 * <td>PM</td>
+	 * </tr>
+	 * <tr><td>H</td>
+	 *       <td>Hour in day (0-23)</td>
+	 * <td>Number</td>
+	 * <td>0</td>
+	 * </tr>
+	 * <tr><td>k</td>
+	 *       <td>Hour in day (1-24)</td>
+	 * <td>Number</td>
+	 * <td>24</td>
+	 * </tr>
+	 * <tr><td>K</td>
+	 * <td>Hour in am/pm (0-11)</td>
+	 * <td>Number</td>
+	 * <td>0</td>
+	 * </tr>
+	 * <tr><td>h</td>
+	 * <td>Hour in am/pm (1-12)</td>
+	 * <td>Number</td>
+	 * <td>12</td>
+	 * </tr>
+	 * <tr><td>m</td>
+	 * <td>Minute in hour</td>
+	 * <td>Number</td>
+	 * <td>30</td>
+	 * </tr>
+	 * <tr><td>s</td>
+	 * <td>Second in minute</td>
+	 * <td>Number</td>
+	 * <td>55</td>
+	 * </tr>
+	 * <tr><td>S</td>
+	 * <td>Millisecond</td>
+	 * <td>Number</td>
+	 * <td>978</td>
+	 * </tr>
+	 * <tr><td>x/z</td>
+	 * <td>Time zone</td>
+	 * <td>General time zone</td>
+	 * <td>Pacific Standard Time; PST; GMT-08:00</td>
+	 * </tr>
+	 * <tr><td>Z</td>
+	 * <td>Time zone</td>
+	 * <td>RFC 822 time zone</td>
+	 * <td>-0800</td>
+	 * </tr>
+	 * </tbody>
+	 * </table>
+
+	 * @param {Object} locale format locale
+	 */
+	function DateTimeFormat(pattern, locale) {
+	  this.locale = locale || enUsLocale;
+	  this.originalPattern = pattern;
+	  this.pattern = compile(pattern);
+	}
+
+	function formatField(field, count, locale, calendar) {
+	  var current,
+	    value;
+	  switch (field) {
+	    case 'G':
+	      value = calendar.getYear() > 0 ? 1 : 0;
+	      current = locale.eras[value];
+	      break;
+	    case 'y':
+	      value = calendar.getYear();
+	      if (value <= 0) {
+	        value = 1 - value;
+	      }
+	      current = (zeroPaddingNumber(value, 2, count !== 2 ? MAX_VALUE : 2));
+	      break;
+	    case 'M':
+	      value = calendar.getMonth();
+	      if (count >= 4) {
+	        current = locale.months[value];
+	      } else if (count === 3) {
+	        current = locale.shortMonths[value];
+	      } else {
+	        current = zeroPaddingNumber(value + 1, count);
+	      }
+	      break;
+	    case 'k':
+	      current = zeroPaddingNumber(calendar.getHourOfDay() || 24,
+	        count);
+	      break;
+	    case 'E':
+	      value = calendar.getDayOfWeek();
+	      current = count >= 4 ?
+	        locale.weekdays[value] :
+	        locale.shortWeekdays[value];
+	      break;
+	    case 'a':
+	      current = locale.ampms[calendar.getHourOfDay() >= 12 ?
+	        1 :
+	        0];
+	      break;
+	    case 'h':
+	      current = zeroPaddingNumber(calendar.
+	        getHourOfDay() % 12 || 12, count);
+	      break;
+	    case 'K':
+	      current = zeroPaddingNumber(calendar.
+	        getHourOfDay() % 12, count);
+	      break;
+	    case 'Z':
+	      var offset = calendar.getTimezoneOffset();
+	      var parts = [offset < 0 ? '-' : '+'];
+	      offset = Math.abs(offset);
+	      parts.push(zeroPaddingNumber(Math.floor(offset / 60) % 100, 2),
+	        zeroPaddingNumber(offset % 60, 2));
+	      current = parts.join('');
+	      break;
+	    default :
+	      // case 'd':
+	      // case 'H':
+	      // case 'm':
+	      // case 's':
+	      // case 'S':
+	      // case 'D':
+	      // case 'F':
+	      // case 'w':
+	      // case 'W':
+	      var index = calendarIndexMap[field];
+	      value = calendar.get(index);
+	      current = zeroPaddingNumber(value, count);
+	  }
+	  return current;
+	}
+
+	function matchField(dateStr, startIndex, matches) {
+	  var matchedLen = -1;
+	  var index = -1;
+	  var i;
+	  var len = matches.length;
+	  for (i = 0; i < len; i++) {
+	    var m = matches[i];
+	    var mLen = m.length;
+	    if (mLen > matchedLen &&
+	      matchPartString(dateStr, startIndex, m, mLen)) {
+	      matchedLen = mLen;
+	      index = i;
+	    }
+	  }
+	  return index >= 0 ? {
+	    value: index,
+	    startIndex: startIndex + matchedLen
+	  } : null;
+	}
+
+	function matchPartString(dateStr, startIndex, match, mLen) {
+	  for (var i = 0; i < mLen; i++) {
+	    if (dateStr.charAt(startIndex + i) !== match.charAt(i)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	function getLeadingNumberLen(str) {
+	  var i, c;
+	  var len = str.length;
+	  for (i = 0; i < len; i++) {
+	    c = str.charAt(i);
+	    if (c < '0' || c > '9') {
+	      break;
+	    }
+	  }
+	  return i;
+	}
+
+	function matchNumber(dateStr, startIndex, count, obeyCount) {
+	  var str = dateStr;
+	  var n;
+	  if (obeyCount) {
+	    if (dateStr.length <= startIndex + count) {
+	      return null;
+	    }
+	    str = dateStr.slice(startIndex, startIndex + count);
+	    if (!str.match(/^\d+$/)) {
+	      throw new Error('GregorianCalendarFormat parse error, dateStr: ' + dateStr + ', patter: ' + (this.originalPattern));
+	    }
+	  } else {
+	    str = str.slice(startIndex);
+	  }
+	  n = parseInt(str, 10);
+	  if (isNaN(n)) {
+	    throw new Error('GregorianCalendarFormat parse error, dateStr: ' + dateStr + ', patter: ' + (this.originalPattern));
+	  }
+	  return {
+	    value: n,
+	    startIndex: startIndex + getLeadingNumberLen(str)
+	  };
+	}
+
+	function parseField(calendar, dateStr, startIndex, field, count, obeyCount, tmp) {
+	  var match, year, hour;
+	  if (dateStr.length <= startIndex) {
+	    return startIndex;
+	  }
+	  var locale = this.locale;
+	  switch (field) {
+	    case 'G':
+	      if ((match = matchField(dateStr, startIndex, locale.eras))) {
+	        if (calendar.isSetYear()) {
+	          if (match.value === 0) {
+	            year = calendar.getYear();
+	            calendar.setYear(1 - year);
+	          }
+	        } else {
+	          tmp.era = match.value;
+	        }
+	      }
+	      break;
+	    case 'y':
+	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
+	        year = match.value;
+	        if ('era' in tmp) {
+	          if (tmp.era === 0) {
+	            year = 1 - year;
+	          }
+	        }
+	        calendar.setYear(year);
+	      }
+	      break;
+	    case 'M':
+	      var month;
+	      if (count >= 3) {
+	        if ((match = matchField(dateStr, startIndex, locale[count === 3 ?
+	            'shortMonths' : 'months']))) {
+	          month = match.value;
+	        }
+	      } else {
+	        if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
+	          month = match.value - 1;
+	        }
+	      }
+	      if (match) {
+	        calendar.setMonth(month);
+	      }
+	      break;
+	    case 'k':
+	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
+	        calendar.setHourOfDay(match.value % 24);
+	      }
+	      break;
+	    case 'E':
+	      if ((match = matchField(dateStr, startIndex, locale[count > 3 ?
+	          'weekdays' :
+	          'shortWeekdays']))) {
+	        calendar.setDayOfWeek(match.value);
+	      }
+	      break;
+	    case 'a':
+	      if ((match = matchField(dateStr, startIndex, locale.ampms))) {
+	        if (calendar.isSetHourOfDay()) {
+	          if (match.value) {
+	            hour = calendar.getHourOfDay();
+	            if (hour < 12) {
+	              calendar.setHourOfDay((hour + 12) % 24);
+	            }
+	          }
+	        } else {
+	          tmp.ampm = match.value;
+	        }
+	      }
+	      break;
+	    case 'h':
+	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
+	        hour = match.value %= 12;
+	        if (tmp.ampm) {
+	          hour += 12;
+	        }
+	        calendar.setHourOfDay(hour);
+	      }
+	      break;
+	    case 'K':
+	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
+	        hour = match.value;
+	        if (tmp.ampm) {
+	          hour += 12;
+	        }
+	        calendar.setHourOfDay(hour);
+	      }
+	      break;
+	    case 'Z':
+	      var sign = 1;
+	      var zoneChar = dateStr.charAt(startIndex);
+	      if (zoneChar === '-') {
+	        sign = -1;
+	        startIndex++;
+	      } else if (zoneChar === '+') {
+	        startIndex++;
+	      } else {
+	        break;
+	      }
+	      if ((match = matchNumber.call(this, dateStr, startIndex, 2, true))) {
+	        var zoneOffset = match.value * 60;
+	        startIndex = match.startIndex;
+	        if ((match = matchNumber.call(this, dateStr, startIndex, 2, true))) {
+	          zoneOffset += match.value;
+	        }
+	        calendar.setTimezoneOffset(zoneOffset);
+	      }
+	      break;
+	    default :
+	      // case 'd':
+	      // case 'H':
+	      // case 'm':
+	      // case 's':
+	      // case 'S':
+	      // case 'D':
+	      // case 'F':
+	      // case 'w':
+	      // case 'W'
+	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
+	        var index = calendarIndexMap[field];
+	        calendar.set(index, match.value);
+	      }
+	  }
+	  if (match) {
+	    startIndex = match.startIndex;
+	  }
+	  return startIndex;
+	}
+
+	mix(DateTimeFormat.prototype, {
+	  /**
+	   * format a GregorianDate instance according to specified pattern
+	   * @param {GregorianCalendar} calendar GregorianDate instance
+	   * @returns {string} formatted string of GregorianDate instance
+	   */
+	  format: function (calendar) {
+	    if (!calendar.isGregorianCalendar) {
+	      throw new Error('calendar must be type of GregorianCalendar');
+	    }
+	    var i;
+	    var ret = [];
+	    var pattern = this.pattern;
+	    var len = pattern.length;
+	    for (i = 0; i < len; i++) {
+	      var comp = pattern[i];
+	      if (comp.text) {
+	        ret.push(comp.text);
+	      } else if ('field' in comp) {
+	        ret.push(formatField(comp.field, comp.count, this.locale, calendar));
+	      }
+	    }
+	    return ret.join('');
+	  },
+
+	  /**
+	   * parse a formatted string of GregorianDate instance according to specified pattern
+	   * @param {String} dateStr formatted string of GregorianDate
+	   * @returns {GregorianCalendar}
+	   */
+	  parse: function (dateStr, calendarLocale) {
+	    var calendar = new GregorianCalendar(calendarLocale);
+	    var i;
+	    var j;
+	    var tmp = {};
+	    var obeyCount = false;
+	    var dateStrLen = dateStr.length;
+	    var errorIndex = -1;
+	    var startIndex = 0;
+	    var oldStartIndex = 0;
+	    var pattern = this.pattern;
+	    var len = pattern.length;
+
+	    loopPattern: {
+	      for (i = 0; errorIndex < 0 && i < len; i++) {
+	        var comp = pattern[i], text, textLen;
+	        oldStartIndex = startIndex;
+	        if ((text = comp.text)) {
+	          textLen = text.length;
+	          if ((textLen + startIndex) > dateStrLen) {
+	            errorIndex = startIndex;
+	          } else {
+	            for (j = 0; j < textLen; j++) {
+	              if (text.charAt(j) !== dateStr.charAt(j + startIndex)) {
+	                errorIndex = startIndex;
+	                break loopPattern;
+	              }
+	            }
+	            startIndex += textLen;
+	          }
+	        } else if ('field' in comp) {
+	          obeyCount = false;
+	          var nextComp = pattern[i + 1];
+	          if (nextComp) {
+	            if ('field' in nextComp) {
+	              obeyCount = true;
+	            } else {
+	              var c = nextComp.text.charAt(0);
+	              if (c >= '0' && c <= '9') {
+	                obeyCount = true;
+	              }
+	            }
+	          }
+	          startIndex = parseField.call(this, calendar,
+	            dateStr,
+	            startIndex,
+	            comp.field,
+	            comp.count,
+	            obeyCount,
+	            tmp);
+	          if (startIndex === oldStartIndex) {
+	            errorIndex = startIndex;
+	          }
+	        }
+	      }
+	    }
+
+	    if (errorIndex >= 0) {
+	      console.error('error when parsing date');
+	      console.error(dateStr);
+	      console.error(dateStr.slice(0, errorIndex) + '^');
+	      return undefined;
+	    }
+	    return calendar;
+	  }
+	});
+
+	mix(DateTimeFormat, {
+	  Style: DateTimeStyle,
+
+	  /**
+	   * get a formatter instance of short style pattern.
+	   * en-us: M/d/yy h:mm a
+	   * zh-cn: yy-M-d ah:mm
+	   * @param {Object} locale locale object
+	   * @returns {GregorianCalendar}
+	   * @static
+	   */
+	  getInstance: function (locale) {
+	    return this.getDateTimeInstance(DateTimeStyle.SHORT, DateTimeStyle.SHORT, locale);
+	  },
+
+	  /**
+	   * get a formatter instance of specified date style.
+	   * @param {Date.Formatter.Style} dateStyle date format style
+	   * @param {Object} locale
+	   * @returns {GregorianCalendar}
+	   * @static
+	   */
+	  getDateInstance: function (dateStyle, locale) {
+	    return this.getDateTimeInstance(dateStyle, undefined, locale);
+	  },
+
+	  /**
+	   * get a formatter instance of specified date style and time style.
+	   * @param {Date.Formatter.Style} dateStyle date format style
+	   * @param {Date.Formatter.Style} timeStyle time format style
+	   * @param {Object} locale
+	   * @returns {GregorianCalendar}
+	   * @static
+	   */
+	  getDateTimeInstance: function (dateStyle, timeStyle, locale) {
+	    locale = locale || enUsLocale;
+	    var datePattern = '';
+	    if (dateStyle !== undefined) {
+	      datePattern = locale.datePatterns[dateStyle];
+	    }
+	    var timePattern = '';
+	    if (timeStyle !== undefined) {
+	      timePattern = locale.timePatterns[timeStyle];
+	    }
+	    var pattern = datePattern;
+	    if (timePattern) {
+	      if (datePattern) {
+	        pattern = substitute(locale.dateTimePattern, {
+	          date: datePattern,
+	          time: timePattern
+	        });
+	      } else {
+	        pattern = timePattern;
+	      }
+	    }
+	    return new DateTimeFormat(pattern, locale);
+	  },
+
+	  /**
+	   * get a formatter instance of specified time style.
+	   * @param {Date.Formatter.Style} timeStyle time format style
+	   * @param {Object} locale
+	   * @returns {GregorianCalendar}
+	   * @static
+	   */
+	  getTimeInstance: function (timeStyle, locale) {
+	    return this.getDateTimeInstance(undefined, timeStyle, locale);
+	  }
+	});
+
+	module.exports = DateTimeFormat;
+
+	DateTimeFormat.version = '@VERSION@';
+
+	// gc_format@163.com
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var seed = 0;
+	module.exports = function () {
+	  return Date.now() + '_' + (seed++);
+	};
+
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This file contains an unmodified version of:
+	 * https://github.com/facebook/react/blob/v0.12.0/src/vendor/stubs/cx.js
+	 *
+	 * This source code is licensed under the BSD-style license found here:
+	 * https://github.com/facebook/react/blob/v0.12.0/LICENSE
+	 * An additional grant of patent rights can be found here:
+	 * https://github.com/facebook/react/blob/v0.12.0/PATENTS
+	 */
+
+	/**
+	 * This function is used to mark string literals representing CSS class names
+	 * so that they can be transformed statically. This allows for modularization
+	 * and minification of CSS class names.
+	 *
+	 * In static_upstream, this function is actually implemented, but it should
+	 * eventually be replaced with something more descriptive, and the transform
+	 * that is used in the main stack should be ported for use elsewhere.
+	 *
+	 * @param string|object className to modularize, or an object of key/values.
+	 *                      In the object case, the values are conditions that
+	 *                      determine if the className keys should be included.
+	 * @param [string ...]  Variable list of classNames in the string case.
+	 * @return string       Renderable space-separated CSS className.
+	 */
+	function cx(classNames) {
+	  if (typeof classNames === 'object') {
+	    return Object.keys(classNames).filter(function(className) {
+	      return classNames[className];
+	    }).join(' ');
+	  } else {
+	    return Array.prototype.join.call(arguments, ' ');
+	  }
+	}
+
+	module.exports = cx;
+
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This file contains an unmodified version of:
+	 * https://github.com/facebook/react/blob/v0.12.0/src/utils/joinClasses.js
+	 *
+	 * This source code is licensed under the BSD-style license found here:
+	 * https://github.com/facebook/react/blob/v0.12.0/LICENSE
+	 * An additional grant of patent rights can be found here:
+	 * https://github.com/facebook/react/blob/v0.12.0/PATENTS
+	 */
+
+	"use strict";
+
+	/**
+	 * Combines multiple className strings into one.
+	 * http://jsperf.com/joinclasses-args-vs-array
+	 *
+	 * @param {...?string} classes
+	 * @return {string}
+	 */
+
+	function joinClasses(className /*, ... */ ) {
+	  if (!className) {
+	    className = '';
+	  }
+	  var nextClass;
+	  var argLength = arguments.length;
+	  if (argLength > 1) {
+	    for (var ii = 1; ii < argLength; ii++) {
+	      nextClass = arguments[ii];
+	      if (nextClass) {
+	        className = (className ? className + ' ' : '') + nextClass;
+	      }
+	    }
+	  }
+	  return className;
+	}
+
+	module.exports = joinClasses;
+
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @ignore
+	 * some key-codes definition and utils from closure-library
+	 * @author yiminghe@gmail.com
+	 */
+
+	var KeyCode = {
+	  /**
+	   * MAC_ENTER
+	   */
+	  MAC_ENTER: 3,
+	  /**
+	   * BACKSPACE
+	   */
+	  BACKSPACE: 8,
+	  /**
+	   * TAB
+	   */
+	  TAB: 9,
+	  /**
+	   * NUMLOCK on FF/Safari Mac
+	   */
+	  NUM_CENTER: 12, // NUMLOCK on FF/Safari Mac
+	  /**
+	   * ENTER
+	   */
+	  ENTER: 13,
+	  /**
+	   * SHIFT
+	   */
+	  SHIFT: 16,
+	  /**
+	   * CTRL
+	   */
+	  CTRL: 17,
+	  /**
+	   * ALT
+	   */
+	  ALT: 18,
+	  /**
+	   * PAUSE
+	   */
+	  PAUSE: 19,
+	  /**
+	   * CAPS_LOCK
+	   */
+	  CAPS_LOCK: 20,
+	  /**
+	   * ESC
+	   */
+	  ESC: 27,
+	  /**
+	   * SPACE
+	   */
+	  SPACE: 32,
+	  /**
+	   * PAGE_UP
+	   */
+	  PAGE_UP: 33, // also NUM_NORTH_EAST
+	  /**
+	   * PAGE_DOWN
+	   */
+	  PAGE_DOWN: 34, // also NUM_SOUTH_EAST
+	  /**
+	   * END
+	   */
+	  END: 35, // also NUM_SOUTH_WEST
+	  /**
+	   * HOME
+	   */
+	  HOME: 36, // also NUM_NORTH_WEST
+	  /**
+	   * LEFT
+	   */
+	  LEFT: 37, // also NUM_WEST
+	  /**
+	   * UP
+	   */
+	  UP: 38, // also NUM_NORTH
+	  /**
+	   * RIGHT
+	   */
+	  RIGHT: 39, // also NUM_EAST
+	  /**
+	   * DOWN
+	   */
+	  DOWN: 40, // also NUM_SOUTH
+	  /**
+	   * PRINT_SCREEN
+	   */
+	  PRINT_SCREEN: 44,
+	  /**
+	   * INSERT
+	   */
+	  INSERT: 45, // also NUM_INSERT
+	  /**
+	   * DELETE
+	   */
+	  DELETE: 46, // also NUM_DELETE
+	  /**
+	   * ZERO
+	   */
+	  ZERO: 48,
+	  /**
+	   * ONE
+	   */
+	  ONE: 49,
+	  /**
+	   * TWO
+	   */
+	  TWO: 50,
+	  /**
+	   * THREE
+	   */
+	  THREE: 51,
+	  /**
+	   * FOUR
+	   */
+	  FOUR: 52,
+	  /**
+	   * FIVE
+	   */
+	  FIVE: 53,
+	  /**
+	   * SIX
+	   */
+	  SIX: 54,
+	  /**
+	   * SEVEN
+	   */
+	  SEVEN: 55,
+	  /**
+	   * EIGHT
+	   */
+	  EIGHT: 56,
+	  /**
+	   * NINE
+	   */
+	  NINE: 57,
+	  /**
+	   * QUESTION_MARK
+	   */
+	  QUESTION_MARK: 63, // needs localization
+	  /**
+	   * A
+	   */
+	  A: 65,
+	  /**
+	   * B
+	   */
+	  B: 66,
+	  /**
+	   * C
+	   */
+	  C: 67,
+	  /**
+	   * D
+	   */
+	  D: 68,
+	  /**
+	   * E
+	   */
+	  E: 69,
+	  /**
+	   * F
+	   */
+	  F: 70,
+	  /**
+	   * G
+	   */
+	  G: 71,
+	  /**
+	   * H
+	   */
+	  H: 72,
+	  /**
+	   * I
+	   */
+	  I: 73,
+	  /**
+	   * J
+	   */
+	  J: 74,
+	  /**
+	   * K
+	   */
+	  K: 75,
+	  /**
+	   * L
+	   */
+	  L: 76,
+	  /**
+	   * M
+	   */
+	  M: 77,
+	  /**
+	   * N
+	   */
+	  N: 78,
+	  /**
+	   * O
+	   */
+	  O: 79,
+	  /**
+	   * P
+	   */
+	  P: 80,
+	  /**
+	   * Q
+	   */
+	  Q: 81,
+	  /**
+	   * R
+	   */
+	  R: 82,
+	  /**
+	   * S
+	   */
+	  S: 83,
+	  /**
+	   * T
+	   */
+	  T: 84,
+	  /**
+	   * U
+	   */
+	  U: 85,
+	  /**
+	   * V
+	   */
+	  V: 86,
+	  /**
+	   * W
+	   */
+	  W: 87,
+	  /**
+	   * X
+	   */
+	  X: 88,
+	  /**
+	   * Y
+	   */
+	  Y: 89,
+	  /**
+	   * Z
+	   */
+	  Z: 90,
+	  /**
+	   * META
+	   */
+	  META: 91, // WIN_KEY_LEFT
+	  /**
+	   * WIN_KEY_RIGHT
+	   */
+	  WIN_KEY_RIGHT: 92,
+	  /**
+	   * CONTEXT_MENU
+	   */
+	  CONTEXT_MENU: 93,
+	  /**
+	   * NUM_ZERO
+	   */
+	  NUM_ZERO: 96,
+	  /**
+	   * NUM_ONE
+	   */
+	  NUM_ONE: 97,
+	  /**
+	   * NUM_TWO
+	   */
+	  NUM_TWO: 98,
+	  /**
+	   * NUM_THREE
+	   */
+	  NUM_THREE: 99,
+	  /**
+	   * NUM_FOUR
+	   */
+	  NUM_FOUR: 100,
+	  /**
+	   * NUM_FIVE
+	   */
+	  NUM_FIVE: 101,
+	  /**
+	   * NUM_SIX
+	   */
+	  NUM_SIX: 102,
+	  /**
+	   * NUM_SEVEN
+	   */
+	  NUM_SEVEN: 103,
+	  /**
+	   * NUM_EIGHT
+	   */
+	  NUM_EIGHT: 104,
+	  /**
+	   * NUM_NINE
+	   */
+	  NUM_NINE: 105,
+	  /**
+	   * NUM_MULTIPLY
+	   */
+	  NUM_MULTIPLY: 106,
+	  /**
+	   * NUM_PLUS
+	   */
+	  NUM_PLUS: 107,
+	  /**
+	   * NUM_MINUS
+	   */
+	  NUM_MINUS: 109,
+	  /**
+	   * NUM_PERIOD
+	   */
+	  NUM_PERIOD: 110,
+	  /**
+	   * NUM_DIVISION
+	   */
+	  NUM_DIVISION: 111,
+	  /**
+	   * F1
+	   */
+	  F1: 112,
+	  /**
+	   * F2
+	   */
+	  F2: 113,
+	  /**
+	   * F3
+	   */
+	  F3: 114,
+	  /**
+	   * F4
+	   */
+	  F4: 115,
+	  /**
+	   * F5
+	   */
+	  F5: 116,
+	  /**
+	   * F6
+	   */
+	  F6: 117,
+	  /**
+	   * F7
+	   */
+	  F7: 118,
+	  /**
+	   * F8
+	   */
+	  F8: 119,
+	  /**
+	   * F9
+	   */
+	  F9: 120,
+	  /**
+	   * F10
+	   */
+	  F10: 121,
+	  /**
+	   * F11
+	   */
+	  F11: 122,
+	  /**
+	   * F12
+	   */
+	  F12: 123,
+	  /**
+	   * NUMLOCK
+	   */
+	  NUMLOCK: 144,
+	  /**
+	   * SEMICOLON
+	   */
+	  SEMICOLON: 186, // needs localization
+	  /**
+	   * DASH
+	   */
+	  DASH: 189, // needs localization
+	  /**
+	   * EQUALS
+	   */
+	  EQUALS: 187, // needs localization
+	  /**
+	   * COMMA
+	   */
+	  COMMA: 188, // needs localization
+	  /**
+	   * PERIOD
+	   */
+	  PERIOD: 190, // needs localization
+	  /**
+	   * SLASH
+	   */
+	  SLASH: 191, // needs localization
+	  /**
+	   * APOSTROPHE
+	   */
+	  APOSTROPHE: 192, // needs localization
+	  /**
+	   * SINGLE_QUOTE
+	   */
+	  SINGLE_QUOTE: 222, // needs localization
+	  /**
+	   * OPEN_SQUARE_BRACKET
+	   */
+	  OPEN_SQUARE_BRACKET: 219, // needs localization
+	  /**
+	   * BACKSLASH
+	   */
+	  BACKSLASH: 220, // needs localization
+	  /**
+	   * CLOSE_SQUARE_BRACKET
+	   */
+	  CLOSE_SQUARE_BRACKET: 221, // needs localization
+	  /**
+	   * WIN_KEY
+	   */
+	  WIN_KEY: 224,
+	  /**
+	   * MAC_FF_META
+	   */
+	  MAC_FF_META: 224, // Firefox (Gecko) fires this for the meta key instead of 91
+	  /**
+	   * WIN_IME
+	   */
+	  WIN_IME: 229
+	};
+
+	/*
+	 whether text and modified key is entered at the same time.
+	 */
+	KeyCode.isTextModifyingKeyEvent = function (e) {
+	  var keyCode = e.keyCode;
+	  if (e.altKey && !e.ctrlKey || e.metaKey ||
+	      // Function keys don't generate text
+	    keyCode >= KeyCode.F1 && keyCode <= KeyCode.F12) {
+	    return false;
+	  }
+
+	  // The following keys are quite harmless, even in combination with
+	  // CTRL, ALT or SHIFT.
+	  switch (keyCode) {
+	    case KeyCode.ALT:
+	    case KeyCode.CAPS_LOCK:
+	    case KeyCode.CONTEXT_MENU:
+	    case KeyCode.CTRL:
+	    case KeyCode.DOWN:
+	    case KeyCode.END:
+	    case KeyCode.ESC:
+	    case KeyCode.HOME:
+	    case KeyCode.INSERT:
+	    case KeyCode.LEFT:
+	    case KeyCode.MAC_FF_META:
+	    case KeyCode.META:
+	    case KeyCode.NUMLOCK:
+	    case KeyCode.NUM_CENTER:
+	    case KeyCode.PAGE_DOWN:
+	    case KeyCode.PAGE_UP:
+	    case KeyCode.PAUSE:
+	    case KeyCode.PRINT_SCREEN:
+	    case KeyCode.RIGHT:
+	    case KeyCode.SHIFT:
+	    case KeyCode.UP:
+	    case KeyCode.WIN_KEY:
+	    case KeyCode.WIN_KEY_RIGHT:
+	      return false;
+	    default:
+	      return true;
+	  }
+	};
+
+	/*
+	 whether character is entered.
+	 */
+	KeyCode.isCharacterKey = function (keyCode) {
+	  if (keyCode >= KeyCode.ZERO &&
+	    keyCode <= KeyCode.NINE) {
+	    return true;
+	  }
+
+	  if (keyCode >= KeyCode.NUM_ZERO &&
+	    keyCode <= KeyCode.NUM_MULTIPLY) {
+	    return true;
+	  }
+
+	  if (keyCode >= KeyCode.A &&
+	    keyCode <= KeyCode.Z) {
+	    return true;
+	  }
+
+	  // Safari sends zero key code for non-latin characters.
+	  if (window.navigation.userAgent.indexOf('WebKit') !== -1 && keyCode === 0) {
+	    return true;
+	  }
+
+	  switch (keyCode) {
+	    case KeyCode.SPACE:
+	    case KeyCode.QUESTION_MARK:
+	    case KeyCode.NUM_PLUS:
+	    case KeyCode.NUM_MINUS:
+	    case KeyCode.NUM_PERIOD:
+	    case KeyCode.NUM_DIVISION:
+	    case KeyCode.SEMICOLON:
+	    case KeyCode.DASH:
+	    case KeyCode.EQUALS:
+	    case KeyCode.COMMA:
+	    case KeyCode.PERIOD:
+	    case KeyCode.SLASH:
+	    case KeyCode.APOSTROPHE:
+	    case KeyCode.SINGLE_QUOTE:
+	    case KeyCode.OPEN_SQUARE_BRACKET:
+	    case KeyCode.BACKSLASH:
+	    case KeyCode.CLOSE_SQUARE_BRACKET:
+	      return true;
+	    default:
+	      return false;
+	  }
+	};
+
+	module.exports = KeyCode;
+
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	* @providesModule ReactComponentWithPureRenderMixin
+	*/
+
+	"use strict";
+
+	var shallowEqual = __webpack_require__(49);
+
+	/**
+	 * If your React component's render function is "pure", e.g. it will render the
+	 * same result given the same props and state, provide this Mixin for a
+	 * considerable performance boost.
+	 *
+	 * Most React components have pure render functions.
+	 *
+	 * Example:
+	 *
+	 *   var ReactComponentWithPureRenderMixin =
+	 *     require('ReactComponentWithPureRenderMixin');
+	 *   React.createClass({
+	 *     mixins: [ReactComponentWithPureRenderMixin],
+	 *
+	 *     render: function() {
+	 *       return <div className={this.props.className}>foo</div>;
+	 *     }
+	 *   });
+	 *
+	 * Note: This only checks shallow equality for props and state. If these contain
+	 * complex data structures this mixin may have false-negatives for deeper
+	 * differences. Only mixin to components which have simple props and state, or
+	 * use `forceUpdate()` when you know deep data structures have changed.
+	 */
+	var ReactComponentWithPureRenderMixin = {
+	  shouldComponentUpdate: function(nextProps, nextState) {
+	    return !shallowEqual(this.props, nextProps) ||
+	           !shallowEqual(this.state, nextState);
+	  }
+	};
+
+	module.exports = ReactComponentWithPureRenderMixin;
+
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule shallowEqual
+	 */
+
+	"use strict";
+
+	/**
+	 * Performs equality by iterating through keys on an object and returning
+	 * false when any key has values which are not strictly equal between
+	 * objA and objB. Returns true when the values of all keys are strictly equal.
+	 *
+	 * @return {boolean}
+	 */
+	function shallowEqual(objA, objB) {
+	  if (objA === objB) {
+	    return true;
+	  }
+	  var key;
+	  // Test for A's keys different from B.
+	  for (key in objA) {
+	    if (objA.hasOwnProperty(key) &&
+	        (!objB.hasOwnProperty(key) || objA[key] !== objB[key])) {
+	      return false;
+	    }
+	  }
+	  // Test for B's keys missing from A.
+	  for (key in objB) {
+	    if (objB.hasOwnProperty(key) && !objA.hasOwnProperty(key)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = shallowEqual;
+
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Safe chained function
+	 *
+	 * Will only create a new function if needed,
+	 * otherwise will pass back existing functions or null.
+	 *
+	 * @returns {function|null}
+	 */
+	function createChainedFunction() {
+	  var args = arguments;
+
+	  return function chainedFunction() {
+	    for (var i = 0; i < args.length; i++) {
+	      if (args[i] && args[i].apply) {
+	        args[i].apply(this, arguments);
+	      }
+	    }
+	  };
+	}
+
+	module.exports = createChainedFunction;
+
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (target, eventType, callback) {
+	  if (target.addEventListener) {
+	    target.addEventListener(eventType, callback, false);
+	    return {
+	      remove: function () {
+	        target.removeEventListener(eventType, callback, false);
+	      }
+	    };
+	  } else if (target.attachEvent) {
+	    target.attachEvent('on' + eventType, callback);
+	    return {
+	      remove: function () {
+	        target.detachEvent('on' + eventType, callback);
+	      }
+	    };
+	  }
+	};
+
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function (root, node) {
+	  while (node) {
+	    if (node === root) {
+	      return true;
+	    }
+	    node = node.parentNode;
+	  }
+
+	  return false;
+	};
+
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+
+	module.exports = function (children) {
+	  var ret = [];
+	  React.Children.forEach(children, function (c) {
+	    ret.push(c);
+	  });
+	  return ret;
+	};
+
+
+/***/ },
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var RE_NUM = /[\-+]?(?:\d*\.|)\d+(?:[eE][\-+]?\d+|)/.source;
@@ -5867,7 +7481,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 44 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7221,1620 +8835,6 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 45 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var seed = 0;
-	module.exports = function () {
-	  return Date.now() + '_' + (seed++);
-	};
-
-
-/***/ },
-/* 46 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This file contains an unmodified version of:
-	 * https://github.com/facebook/react/blob/v0.12.0/src/vendor/stubs/cx.js
-	 *
-	 * This source code is licensed under the BSD-style license found here:
-	 * https://github.com/facebook/react/blob/v0.12.0/LICENSE
-	 * An additional grant of patent rights can be found here:
-	 * https://github.com/facebook/react/blob/v0.12.0/PATENTS
-	 */
-
-	/**
-	 * This function is used to mark string literals representing CSS class names
-	 * so that they can be transformed statically. This allows for modularization
-	 * and minification of CSS class names.
-	 *
-	 * In static_upstream, this function is actually implemented, but it should
-	 * eventually be replaced with something more descriptive, and the transform
-	 * that is used in the main stack should be ported for use elsewhere.
-	 *
-	 * @param string|object className to modularize, or an object of key/values.
-	 *                      In the object case, the values are conditions that
-	 *                      determine if the className keys should be included.
-	 * @param [string ...]  Variable list of classNames in the string case.
-	 * @return string       Renderable space-separated CSS className.
-	 */
-	function cx(classNames) {
-	  if (typeof classNames === 'object') {
-	    return Object.keys(classNames).filter(function(className) {
-	      return classNames[className];
-	    }).join(' ');
-	  } else {
-	    return Array.prototype.join.call(arguments, ' ');
-	  }
-	}
-
-	module.exports = cx;
-
-
-/***/ },
-/* 47 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This file contains an unmodified version of:
-	 * https://github.com/facebook/react/blob/v0.12.0/src/utils/joinClasses.js
-	 *
-	 * This source code is licensed under the BSD-style license found here:
-	 * https://github.com/facebook/react/blob/v0.12.0/LICENSE
-	 * An additional grant of patent rights can be found here:
-	 * https://github.com/facebook/react/blob/v0.12.0/PATENTS
-	 */
-
-	"use strict";
-
-	/**
-	 * Combines multiple className strings into one.
-	 * http://jsperf.com/joinclasses-args-vs-array
-	 *
-	 * @param {...?string} classes
-	 * @return {string}
-	 */
-
-	function joinClasses(className /*, ... */ ) {
-	  if (!className) {
-	    className = '';
-	  }
-	  var nextClass;
-	  var argLength = arguments.length;
-	  if (argLength > 1) {
-	    for (var ii = 1; ii < argLength; ii++) {
-	      nextClass = arguments[ii];
-	      if (nextClass) {
-	        className = (className ? className + ' ' : '') + nextClass;
-	      }
-	    }
-	  }
-	  return className;
-	}
-
-	module.exports = joinClasses;
-
-
-/***/ },
-/* 48 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @ignore
-	 * some key-codes definition and utils from closure-library
-	 * @author yiminghe@gmail.com
-	 */
-
-	var KeyCode = {
-	  /**
-	   * MAC_ENTER
-	   */
-	  MAC_ENTER: 3,
-	  /**
-	   * BACKSPACE
-	   */
-	  BACKSPACE: 8,
-	  /**
-	   * TAB
-	   */
-	  TAB: 9,
-	  /**
-	   * NUMLOCK on FF/Safari Mac
-	   */
-	  NUM_CENTER: 12, // NUMLOCK on FF/Safari Mac
-	  /**
-	   * ENTER
-	   */
-	  ENTER: 13,
-	  /**
-	   * SHIFT
-	   */
-	  SHIFT: 16,
-	  /**
-	   * CTRL
-	   */
-	  CTRL: 17,
-	  /**
-	   * ALT
-	   */
-	  ALT: 18,
-	  /**
-	   * PAUSE
-	   */
-	  PAUSE: 19,
-	  /**
-	   * CAPS_LOCK
-	   */
-	  CAPS_LOCK: 20,
-	  /**
-	   * ESC
-	   */
-	  ESC: 27,
-	  /**
-	   * SPACE
-	   */
-	  SPACE: 32,
-	  /**
-	   * PAGE_UP
-	   */
-	  PAGE_UP: 33, // also NUM_NORTH_EAST
-	  /**
-	   * PAGE_DOWN
-	   */
-	  PAGE_DOWN: 34, // also NUM_SOUTH_EAST
-	  /**
-	   * END
-	   */
-	  END: 35, // also NUM_SOUTH_WEST
-	  /**
-	   * HOME
-	   */
-	  HOME: 36, // also NUM_NORTH_WEST
-	  /**
-	   * LEFT
-	   */
-	  LEFT: 37, // also NUM_WEST
-	  /**
-	   * UP
-	   */
-	  UP: 38, // also NUM_NORTH
-	  /**
-	   * RIGHT
-	   */
-	  RIGHT: 39, // also NUM_EAST
-	  /**
-	   * DOWN
-	   */
-	  DOWN: 40, // also NUM_SOUTH
-	  /**
-	   * PRINT_SCREEN
-	   */
-	  PRINT_SCREEN: 44,
-	  /**
-	   * INSERT
-	   */
-	  INSERT: 45, // also NUM_INSERT
-	  /**
-	   * DELETE
-	   */
-	  DELETE: 46, // also NUM_DELETE
-	  /**
-	   * ZERO
-	   */
-	  ZERO: 48,
-	  /**
-	   * ONE
-	   */
-	  ONE: 49,
-	  /**
-	   * TWO
-	   */
-	  TWO: 50,
-	  /**
-	   * THREE
-	   */
-	  THREE: 51,
-	  /**
-	   * FOUR
-	   */
-	  FOUR: 52,
-	  /**
-	   * FIVE
-	   */
-	  FIVE: 53,
-	  /**
-	   * SIX
-	   */
-	  SIX: 54,
-	  /**
-	   * SEVEN
-	   */
-	  SEVEN: 55,
-	  /**
-	   * EIGHT
-	   */
-	  EIGHT: 56,
-	  /**
-	   * NINE
-	   */
-	  NINE: 57,
-	  /**
-	   * QUESTION_MARK
-	   */
-	  QUESTION_MARK: 63, // needs localization
-	  /**
-	   * A
-	   */
-	  A: 65,
-	  /**
-	   * B
-	   */
-	  B: 66,
-	  /**
-	   * C
-	   */
-	  C: 67,
-	  /**
-	   * D
-	   */
-	  D: 68,
-	  /**
-	   * E
-	   */
-	  E: 69,
-	  /**
-	   * F
-	   */
-	  F: 70,
-	  /**
-	   * G
-	   */
-	  G: 71,
-	  /**
-	   * H
-	   */
-	  H: 72,
-	  /**
-	   * I
-	   */
-	  I: 73,
-	  /**
-	   * J
-	   */
-	  J: 74,
-	  /**
-	   * K
-	   */
-	  K: 75,
-	  /**
-	   * L
-	   */
-	  L: 76,
-	  /**
-	   * M
-	   */
-	  M: 77,
-	  /**
-	   * N
-	   */
-	  N: 78,
-	  /**
-	   * O
-	   */
-	  O: 79,
-	  /**
-	   * P
-	   */
-	  P: 80,
-	  /**
-	   * Q
-	   */
-	  Q: 81,
-	  /**
-	   * R
-	   */
-	  R: 82,
-	  /**
-	   * S
-	   */
-	  S: 83,
-	  /**
-	   * T
-	   */
-	  T: 84,
-	  /**
-	   * U
-	   */
-	  U: 85,
-	  /**
-	   * V
-	   */
-	  V: 86,
-	  /**
-	   * W
-	   */
-	  W: 87,
-	  /**
-	   * X
-	   */
-	  X: 88,
-	  /**
-	   * Y
-	   */
-	  Y: 89,
-	  /**
-	   * Z
-	   */
-	  Z: 90,
-	  /**
-	   * META
-	   */
-	  META: 91, // WIN_KEY_LEFT
-	  /**
-	   * WIN_KEY_RIGHT
-	   */
-	  WIN_KEY_RIGHT: 92,
-	  /**
-	   * CONTEXT_MENU
-	   */
-	  CONTEXT_MENU: 93,
-	  /**
-	   * NUM_ZERO
-	   */
-	  NUM_ZERO: 96,
-	  /**
-	   * NUM_ONE
-	   */
-	  NUM_ONE: 97,
-	  /**
-	   * NUM_TWO
-	   */
-	  NUM_TWO: 98,
-	  /**
-	   * NUM_THREE
-	   */
-	  NUM_THREE: 99,
-	  /**
-	   * NUM_FOUR
-	   */
-	  NUM_FOUR: 100,
-	  /**
-	   * NUM_FIVE
-	   */
-	  NUM_FIVE: 101,
-	  /**
-	   * NUM_SIX
-	   */
-	  NUM_SIX: 102,
-	  /**
-	   * NUM_SEVEN
-	   */
-	  NUM_SEVEN: 103,
-	  /**
-	   * NUM_EIGHT
-	   */
-	  NUM_EIGHT: 104,
-	  /**
-	   * NUM_NINE
-	   */
-	  NUM_NINE: 105,
-	  /**
-	   * NUM_MULTIPLY
-	   */
-	  NUM_MULTIPLY: 106,
-	  /**
-	   * NUM_PLUS
-	   */
-	  NUM_PLUS: 107,
-	  /**
-	   * NUM_MINUS
-	   */
-	  NUM_MINUS: 109,
-	  /**
-	   * NUM_PERIOD
-	   */
-	  NUM_PERIOD: 110,
-	  /**
-	   * NUM_DIVISION
-	   */
-	  NUM_DIVISION: 111,
-	  /**
-	   * F1
-	   */
-	  F1: 112,
-	  /**
-	   * F2
-	   */
-	  F2: 113,
-	  /**
-	   * F3
-	   */
-	  F3: 114,
-	  /**
-	   * F4
-	   */
-	  F4: 115,
-	  /**
-	   * F5
-	   */
-	  F5: 116,
-	  /**
-	   * F6
-	   */
-	  F6: 117,
-	  /**
-	   * F7
-	   */
-	  F7: 118,
-	  /**
-	   * F8
-	   */
-	  F8: 119,
-	  /**
-	   * F9
-	   */
-	  F9: 120,
-	  /**
-	   * F10
-	   */
-	  F10: 121,
-	  /**
-	   * F11
-	   */
-	  F11: 122,
-	  /**
-	   * F12
-	   */
-	  F12: 123,
-	  /**
-	   * NUMLOCK
-	   */
-	  NUMLOCK: 144,
-	  /**
-	   * SEMICOLON
-	   */
-	  SEMICOLON: 186, // needs localization
-	  /**
-	   * DASH
-	   */
-	  DASH: 189, // needs localization
-	  /**
-	   * EQUALS
-	   */
-	  EQUALS: 187, // needs localization
-	  /**
-	   * COMMA
-	   */
-	  COMMA: 188, // needs localization
-	  /**
-	   * PERIOD
-	   */
-	  PERIOD: 190, // needs localization
-	  /**
-	   * SLASH
-	   */
-	  SLASH: 191, // needs localization
-	  /**
-	   * APOSTROPHE
-	   */
-	  APOSTROPHE: 192, // needs localization
-	  /**
-	   * SINGLE_QUOTE
-	   */
-	  SINGLE_QUOTE: 222, // needs localization
-	  /**
-	   * OPEN_SQUARE_BRACKET
-	   */
-	  OPEN_SQUARE_BRACKET: 219, // needs localization
-	  /**
-	   * BACKSLASH
-	   */
-	  BACKSLASH: 220, // needs localization
-	  /**
-	   * CLOSE_SQUARE_BRACKET
-	   */
-	  CLOSE_SQUARE_BRACKET: 221, // needs localization
-	  /**
-	   * WIN_KEY
-	   */
-	  WIN_KEY: 224,
-	  /**
-	   * MAC_FF_META
-	   */
-	  MAC_FF_META: 224, // Firefox (Gecko) fires this for the meta key instead of 91
-	  /**
-	   * WIN_IME
-	   */
-	  WIN_IME: 229
-	};
-
-	/*
-	 whether text and modified key is entered at the same time.
-	 */
-	KeyCode.isTextModifyingKeyEvent = function (e) {
-	  var keyCode = e.keyCode;
-	  if (e.altKey && !e.ctrlKey || e.metaKey ||
-	      // Function keys don't generate text
-	    keyCode >= KeyCode.F1 && keyCode <= KeyCode.F12) {
-	    return false;
-	  }
-
-	  // The following keys are quite harmless, even in combination with
-	  // CTRL, ALT or SHIFT.
-	  switch (keyCode) {
-	    case KeyCode.ALT:
-	    case KeyCode.CAPS_LOCK:
-	    case KeyCode.CONTEXT_MENU:
-	    case KeyCode.CTRL:
-	    case KeyCode.DOWN:
-	    case KeyCode.END:
-	    case KeyCode.ESC:
-	    case KeyCode.HOME:
-	    case KeyCode.INSERT:
-	    case KeyCode.LEFT:
-	    case KeyCode.MAC_FF_META:
-	    case KeyCode.META:
-	    case KeyCode.NUMLOCK:
-	    case KeyCode.NUM_CENTER:
-	    case KeyCode.PAGE_DOWN:
-	    case KeyCode.PAGE_UP:
-	    case KeyCode.PAUSE:
-	    case KeyCode.PRINT_SCREEN:
-	    case KeyCode.RIGHT:
-	    case KeyCode.SHIFT:
-	    case KeyCode.UP:
-	    case KeyCode.WIN_KEY:
-	    case KeyCode.WIN_KEY_RIGHT:
-	      return false;
-	    default:
-	      return true;
-	  }
-	};
-
-	/*
-	 whether character is entered.
-	 */
-	KeyCode.isCharacterKey = function (keyCode) {
-	  if (keyCode >= KeyCode.ZERO &&
-	    keyCode <= KeyCode.NINE) {
-	    return true;
-	  }
-
-	  if (keyCode >= KeyCode.NUM_ZERO &&
-	    keyCode <= KeyCode.NUM_MULTIPLY) {
-	    return true;
-	  }
-
-	  if (keyCode >= KeyCode.A &&
-	    keyCode <= KeyCode.Z) {
-	    return true;
-	  }
-
-	  // Safari sends zero key code for non-latin characters.
-	  if (window.navigation.userAgent.indexOf('WebKit') !== -1 && keyCode === 0) {
-	    return true;
-	  }
-
-	  switch (keyCode) {
-	    case KeyCode.SPACE:
-	    case KeyCode.QUESTION_MARK:
-	    case KeyCode.NUM_PLUS:
-	    case KeyCode.NUM_MINUS:
-	    case KeyCode.NUM_PERIOD:
-	    case KeyCode.NUM_DIVISION:
-	    case KeyCode.SEMICOLON:
-	    case KeyCode.DASH:
-	    case KeyCode.EQUALS:
-	    case KeyCode.COMMA:
-	    case KeyCode.PERIOD:
-	    case KeyCode.SLASH:
-	    case KeyCode.APOSTROPHE:
-	    case KeyCode.SINGLE_QUOTE:
-	    case KeyCode.OPEN_SQUARE_BRACKET:
-	    case KeyCode.BACKSLASH:
-	    case KeyCode.CLOSE_SQUARE_BRACKET:
-	      return true;
-	    default:
-	      return false;
-	  }
-	};
-
-	module.exports = KeyCode;
-
-
-/***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	* @providesModule ReactComponentWithPureRenderMixin
-	*/
-
-	"use strict";
-
-	var shallowEqual = __webpack_require__(50);
-
-	/**
-	 * If your React component's render function is "pure", e.g. it will render the
-	 * same result given the same props and state, provide this Mixin for a
-	 * considerable performance boost.
-	 *
-	 * Most React components have pure render functions.
-	 *
-	 * Example:
-	 *
-	 *   var ReactComponentWithPureRenderMixin =
-	 *     require('ReactComponentWithPureRenderMixin');
-	 *   React.createClass({
-	 *     mixins: [ReactComponentWithPureRenderMixin],
-	 *
-	 *     render: function() {
-	 *       return <div className={this.props.className}>foo</div>;
-	 *     }
-	 *   });
-	 *
-	 * Note: This only checks shallow equality for props and state. If these contain
-	 * complex data structures this mixin may have false-negatives for deeper
-	 * differences. Only mixin to components which have simple props and state, or
-	 * use `forceUpdate()` when you know deep data structures have changed.
-	 */
-	var ReactComponentWithPureRenderMixin = {
-	  shouldComponentUpdate: function(nextProps, nextState) {
-	    return !shallowEqual(this.props, nextProps) ||
-	           !shallowEqual(this.state, nextState);
-	  }
-	};
-
-	module.exports = ReactComponentWithPureRenderMixin;
-
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule shallowEqual
-	 */
-
-	"use strict";
-
-	/**
-	 * Performs equality by iterating through keys on an object and returning
-	 * false when any key has values which are not strictly equal between
-	 * objA and objB. Returns true when the values of all keys are strictly equal.
-	 *
-	 * @return {boolean}
-	 */
-	function shallowEqual(objA, objB) {
-	  if (objA === objB) {
-	    return true;
-	  }
-	  var key;
-	  // Test for A's keys different from B.
-	  for (key in objA) {
-	    if (objA.hasOwnProperty(key) &&
-	        (!objB.hasOwnProperty(key) || objA[key] !== objB[key])) {
-	      return false;
-	    }
-	  }
-	  // Test for B's keys missing from A.
-	  for (key in objB) {
-	    if (objB.hasOwnProperty(key) && !objA.hasOwnProperty(key)) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = shallowEqual;
-
-
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Safe chained function
-	 *
-	 * Will only create a new function if needed,
-	 * otherwise will pass back existing functions or null.
-	 *
-	 * @returns {function|null}
-	 */
-	function createChainedFunction() {
-	  var args = arguments;
-
-	  return function chainedFunction() {
-	    for (var i = 0; i < args.length; i++) {
-	      if (args[i] && args[i].apply) {
-	        args[i].apply(this, arguments);
-	      }
-	    }
-	  };
-	}
-
-	module.exports = createChainedFunction;
-
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function (target, eventType, callback) {
-	  if (target.addEventListener) {
-	    target.addEventListener(eventType, callback, false);
-	    return {
-	      remove: function () {
-	        target.removeEventListener(eventType, callback, false);
-	      }
-	    };
-	  } else if (target.attachEvent) {
-	    target.attachEvent('on' + eventType, callback);
-	    return {
-	      remove: function () {
-	        target.detachEvent('on' + eventType, callback);
-	      }
-	    };
-	  }
-	};
-
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function (root, node) {
-	  while (node) {
-	    if (node === root) {
-	      return true;
-	    }
-	    node = node.parentNode;
-	  }
-
-	  return false;
-	};
-
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(2);
-
-	module.exports = function (children) {
-	  var ret = [];
-	  React.Children.forEach(children, function (c) {
-	    ret.push(c);
-	  });
-	  return ret;
-	};
-
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @ignore
-	 * DateTimeFormat for
-	 * Inspired by DateTimeFormat from JDK.
-	 * @author yiminghe@gmail.com
-	 */
-
-	var GregorianCalendar = __webpack_require__(7);
-	var enUsLocale = __webpack_require__(42);
-	var MAX_VALUE = Number.MAX_VALUE;
-	/**
-	 * date or time style enum
-	 * @enum {Number} Date.Formatter.Style
-	 */
-	var DateTimeStyle = {
-	  /**
-	   * full style
-	   */
-	  FULL: 0,
-	  /**
-	   * long style
-	   */
-	  LONG: 1,
-	  /**
-	   * medium style
-	   */
-	  MEDIUM: 2,
-	  /**
-	   * short style
-	   */
-	  SHORT: 3
-	};
-
-	/*
-	 Letter    Date or Time Component    Presentation    Examples
-	 G    Era designator    Text    AD
-	 y    Year    Year    1996; 96
-	 M    Month in year    Month    July; Jul; 07
-	 w    Week in year    Number    27
-	 W    Week in month    Number    2
-	 D    Day in year    Number    189
-	 d    Day in month    Number    10
-	 F    Day of week in month    Number    2
-	 E    Day in week    Text    Tuesday; Tue
-	 a    Am/pm marker    Text    PM
-	 H    Hour in day (0-23)    Number    0
-	 k    Hour in day (1-24)    Number    24
-	 K    Hour in am/pm (0-11)    Number    0
-	 h    Hour in am/pm (1-12)    Number    12
-	 m    Minute in hour    Number    30
-	 s    Second in minute    Number    55
-	 S    Millisecond    Number    978
-	 x z    Time zone    General time zone    Pacific Standard Time; PST; GMT-08:00
-	 Z    Time zone    RFC 822 time zone    -0800
-	 */
-
-	var patternChars = new Array(GregorianCalendar.DAY_OF_WEEK_IN_MONTH + 2).join('1');
-	var ERA = 0;
-	var calendarIndexMap = {};
-
-	patternChars = patternChars.split('');
-	patternChars[ERA] = 'G';
-	patternChars[GregorianCalendar.YEAR] = 'y';
-	patternChars[GregorianCalendar.MONTH] = 'M';
-	patternChars[GregorianCalendar.DAY_OF_MONTH] = 'd';
-	patternChars[GregorianCalendar.HOUR_OF_DAY] = 'H';
-	patternChars[GregorianCalendar.MINUTES] = 'm';
-	patternChars[GregorianCalendar.SECONDS] = 's';
-	patternChars[GregorianCalendar.MILLISECONDS] = 'S';
-	patternChars[GregorianCalendar.WEEK_OF_YEAR] = 'w';
-	patternChars[GregorianCalendar.WEEK_OF_MONTH] = 'W';
-	patternChars[GregorianCalendar.DAY_OF_YEAR] = 'D';
-	patternChars[GregorianCalendar.DAY_OF_WEEK_IN_MONTH] = 'F';
-
-	(function () {
-	  for (var index in patternChars) {
-	    calendarIndexMap[patternChars[index]] = index;
-	  }
-	})();
-
-	function mix(t, s) {
-	  for (var p in s) {
-	    t[p] = s[p];
-	  }
-	}
-
-	var SUBSTITUTE_REG = /\\?\{([^{}]+)\}/g;
-	var EMPTY = '';
-
-	function substitute(str, o, regexp) {
-	  if (typeof str !== 'string' || !o) {
-	    return str;
-	  }
-
-	  return str.replace(regexp || SUBSTITUTE_REG, function (match, name) {
-	    if (match.charAt(0) === '\\') {
-	      return match.slice(1);
-	    }
-	    return (o[name] === undefined) ? EMPTY : o[name];
-	  });
-	}
-
-	patternChars = patternChars.join('') + 'ahkKZE';
-
-	function encode(lastField, count, compiledPattern) {
-	  compiledPattern.push({
-	    field: lastField,
-	    count: count
-	  });
-	}
-
-	function compile(pattern) {
-	  var length = pattern.length;
-	  var inQuote = false;
-	  var compiledPattern = [];
-	  var tmpBuffer = null;
-	  var count = 0;
-	  var lastField = -1;
-
-	  for (var i = 0; i < length; i++) {
-	    var c = pattern.charAt(i);
-
-	    if (c === '\'') {
-	      // '' is treated as a single quote regardless of being
-	      // in a quoted section.
-	      if ((i + 1) < length) {
-	        c = pattern.charAt(i + 1);
-	        if (c === '\'') {
-	          i++;
-	          if (count !== 0) {
-	            encode(lastField, count, compiledPattern);
-	            lastField = -1;
-	            count = 0;
-	          }
-	          if (inQuote) {
-	            tmpBuffer += c;
-	          }
-	          continue;
-	        }
-	      }
-	      if (!inQuote) {
-	        if (count !== 0) {
-	          encode(lastField, count, compiledPattern);
-	          lastField = -1;
-	          count = 0;
-	        }
-	        tmpBuffer = '';
-	        inQuote = true;
-	      } else {
-	        compiledPattern.push({
-	          text: tmpBuffer
-	        });
-	        inQuote = false;
-	      }
-	      continue;
-	    }
-	    if (inQuote) {
-	      tmpBuffer += c;
-	      continue;
-	    }
-	    if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')) {
-	      if (count !== 0) {
-	        encode(lastField, count, compiledPattern);
-	        lastField = -1;
-	        count = 0;
-	      }
-	      compiledPattern.push({
-	        text: c
-	      });
-	      continue;
-	    }
-
-	    if (patternChars.indexOf(c) === -1) {
-	      throw new Error('Illegal pattern character "' + c + '"');
-	    }
-
-	    if (lastField === -1 || lastField === c) {
-	      lastField = c;
-	      count++;
-	      continue;
-	    }
-	    encode(lastField, count, compiledPattern);
-	    lastField = c;
-	    count = 1;
-	  }
-
-	  if (inQuote) {
-	    throw new Error('Unterminated quote');
-	  }
-
-	  if (count !== 0) {
-	    encode(lastField, count, compiledPattern);
-	  }
-
-	  return compiledPattern;
-	}
-
-	var zeroDigit = '0';
-
-	// TODO zeroDigit localization??
-	function zeroPaddingNumber(value, minDigits, maxDigits, buffer) {
-	  // Optimization for 1, 2 and 4 digit numbers. This should
-	  // cover most cases of formatting date/time related items.
-	  // Note: This optimization code assumes that maxDigits is
-	  // either 2 or Integer.MAX_VALUE (maxIntCount in format()).
-	  buffer = buffer || [];
-	  maxDigits = maxDigits || MAX_VALUE;
-	  if (value >= 0) {
-	    if (value < 100 && minDigits >= 1 && minDigits <= 2) {
-	      if (value < 10 && minDigits === 2) {
-	        buffer.push(zeroDigit);
-	      }
-	      buffer.push(value);
-	      return buffer.join('');
-	    } else if (value >= 1000 && value < 10000) {
-	      if (minDigits === 4) {
-	        buffer.push(value);
-	        return buffer.join('');
-	      }
-	      if (minDigits === 2 && maxDigits === 2) {
-	        return zeroPaddingNumber(value % 100, 2, 2, buffer);
-	      }
-	    }
-	  }
-	  buffer.push(value + '');
-	  return buffer.join('');
-	}
-
-	/**
-	 *
-	 * date time formatter for GregorianCalendar
-	 *
-	 *      @example
-	 *
-	 *          var calendar = new GregorianCalendar(2013,9,24);
-	 *          // ' to escape
-	 *          var formatter = new GregorianCalendarFormat("'today is' ''yyyy/MM/dd a''");
-	 *          document.write(formatter.format(calendar));
-	 *
-	 * @class GregorianCalendarFormat
-	 * @param {String} pattern patter string of date formatter
-	 *
-	 * <table border="1">
-	 * <thead valign="bottom">
-	 * <tr><th class="head">Letter</th>
-	 * <th class="head">Date or Time Component</th>
-	 * <th class="head">Presentation</th>
-	 * <th class="head">Examples</th>
-	 * </tr>
-	 * </thead>
-	 * <tbody valign="top">
-	 * <tr><td>G</td>
-	 * <td>Era designator</td>
-	 * <td>Text</td>
-	 * <td>AD</td>
-	 * </tr>
-	 * <tr><td>y</td>
-	 * <td>Year</td>
-	 * <td>Year</td>
-	 * <td>1996; 96</td>
-	 * </tr>
-	 * <tr><td>M</td>
-	 * <td>Month in year</td>
-	 * <td>Month</td>
-	 * <td>July; Jul; 07</td>
-	 * </tr>
-	 * <tr><td>w</td>
-	 * <td>Week in year</td>
-	 * <td>Number</td>
-	 * <td>27</td>
-	 * </tr>
-	 * <tr><td>W</td>
-	 * <td>Week in month</td>
-	 * <td>Number</td>
-	 * <td>2</td>
-	 * </tr>
-	 * <tr><td>D</td>
-	 * <td>Day in year</td>
-	 * <td>Number</td>
-	 * <td>189</td>
-	 * </tr>
-	 * <tr><td>d</td>
-	 * <td>Day in month</td>
-	 * <td>Number</td>
-	 * <td>10</td>
-	 * </tr>
-	 * <tr><td>F</td>
-	 * <td>Day of week in month</td>
-	 * <td>Number</td>
-	 * <td>2</td>
-	 * </tr>
-	 * <tr><td>E</td>
-	 * <td>Day in week</td>
-	 * <td>Text</td>
-	 * <td>Tuesday; Tue</td>
-	 * </tr>
-	 * <tr><td>a</td>
-	 * <td>Am/pm marker</td>
-	 * <td>Text</td>
-	 * <td>PM</td>
-	 * </tr>
-	 * <tr><td>H</td>
-	 *       <td>Hour in day (0-23)</td>
-	 * <td>Number</td>
-	 * <td>0</td>
-	 * </tr>
-	 * <tr><td>k</td>
-	 *       <td>Hour in day (1-24)</td>
-	 * <td>Number</td>
-	 * <td>24</td>
-	 * </tr>
-	 * <tr><td>K</td>
-	 * <td>Hour in am/pm (0-11)</td>
-	 * <td>Number</td>
-	 * <td>0</td>
-	 * </tr>
-	 * <tr><td>h</td>
-	 * <td>Hour in am/pm (1-12)</td>
-	 * <td>Number</td>
-	 * <td>12</td>
-	 * </tr>
-	 * <tr><td>m</td>
-	 * <td>Minute in hour</td>
-	 * <td>Number</td>
-	 * <td>30</td>
-	 * </tr>
-	 * <tr><td>s</td>
-	 * <td>Second in minute</td>
-	 * <td>Number</td>
-	 * <td>55</td>
-	 * </tr>
-	 * <tr><td>S</td>
-	 * <td>Millisecond</td>
-	 * <td>Number</td>
-	 * <td>978</td>
-	 * </tr>
-	 * <tr><td>x/z</td>
-	 * <td>Time zone</td>
-	 * <td>General time zone</td>
-	 * <td>Pacific Standard Time; PST; GMT-08:00</td>
-	 * </tr>
-	 * <tr><td>Z</td>
-	 * <td>Time zone</td>
-	 * <td>RFC 822 time zone</td>
-	 * <td>-0800</td>
-	 * </tr>
-	 * </tbody>
-	 * </table>
-
-	 * @param {Object} locale format locale
-	 */
-	function DateTimeFormat(pattern, locale) {
-	  this.locale = locale || enUsLocale;
-	  this.originalPattern = pattern;
-	  this.pattern = compile(pattern);
-	}
-
-	function formatField(field, count, locale, calendar) {
-	  var current,
-	    value;
-	  switch (field) {
-	    case 'G':
-	      value = calendar.getYear() > 0 ? 1 : 0;
-	      current = locale.eras[value];
-	      break;
-	    case 'y':
-	      value = calendar.getYear();
-	      if (value <= 0) {
-	        value = 1 - value;
-	      }
-	      current = (zeroPaddingNumber(value, 2, count !== 2 ? MAX_VALUE : 2));
-	      break;
-	    case 'M':
-	      value = calendar.getMonth();
-	      if (count >= 4) {
-	        current = locale.months[value];
-	      } else if (count === 3) {
-	        current = locale.shortMonths[value];
-	      } else {
-	        current = zeroPaddingNumber(value + 1, count);
-	      }
-	      break;
-	    case 'k':
-	      current = zeroPaddingNumber(calendar.getHourOfDay() || 24,
-	        count);
-	      break;
-	    case 'E':
-	      value = calendar.getDayOfWeek();
-	      current = count >= 4 ?
-	        locale.weekdays[value] :
-	        locale.shortWeekdays[value];
-	      break;
-	    case 'a':
-	      current = locale.ampms[calendar.getHourOfDay() >= 12 ?
-	        1 :
-	        0];
-	      break;
-	    case 'h':
-	      current = zeroPaddingNumber(calendar.
-	        getHourOfDay() % 12 || 12, count);
-	      break;
-	    case 'K':
-	      current = zeroPaddingNumber(calendar.
-	        getHourOfDay() % 12, count);
-	      break;
-	    case 'Z':
-	      var offset = calendar.getTimezoneOffset();
-	      var parts = [offset < 0 ? '-' : '+'];
-	      offset = Math.abs(offset);
-	      parts.push(zeroPaddingNumber(Math.floor(offset / 60) % 100, 2),
-	        zeroPaddingNumber(offset % 60, 2));
-	      current = parts.join('');
-	      break;
-	    default :
-	      // case 'd':
-	      // case 'H':
-	      // case 'm':
-	      // case 's':
-	      // case 'S':
-	      // case 'D':
-	      // case 'F':
-	      // case 'w':
-	      // case 'W':
-	      var index = calendarIndexMap[field];
-	      value = calendar.get(index);
-	      current = zeroPaddingNumber(value, count);
-	  }
-	  return current;
-	}
-
-	function matchField(dateStr, startIndex, matches) {
-	  var matchedLen = -1;
-	  var index = -1;
-	  var i;
-	  var len = matches.length;
-	  for (i = 0; i < len; i++) {
-	    var m = matches[i];
-	    var mLen = m.length;
-	    if (mLen > matchedLen &&
-	      matchPartString(dateStr, startIndex, m, mLen)) {
-	      matchedLen = mLen;
-	      index = i;
-	    }
-	  }
-	  return index >= 0 ? {
-	    value: index,
-	    startIndex: startIndex + matchedLen
-	  } : null;
-	}
-
-	function matchPartString(dateStr, startIndex, match, mLen) {
-	  for (var i = 0; i < mLen; i++) {
-	    if (dateStr.charAt(startIndex + i) !== match.charAt(i)) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	function getLeadingNumberLen(str) {
-	  var i, c;
-	  var len = str.length;
-	  for (i = 0; i < len; i++) {
-	    c = str.charAt(i);
-	    if (c < '0' || c > '9') {
-	      break;
-	    }
-	  }
-	  return i;
-	}
-
-	function matchNumber(dateStr, startIndex, count, obeyCount) {
-	  var str = dateStr;
-	  var n;
-	  if (obeyCount) {
-	    if (dateStr.length <= startIndex + count) {
-	      return null;
-	    }
-	    str = dateStr.slice(startIndex, startIndex + count);
-	    if (!str.match(/^\d+$/)) {
-	      throw new Error('GregorianCalendarFormat parse error, dateStr: ' + dateStr + ', patter: ' + (this.originalPattern));
-	    }
-	  } else {
-	    str = str.slice(startIndex);
-	  }
-	  n = parseInt(str, 10);
-	  if (isNaN(n)) {
-	    throw new Error('GregorianCalendarFormat parse error, dateStr: ' + dateStr + ', patter: ' + (this.originalPattern));
-	  }
-	  return {
-	    value: n,
-	    startIndex: startIndex + getLeadingNumberLen(str)
-	  };
-	}
-
-	function parseField(calendar, dateStr, startIndex, field, count, obeyCount, tmp) {
-	  var match, year, hour;
-	  if (dateStr.length <= startIndex) {
-	    return startIndex;
-	  }
-	  var locale = this.locale;
-	  switch (field) {
-	    case 'G':
-	      if ((match = matchField(dateStr, startIndex, locale.eras))) {
-	        if (calendar.isSetYear()) {
-	          if (match.value === 0) {
-	            year = calendar.getYear();
-	            calendar.setYear(1 - year);
-	          }
-	        } else {
-	          tmp.era = match.value;
-	        }
-	      }
-	      break;
-	    case 'y':
-	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
-	        year = match.value;
-	        if ('era' in tmp) {
-	          if (tmp.era === 0) {
-	            year = 1 - year;
-	          }
-	        }
-	        calendar.setYear(year);
-	      }
-	      break;
-	    case 'M':
-	      var month;
-	      if (count >= 3) {
-	        if ((match = matchField(dateStr, startIndex, locale[count === 3 ?
-	            'shortMonths' : 'months']))) {
-	          month = match.value;
-	        }
-	      } else {
-	        if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
-	          month = match.value - 1;
-	        }
-	      }
-	      if (match) {
-	        calendar.setMonth(month);
-	      }
-	      break;
-	    case 'k':
-	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
-	        calendar.setHourOfDay(match.value % 24);
-	      }
-	      break;
-	    case 'E':
-	      if ((match = matchField(dateStr, startIndex, locale[count > 3 ?
-	          'weekdays' :
-	          'shortWeekdays']))) {
-	        calendar.setDayOfWeek(match.value);
-	      }
-	      break;
-	    case 'a':
-	      if ((match = matchField(dateStr, startIndex, locale.ampms))) {
-	        if (calendar.isSetHourOfDay()) {
-	          if (match.value) {
-	            hour = calendar.getHourOfDay();
-	            if (hour < 12) {
-	              calendar.setHourOfDay((hour + 12) % 24);
-	            }
-	          }
-	        } else {
-	          tmp.ampm = match.value;
-	        }
-	      }
-	      break;
-	    case 'h':
-	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
-	        hour = match.value %= 12;
-	        if (tmp.ampm) {
-	          hour += 12;
-	        }
-	        calendar.setHourOfDay(hour);
-	      }
-	      break;
-	    case 'K':
-	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
-	        hour = match.value;
-	        if (tmp.ampm) {
-	          hour += 12;
-	        }
-	        calendar.setHourOfDay(hour);
-	      }
-	      break;
-	    case 'Z':
-	      var sign = 1;
-	      var zoneChar = dateStr.charAt(startIndex);
-	      if (zoneChar === '-') {
-	        sign = -1;
-	        startIndex++;
-	      } else if (zoneChar === '+') {
-	        startIndex++;
-	      } else {
-	        break;
-	      }
-	      if ((match = matchNumber.call(this, dateStr, startIndex, 2, true))) {
-	        var zoneOffset = match.value * 60;
-	        startIndex = match.startIndex;
-	        if ((match = matchNumber.call(this, dateStr, startIndex, 2, true))) {
-	          zoneOffset += match.value;
-	        }
-	        calendar.setTimezoneOffset(zoneOffset);
-	      }
-	      break;
-	    default :
-	      // case 'd':
-	      // case 'H':
-	      // case 'm':
-	      // case 's':
-	      // case 'S':
-	      // case 'D':
-	      // case 'F':
-	      // case 'w':
-	      // case 'W'
-	      if ((match = matchNumber.call(this, dateStr, startIndex, count, obeyCount))) {
-	        var index = calendarIndexMap[field];
-	        calendar.set(index, match.value);
-	      }
-	  }
-	  if (match) {
-	    startIndex = match.startIndex;
-	  }
-	  return startIndex;
-	}
-
-	mix(DateTimeFormat.prototype, {
-	  /**
-	   * format a GregorianDate instance according to specified pattern
-	   * @param {GregorianCalendar} calendar GregorianDate instance
-	   * @returns {string} formatted string of GregorianDate instance
-	   */
-	  format: function (calendar) {
-	    if (!calendar.isGregorianCalendar) {
-	      throw new Error('calendar must be type of GregorianCalendar');
-	    }
-	    var i;
-	    var ret = [];
-	    var pattern = this.pattern;
-	    var len = pattern.length;
-	    for (i = 0; i < len; i++) {
-	      var comp = pattern[i];
-	      if (comp.text) {
-	        ret.push(comp.text);
-	      } else if ('field' in comp) {
-	        ret.push(formatField(comp.field, comp.count, this.locale, calendar));
-	      }
-	    }
-	    return ret.join('');
-	  },
-
-	  /**
-	   * parse a formatted string of GregorianDate instance according to specified pattern
-	   * @param {String} dateStr formatted string of GregorianDate
-	   * @returns {GregorianCalendar}
-	   */
-	  parse: function (dateStr, calendarLocale) {
-	    var calendar = new GregorianCalendar(calendarLocale);
-	    var i;
-	    var j;
-	    var tmp = {};
-	    var obeyCount = false;
-	    var dateStrLen = dateStr.length;
-	    var errorIndex = -1;
-	    var startIndex = 0;
-	    var oldStartIndex = 0;
-	    var pattern = this.pattern;
-	    var len = pattern.length;
-
-	    loopPattern: {
-	      for (i = 0; errorIndex < 0 && i < len; i++) {
-	        var comp = pattern[i], text, textLen;
-	        oldStartIndex = startIndex;
-	        if ((text = comp.text)) {
-	          textLen = text.length;
-	          if ((textLen + startIndex) > dateStrLen) {
-	            errorIndex = startIndex;
-	          } else {
-	            for (j = 0; j < textLen; j++) {
-	              if (text.charAt(j) !== dateStr.charAt(j + startIndex)) {
-	                errorIndex = startIndex;
-	                break loopPattern;
-	              }
-	            }
-	            startIndex += textLen;
-	          }
-	        } else if ('field' in comp) {
-	          obeyCount = false;
-	          var nextComp = pattern[i + 1];
-	          if (nextComp) {
-	            if ('field' in nextComp) {
-	              obeyCount = true;
-	            } else {
-	              var c = nextComp.text.charAt(0);
-	              if (c >= '0' && c <= '9') {
-	                obeyCount = true;
-	              }
-	            }
-	          }
-	          startIndex = parseField.call(this, calendar,
-	            dateStr,
-	            startIndex,
-	            comp.field,
-	            comp.count,
-	            obeyCount,
-	            tmp);
-	          if (startIndex === oldStartIndex) {
-	            errorIndex = startIndex;
-	          }
-	        }
-	      }
-	    }
-
-	    if (errorIndex >= 0) {
-	      console.error('error when parsing date');
-	      console.error(dateStr);
-	      console.error(dateStr.slice(0, errorIndex) + '^');
-	      return undefined;
-	    }
-	    return calendar;
-	  }
-	});
-
-	mix(DateTimeFormat, {
-	  Style: DateTimeStyle,
-
-	  /**
-	   * get a formatter instance of short style pattern.
-	   * en-us: M/d/yy h:mm a
-	   * zh-cn: yy-M-d ah:mm
-	   * @param {Object} locale locale object
-	   * @returns {GregorianCalendar}
-	   * @static
-	   */
-	  getInstance: function (locale) {
-	    return this.getDateTimeInstance(DateTimeStyle.SHORT, DateTimeStyle.SHORT, locale);
-	  },
-
-	  /**
-	   * get a formatter instance of specified date style.
-	   * @param {Date.Formatter.Style} dateStyle date format style
-	   * @param {Object} locale
-	   * @returns {GregorianCalendar}
-	   * @static
-	   */
-	  getDateInstance: function (dateStyle, locale) {
-	    return this.getDateTimeInstance(dateStyle, undefined, locale);
-	  },
-
-	  /**
-	   * get a formatter instance of specified date style and time style.
-	   * @param {Date.Formatter.Style} dateStyle date format style
-	   * @param {Date.Formatter.Style} timeStyle time format style
-	   * @param {Object} locale
-	   * @returns {GregorianCalendar}
-	   * @static
-	   */
-	  getDateTimeInstance: function (dateStyle, timeStyle, locale) {
-	    locale = locale || enUsLocale;
-	    var datePattern = '';
-	    if (dateStyle !== undefined) {
-	      datePattern = locale.datePatterns[dateStyle];
-	    }
-	    var timePattern = '';
-	    if (timeStyle !== undefined) {
-	      timePattern = locale.timePatterns[timeStyle];
-	    }
-	    var pattern = datePattern;
-	    if (timePattern) {
-	      if (datePattern) {
-	        pattern = substitute(locale.dateTimePattern, {
-	          date: datePattern,
-	          time: timePattern
-	        });
-	      } else {
-	        pattern = timePattern;
-	      }
-	    }
-	    return new DateTimeFormat(pattern, locale);
-	  },
-
-	  /**
-	   * get a formatter instance of specified time style.
-	   * @param {Date.Formatter.Style} timeStyle time format style
-	   * @param {Object} locale
-	   * @returns {GregorianCalendar}
-	   * @static
-	   */
-	  getTimeInstance: function (timeStyle, locale) {
-	    return this.getDateTimeInstance(undefined, timeStyle, locale);
-	  }
-	});
-
-	module.exports = DateTimeFormat;
-
-	DateTimeFormat.version = '@VERSION@';
-
-	// gc_format@163.com
-
-/***/ },
 /* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8843,7 +8843,7 @@ webpackJsonp([0,1],[
 	var React = __webpack_require__(2);
 	var ROW = 3;
 	var COL = 4;
-	var cx = __webpack_require__(30).classSet;
+	var cx = __webpack_require__(31).classSet;
 
 	function goYear(direction) {
 	  var next = this.state.value.clone();
