@@ -12,14 +12,15 @@ var assign = require('object-assign');
 var GregorianCalendar = require('gregorian-calendar');
 var zhCn = require('gregorian-calendar/lib/locale/zh-cn');
 
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
+var Form = React.createClass({
+  mixins: [Validation.FieldMixin],
+
+  getInitialState() {
     var start = new GregorianCalendar(zhCn);
     start.setTime(Date.now());
     var end = start.clone();
     start.addDayOfMonth(-3);
-    this.state = {
+    return {
       status: {
         name: {},
         email: {},
@@ -29,18 +30,18 @@ class Form extends React.Component {
       formData: {
         name: '',
         email: '',
+        optional: '',
         startDate: start,
         endDate: end
       }
     };
-  }
+  },
 
-  handleValidate(status, formData) {
-    this.setState({
-      status: assign({}, this.state.status, status),
-      formData: assign({}, this.state.formData, formData)
-    });
-  }
+  handleReset(e) {
+    this.refs.validation.reset();
+    this.setState(this.getInitialState());
+    e.preventDefault();
+  },
 
   handleSubmit(e) {
     e.preventDefault();
@@ -54,7 +55,7 @@ class Form extends React.Component {
       }
       console.log(this.state.formData);
     });
-  }
+  },
 
   userExists(rule, value, callback) {
     setTimeout(function () {
@@ -67,7 +68,7 @@ class Form extends React.Component {
         callback();
       }
     }, 1000);
-  }
+  },
 
   validateDate(rule, value, callback) {
     var self = this;
@@ -99,7 +100,7 @@ class Form extends React.Component {
       }
     }
     callback(errors.length ? errors : undefined);
-  }
+  },
 
   render() {
     var formData = this.state.formData;
@@ -117,12 +118,12 @@ class Form extends React.Component {
         </div>
       </div>;
     }
-    return <form onSubmit={this.handleSubmit.bind(this)} className="form-horizontal">
-      <Validation ref='validation' onValidate={this.handleValidate.bind(this)}>
+    return <form onSubmit={this.handleSubmit} className="form-horizontal">
+      <Validation ref='validation' onValidate={this.handleValidate}>
         <div className="form-group">
           <label className="col-sm-2 control-label">name:</label>
           <div className="col-sm-10">
-            <Validator rules={[{type: 'string', requires: true, min: 5}, {validator: this.userExists.bind(this)}]}>
+            <Validator rules={[{requires: true, min: 5}, {validator: this.userExists}]}>
               <input name='name' className="form-control"  value={formData.name}/>
             </Validator>
                 {status.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
@@ -133,9 +134,16 @@ class Form extends React.Component {
         {field}
 
         <div className="form-group">
+          <label className="col-sm-2 control-label">optional:</label>
+          <div className="col-sm-10">
+            <input name='optional' className="form-control"  value={formData.optional} onChange={this.setField.bind(this, 'optional')}/>
+          </div>
+        </div>
+
+        <div className="form-group">
           <label className="col-sm-2 control-label">start date:</label>
           <div className="col-sm-10">
-            <Validator rules={{validator: this.validateDate.bind(this), message: 'will not effect'}}>
+            <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
               <DatePicker name='startDate' formatter={this.props.formatter} calendar={<Calendar showTime={false}/>}
                 value={formData.startDate}>
                 <input type="text" className="form-control" style={{
@@ -152,7 +160,7 @@ class Form extends React.Component {
         <div className="form-group">
           <label className="col-sm-2 control-label">end date:</label>
           <div className="col-sm-10">
-            <Validator rules={{validator: this.validateDate.bind(this), message: 'will not effect'}}>
+            <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
               <DatePicker name='endDate' formatter={this.props.formatter} calendar={<Calendar />}
                 value={formData.endDate}>
                 <input type="text" className="form-control" style={{
@@ -169,12 +177,14 @@ class Form extends React.Component {
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
             <button type="submit" className="btn btn-default">submit</button>
+            &nbsp;&nbsp;&nbsp;
+            <a href='#' className="btn btn-default" onClick={this.handleReset}>reset</a>
           </div>
         </div>
       </Validation>
     </form>;
   }
-}
+});
 
 React.render(<div>
   <h1>Form</h1>

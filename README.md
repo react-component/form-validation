@@ -78,6 +78,7 @@ React.render(<Validation ref='validation' onValidate={this.onValidate}>
 #### methods
 
 - validate(callback:function): validate all fields, call callback with isValid as parameter
+- reset: reset validation to initial state, used for form reset
 - forceValidate(fields:String[],callback:Function): validate specified fields, call callback with isValid as parameter. fields is component's name which is wrapped by Validator
 
 
