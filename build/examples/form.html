@@ -196,14 +196,15 @@
 <span class="hljs-reserved">var</span> GregorianCalendar = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gregorian-calendar'</span>);
 <span class="hljs-reserved">var</span> zhCn = <span class="hljs-built_in">require</span>(<span class="hljs-string">'gregorian-calendar/lib/locale/zh-cn'</span>);
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Form</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> {</span>
-  constructor(props) {
-    <span class="hljs-keyword">super</span>(props);
+<span class="hljs-reserved">var</span> Form = React.createClass({
+  <span class="hljs-attribute">mixins</span>: [Validation.FieldMixin],
+
+  getInitialState() {
     <span class="hljs-reserved">var</span> start = <span class="hljs-keyword">new</span> GregorianCalendar(zhCn);
     start.setTime(Date.now());
     <span class="hljs-reserved">var</span> end = start.clone();
     start.addDayOfMonth(-<span class="hljs-number">3</span>);
-    <span class="hljs-keyword">this</span>.state = {
+    <span class="hljs-keyword">return</span> {
       <span class="hljs-attribute">status</span>: {
         <span class="hljs-attribute">name</span>: {},
         <span class="hljs-attribute">email</span>: {},
@@ -213,18 +214,18 @@
       <span class="hljs-attribute">formData</span>: {
         <span class="hljs-attribute">name</span>: <span class="hljs-string">''</span>,
         <span class="hljs-attribute">email</span>: <span class="hljs-string">''</span>,
+        <span class="hljs-attribute">optional</span>: <span class="hljs-string">''</span>,
         <span class="hljs-attribute">startDate</span>: start,
         <span class="hljs-attribute">endDate</span>: end
       }
     };
-  }
+  },
 
-  handleValidate(status, formData) {
-    <span class="hljs-keyword">this</span>.setState({
-      <span class="hljs-attribute">status</span>: assign({}, <span class="hljs-keyword">this</span>.state.status, status),
-      <span class="hljs-attribute">formData</span>: assign({}, <span class="hljs-keyword">this</span>.state.formData, formData)
-    });
-  }
+  handleReset(e) {
+    <span class="hljs-keyword">this</span>.refs.validation.reset();
+    <span class="hljs-keyword">this</span>.setState(<span class="hljs-keyword">this</span>.getInitialState());
+    e.preventDefault();
+  },
 
   handleSubmit(e) {
     e.preventDefault();
@@ -238,7 +239,7 @@
       }
       <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.formData);
     });
-  }
+  },
 
   userExists(rule, value, callback) {
     setTimeout(<span class="hljs-reserved">function</span> () {
@@ -251,7 +252,7 @@
         callback();
       }
     }, <span class="hljs-number">1000</span>);
-  }
+  },
 
   validateDate(rule, value, callback) {
     <span class="hljs-reserved">var</span> self = <span class="hljs-keyword">this</span>;
@@ -283,7 +284,7 @@
       }
     }
     callback(errors.length ? errors : <span class="hljs-literal">undefined</span>);
-  }
+  },
 
   render() {
     <span class="hljs-reserved">var</span> formData = <span class="hljs-keyword">this</span>.state.formData;
@@ -301,12 +302,12 @@
         &lt;/div&gt;
       &lt;/div&gt;;
     }
-    <span class="hljs-keyword">return</span> &lt;form onSubmit={<span class="hljs-keyword">this</span>.handleSubmit.bind(<span class="hljs-keyword">this</span>)} className=<span class="hljs-string">"form-horizontal"</span>&gt;
-      &lt;Validation ref=<span class="hljs-string">'validation'</span> onValidate={<span class="hljs-keyword">this</span>.handleValidate.bind(<span class="hljs-keyword">this</span>)}&gt;
+    <span class="hljs-keyword">return</span> &lt;form onSubmit={<span class="hljs-keyword">this</span>.handleSubmit} className=<span class="hljs-string">"form-horizontal"</span>&gt;
+      &lt;Validation ref=<span class="hljs-string">'validation'</span> onValidate={<span class="hljs-keyword">this</span>.handleValidate}&gt;
         &lt;div className=<span class="hljs-string">"form-group"</span>&gt;
           &lt;label className=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;<span class="hljs-attribute">name</span>:&lt;/label&gt;
           &lt;div className=<span class="hljs-string">"col-sm-10"</span>&gt;
-            &lt;Validator rules={[{<span class="hljs-attribute">type</span>: <span class="hljs-string">'string'</span>, <span class="hljs-attribute">requires</span>: <span class="hljs-literal">true</span>, <span class="hljs-attribute">min</span>: <span class="hljs-number">5</span>}, {<span class="hljs-attribute">validator</span>: <span class="hljs-keyword">this</span>.userExists.bind(<span class="hljs-keyword">this</span>)}]}&gt;
+            &lt;Validator rules={[{<span class="hljs-attribute">requires</span>: <span class="hljs-literal">true</span>, <span class="hljs-attribute">min</span>: <span class="hljs-number">5</span>}, {<span class="hljs-attribute">validator</span>: <span class="hljs-keyword">this</span>.userExists}]}&gt;
               &lt;input name=<span class="hljs-string">'name'</span> className=<span class="hljs-string">"form-control"</span>  value={formData.name}/&gt;
             &lt;/Validator&gt;
                 {status.name.isValidating ? &lt;span style={{<span class="hljs-attribute">color</span>: <span class="hljs-string">'green'</span>}}&gt; isValidating &lt;/span&gt; : <span class="hljs-literal">null</span>}
@@ -317,9 +318,16 @@
         {field}
 
         &lt;div className=<span class="hljs-string">"form-group"</span>&gt;
+          &lt;label className=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;<span class="hljs-attribute">optional</span>:&lt;/label&gt;
+          &lt;div className=<span class="hljs-string">"col-sm-10"</span>&gt;
+            &lt;input name=<span class="hljs-string">'optional'</span> className=<span class="hljs-string">"form-control"</span>  value={formData.optional} onChange={<span class="hljs-keyword">this</span>.setField.bind(<span class="hljs-keyword">this</span>, <span class="hljs-string">'optional'</span>)}/&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div className=<span class="hljs-string">"form-group"</span>&gt;
           &lt;label className=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;start <span class="hljs-attribute">date</span>:&lt;/label&gt;
           &lt;div className=<span class="hljs-string">"col-sm-10"</span>&gt;
-            &lt;Validator rules={{<span class="hljs-attribute">validator</span>: <span class="hljs-keyword">this</span>.validateDate.bind(<span class="hljs-keyword">this</span>), <span class="hljs-attribute">message</span>: <span class="hljs-string">'will not effect'</span>}}&gt;
+            &lt;Validator rules={{<span class="hljs-attribute">validator</span>: <span class="hljs-keyword">this</span>.validateDate, <span class="hljs-attribute">message</span>: <span class="hljs-string">'will not effect'</span>}}&gt;
               &lt;DatePicker name=<span class="hljs-string">'startDate'</span> formatter={<span class="hljs-keyword">this</span>.props.formatter} calendar={&lt;Calendar showTime={<span class="hljs-literal">false</span>}/&gt;}
                 value={formData.startDate}&gt;
                 &lt;input type=<span class="hljs-string">"text"</span> className=<span class="hljs-string">"form-control"</span> style={{
@@ -336,7 +344,7 @@
         &lt;div className=<span class="hljs-string">"form-group"</span>&gt;
           &lt;label className=<span class="hljs-string">"col-sm-2 control-label"</span>&gt;end <span class="hljs-attribute">date</span>:&lt;/label&gt;
           &lt;div className=<span class="hljs-string">"col-sm-10"</span>&gt;
-            &lt;Validator rules={{<span class="hljs-attribute">validator</span>: <span class="hljs-keyword">this</span>.validateDate.bind(<span class="hljs-keyword">this</span>), <span class="hljs-attribute">message</span>: <span class="hljs-string">'will not effect'</span>}}&gt;
+            &lt;Validator rules={{<span class="hljs-attribute">validator</span>: <span class="hljs-keyword">this</span>.validateDate, <span class="hljs-attribute">message</span>: <span class="hljs-string">'will not effect'</span>}}&gt;
               &lt;DatePicker name=<span class="hljs-string">'endDate'</span> formatter={<span class="hljs-keyword">this</span>.props.formatter} calendar={&lt;Calendar /&gt;}
                 value={formData.endDate}&gt;
                 &lt;input type=<span class="hljs-string">"text"</span> className=<span class="hljs-string">"form-control"</span> style={{
@@ -353,12 +361,14 @@
         &lt;div className=<span class="hljs-string">"form-group"</span>&gt;
           &lt;div className=<span class="hljs-string">"col-sm-offset-2 col-sm-10"</span>&gt;
             &lt;button type=<span class="hljs-string">"submit"</span> className=<span class="hljs-string">"btn btn-default"</span>&gt;submit&lt;/button&gt;
+            &amp;nbsp;&amp;nbsp;&amp;nbsp;
+            &lt;a href=<span class="hljs-string">'#'</span> className=<span class="hljs-string">"btn btn-default"</span> onClick={<span class="hljs-keyword">this</span>.handleReset}&gt;reset&lt;/a&gt;
           &lt;/div&gt;
         &lt;/div&gt;
       &lt;/Validation&gt;
     &lt;/form&gt;;
   }
-}
+});
 
 React.render(&lt;div&gt;
   &lt;h1&gt;Form&lt;/h1&gt;
