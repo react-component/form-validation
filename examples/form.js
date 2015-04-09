@@ -25,10 +25,12 @@ var Form = React.createClass({
         name: {},
         email: {},
         startDate: {},
-        endDate: {}
+        endDate: {},
+        must: {}
       },
       formData: {
         name: '',
+        must: '',
         email: '',
         optional: '',
         startDate: start,
@@ -123,7 +125,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">name:</label>
           <div className="col-sm-10">
-            <Validator rules={[{requires: true, min: 5}, {validator: this.userExists}]}>
+            <Validator rules={[{required: true, min: 5}, {validator: this.userExists}]}>
               <input name='name' className="form-control"  value={formData.name}/>
             </Validator>
                 {status.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
@@ -137,6 +139,16 @@ var Form = React.createClass({
           <label className="col-sm-2 control-label">optional:</label>
           <div className="col-sm-10">
             <input name='optional' className="form-control"  value={formData.optional} onChange={this.setField.bind(this, 'optional')}/>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 control-label">must:</label>
+          <div className="col-sm-10">
+            <Validator rules={{required: true, whitespace: true}}>
+              <input name='must' className="form-control"  value={formData.must}/>
+            </Validator>
+             {status.must.errors ? <span style={errorStyle}> {status.must.errors.join(', ')}</span> : null}
           </div>
         </div>
 
@@ -177,7 +189,7 @@ var Form = React.createClass({
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
             <button type="submit" className="btn btn-default">submit</button>
-            &nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;
             <a href='#' className="btn btn-default" onClick={this.handleReset}>reset</a>
           </div>
         </div>
