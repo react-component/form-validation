@@ -84,7 +84,7 @@ React.render(<Validation ref='validation' onValidate={this.onValidate}>
 
 ### Validator
 
-Validator 's children must be one component which support onChange handler and value/name prop such as <input />
+Validator 's children must be one component which support trigger handler and value/name prop such as <input />
 
 #### props
 
@@ -103,6 +103,12 @@ Validator 's children must be one component which support onChange handler and v
           <td>Object|Array</td>
           <td></td>
           <td>see https://github.com/yiminghe/async-validator,for example: {type:'string',min:4},[{type:'string',whitespace:true,required:true},{validator:validateFn}] </td>
+        </tr>
+        <tr>
+          <td>trigger</td>
+          <td>String</td>
+          <td>onChange</td>
+          <td>when to validate</td>
         </tr>
     </tbody>
 </table>

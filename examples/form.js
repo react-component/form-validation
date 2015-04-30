@@ -1,6 +1,6 @@
-// blank
 require('bootstrap/dist/css/bootstrap.css');
 require('rc-calendar/assets/bootstrap.css');
+
 var Validation = require('rc-form-validation');
 var Validator = Validation.Validator;
 var React = require('react');
@@ -111,10 +111,14 @@ var Form = React.createClass({
     var errorStyle = {color: 'red', fontWeight: 'bold'};
     if (!this.state.remove) {
       field = <div className="form-group">
-        <label className="col-sm-2 control-label">email:</label>
+        <label className="col-sm-2 control-label">email(validate on blur):</label>
         <div className="col-sm-10">
-          <Validator rules={{type: 'email', message: '错误的 email 格式'}}>
-            <input name='email' className="form-control" value={formData.email}/>
+          <Validator rules={{type: 'email', message: '错误的 email 格式'}}
+          trigger="onBlur"
+          >
+            <input name='email' className="form-control" value={formData.email}
+            onChange={this.setField.bind(this,'email')}
+            />
           </Validator>
         {status.email.errors ? <span style={errorStyle}> {status.email.errors.join(', ')}</span> : null}
         </div>
