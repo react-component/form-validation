@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var createChainedFunction = require('rc-util').createChainedFunction;
 

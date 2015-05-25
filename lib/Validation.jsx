@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var React = require('react');
 var AsyncValidate = require('async-validator');
 var Validator = require('./Validator');
