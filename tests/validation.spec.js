@@ -1,3 +1,5 @@
+'use strict';
+
 var Validation = require('../');
 var Validator = Validation.Validator;
 var expect = require('expect.js');

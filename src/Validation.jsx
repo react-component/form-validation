@@ -1,3 +1,5 @@
+'use strict';
+
 var React = require('react');
 var AsyncValidate = require('async-validator');
 var Validator = require('./Validator');
@@ -33,9 +35,12 @@ class Validation extends React.Component {
     var validators = this.validators;
     Object.keys(validators).forEach((name)=> {
       var validator = validators[name];
-      var errors = validator.errors && validator.errors.map((e)=> {
+      var errors;
+      if (validator.errors) {
+        errors = validator.errors.map((e)=> {
           return e.message;
         });
+      }
       if (errors && errors.length === 0) {
         errors = null;
       }
@@ -105,9 +110,9 @@ class Validation extends React.Component {
         validator.errors = errors;
         validator.isValidating = false;
         validator.dirty = false;
-        var result = self.getValidateResult();
-        result.formData[name] = value;
-        self.props.onValidate(result.status, result.formData);
+        var r = self.getValidateResult();
+        r.formData[name] = value;
+        self.props.onValidate(r.status, r.formData);
         if (fn) {
           fn();
         }
@@ -128,6 +133,8 @@ class Validation extends React.Component {
     var self = this;
     var validators = this.validators;
     var validator;
+    var doing = 0;
+
     fields = fields || Object.keys(validators);
     var count = fields.length;
     if (count === 0) {
@@ -144,7 +151,6 @@ class Validation extends React.Component {
       }
     }
 
-    var doing = 0;
     fields.forEach((name)=> {
       validator = validators[name];
       self.handleInputChange(validator, validator.getValue(), track);
@@ -156,6 +162,8 @@ class Validation extends React.Component {
     var validators = this.validators;
     var count = 0;
     var validator;
+    var doing = 0;
+
     Object.keys(validators).forEach((name)=> {
       validator = validators[name];
       if (validator.dirty) {
@@ -175,7 +183,6 @@ class Validation extends React.Component {
       }
     }
 
-    var doing = 0;
     Object.keys(validators).forEach((name)=> {
       validator = validators[name];
       if (validator.dirty) {

@@ -1,4 +1,3 @@
-/**
- * only require other specs here
- */
+'use strict';
+
 require('./validation.spec');

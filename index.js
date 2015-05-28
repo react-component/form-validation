@@ -1,1 +1,3 @@
-module.exports = require('./lib/Validation');
+'use strict';
+
+module.exports = require('./src/');

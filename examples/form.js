@@ -1,3 +1,5 @@
+'use strict';
+
 require('bootstrap/dist/css/bootstrap.css');
 require('rc-calendar/assets/bootstrap.css');
 

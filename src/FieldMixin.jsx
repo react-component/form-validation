@@ -1,3 +1,5 @@
+'use strict';
+
 function merge() {
   var ret = {};
   var args = [].slice.call(arguments, 0);
