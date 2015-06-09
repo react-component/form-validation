@@ -24,6 +24,9 @@ class Validation extends React.Component {
       if (!r.validator) {
         r.type = r.type || 'string';// default string type for form field
       }
+      if (r.required) {
+        r.whitespace = true;
+      }
     });
     ret[validator.getName()] = rules;
     return ret;

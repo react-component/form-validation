@@ -53,7 +53,7 @@ describe('validation works', () => {
         <Validator ref='validator' rules={[{type: 'string', min: 5, max: 10}, {validator: validateInput}]}>
           <input name="name" value={state.formData.name} ref="input" onChange={this.onInputChange}/>
         </Validator>
-        <Validator rules={[{type: 'string', required: true, whitespace: true}]}>
+        <Validator rules={[{type: 'string', required: true}]}>
           <input name="pass" value={state.formData.pass}/>
         </Validator>
       {state.status.name.errors ? <div ref='error'>{state.status.name.errors.join(',')}</div> : null}

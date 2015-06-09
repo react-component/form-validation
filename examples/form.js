@@ -151,7 +151,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">must:</label>
           <div className="col-sm-10">
-            <Validator rules={{required: true, whitespace: true}}>
+            <Validator rules={{required: true}}>
               <input name='must' className="form-control"  value={formData.must}/>
             </Validator>
              {status.must.errors ? <span style={errorStyle}> {status.must.errors.join(', ')}</span> : null}
