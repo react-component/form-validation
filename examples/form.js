@@ -3,6 +3,7 @@
 require('bootstrap/dist/css/bootstrap.css');
 require('rc-calendar/assets/bootstrap.css');
 
+var pkg = require('../package.json');
 var Validation = require('rc-form-validation');
 var Validator = Validation.Validator;
 var React = require('react');
@@ -238,6 +239,6 @@ var Form = React.createClass({
 });
 
 React.render(<div>
-  <h1>Form</h1>
+  <h1>{pkg.name}@{pkg.version}</h1>
   <Form/>
 </div>, document.getElementById('__react-content'));
