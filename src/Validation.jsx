@@ -4,6 +4,8 @@ var React = require('react');
 var AsyncValidate = require('async-validator');
 var Validator = require('./Validator');
 var actionId = 0;
+var assign = require('object-assign');
+var textInputTypes = ['text', 'password'];
 
 class Validation extends React.Component {
   constructor(props) {
@@ -17,17 +19,11 @@ class Validation extends React.Component {
   getSchema(validator) {
     var ret = {};
     var rules = validator.props.rules;
-    if (!Array.isArray(rules)) {
+    if (Array.isArray(rules)) {
+      rules = rules.concat();
+    } else {
       rules = [rules];
     }
-    rules.forEach((r)=> {
-      if (!r.validator) {
-        r.type = r.type || 'string';// default string type for form field
-      }
-      if (r.required) {
-        r.whitespace = true;
-      }
-    });
     ret[validator.getName()] = rules;
     return ret;
   }
@@ -91,8 +87,24 @@ class Validation extends React.Component {
   }
 
   handleInputChange(validator, value, fn) {
-    var values = {};
+    var inputElement = validator.getInputElement();
+    var isTextField = inputElement.type === 'input' &&
+      (!inputElement.props.type || textInputTypes.indexOf(inputElement.props.type) !== -1);
+    if (isTextField && value === '') {
+      value = undefined;
+    }
     var name = validator.getName();
+    var schema = this.getSchema(validator);
+    var rules = schema[name];
+    rules.forEach(function (rule, index) {
+      if (rule.transform) {
+        value = rule.transform(value);
+        var newRule = assign({}, rule);
+        newRule.transform = null;
+        rules[index] = newRule;
+      }
+    });
+    var values = {};
     values[name] = value;
     validator.errors = undefined;
     validator.isValidating = true;
@@ -104,7 +116,7 @@ class Validation extends React.Component {
     result.formData[name] = value;
     this.props.onValidate(result.status, result.formData);
     var self = this;
-    new AsyncValidate(this.getSchema(validator)).validate(values, (errors)=> {
+    new AsyncValidate(schema).validate(values, (errors)=> {
       var validators = self.validators;
       // in case component is unmount and remount
       var nowValidator = validators[name];

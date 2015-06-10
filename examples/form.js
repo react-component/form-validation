@@ -14,6 +14,15 @@ var assign = require('object-assign');
 var GregorianCalendar = require('gregorian-calendar');
 var zhCn = require('gregorian-calendar/lib/locale/zh-cn');
 
+function toNumber(v) {
+  var num = Number(v);
+  // num === ' '
+  if (!isNaN(num)) {
+    num = parseInt(v);
+  }
+  return isNaN(num) ? v : num;
+}
+
 var Form = React.createClass({
   mixins: [Validation.FieldMixin],
 
@@ -24,6 +33,8 @@ var Form = React.createClass({
     start.addDayOfMonth(-3);
     return {
       status: {
+        number: {},
+        optionalNumber: {},
         name: {},
         email: {},
         startDate: {},
@@ -31,6 +42,8 @@ var Form = React.createClass({
         must: {}
       },
       formData: {
+        number: 0,
+        optionalNumber: undefined,
         name: '',
         must: '',
         email: '',
@@ -116,10 +129,10 @@ var Form = React.createClass({
         <label className="col-sm-2 control-label">email(validate on blur):</label>
         <div className="col-sm-10">
           <Validator rules={{type: 'email', message: '错误的 email 格式'}}
-          trigger="onBlur"
+            trigger="onBlur"
           >
             <input name='email' className="form-control" value={formData.email}
-            onChange={this.setField.bind(this,'email')}
+              onChange={this.setField.bind(this, 'email')}
             />
           </Validator>
         {status.email.errors ? <span style={errorStyle}> {status.email.errors.join(', ')}</span> : null}
@@ -142,6 +155,26 @@ var Form = React.createClass({
         {field}
 
         <div className="form-group">
+          <label className="col-sm-2 control-label">required number:</label>
+          <div className="col-sm-10">
+            <Validator rules={[{required: true, type: 'number', transform: toNumber}]}>
+              <input name='number' className="form-control"  value={formData.number}/>
+            </Validator>
+            {status.number.errors ? <span style={errorStyle}> {status.number.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 control-label">optional number:</label>
+          <div className="col-sm-10">
+            <Validator rules={[{type: 'number', transform: toNumber}]}>
+              <input name='optionalNumber' className="form-control"  value={formData.optionalNumber}/>
+            </Validator>
+            {status.optionalNumber.errors ? <span style={errorStyle}> {status.optionalNumber.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
           <label className="col-sm-2 control-label">optional:</label>
           <div className="col-sm-10">
             <input name='optional' className="form-control"  value={formData.optional} onChange={this.setField.bind(this, 'optional')}/>
@@ -149,12 +182,12 @@ var Form = React.createClass({
         </div>
 
         <div className="form-group">
-          <label className="col-sm-2 control-label">must:</label>
+          <label className="col-sm-2 control-label">required:</label>
           <div className="col-sm-10">
             <Validator rules={{required: true}}>
               <input name='must' className="form-control"  value={formData.must}/>
             </Validator>
-             {status.must.errors ? <span style={errorStyle}> {status.must.errors.join(', ')}</span> : null}
+            {status.must.errors ? <span style={errorStyle}> {status.must.errors.join(', ')}</span> : null}
           </div>
         </div>
 
@@ -171,7 +204,7 @@ var Form = React.createClass({
                 }}/>
               </DatePicker>
             </Validator>
-                {status.startDate.errors ? <span style={errorStyle}> {status.startDate.errors.join(', ')}</span> : null}
+            {status.startDate.errors ? <span style={errorStyle}> {status.startDate.errors.join(', ')}</span> : null}
           </div>
         </div>
 

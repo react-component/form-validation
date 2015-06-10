@@ -18,6 +18,10 @@ class Validator extends React.Component {
     this.actionId = -1;
   }
 
+  getInputElement() {
+    return React.Children.only(this.props.children);
+  }
+
   handleChange(e) {
     // support custom element
     var value = e.target ? e.target.value : e;
@@ -25,16 +29,16 @@ class Validator extends React.Component {
   }
 
   getName() {
-    return React.Children.only(this.props.children).props.name;
+    return this.getInputElement().props.name;
   }
 
   getValue() {
-    return React.Children.only(this.props.children).props.value;
+    return this.getInputElement().props.value;
   }
 
   render() {
     var props = this.props;
-    var child = React.Children.only(props.children);
+    var child = this.getInputElement();
     var trigger = props.trigger;
     var triggerObj = {};
     triggerObj[trigger] = createChainedFunction(child.props[trigger], this.handleChange);

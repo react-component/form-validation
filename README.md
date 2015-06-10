@@ -125,7 +125,7 @@ npm start
 
 http://localhost:8010/examples/
 
-online example: http://react-component.github.io/form-validation/build/examples/
+online example: http://react-component.github.io/form-validation/examples/
 
 ## Test Case
 

@@ -1,5 +1,8 @@
 # History
 ----
+## 2.4.0 / 2015-06-10
+
+- treat empty text field as undefined (make required works)
 
 ## 2.2.0 / 2015-04-30
 

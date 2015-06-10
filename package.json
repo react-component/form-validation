@@ -1,6 +1,6 @@
 {
   "name": "rc-form-validation",
-  "version": "2.3.2",
+  "version": "2.4.1",
   "description": "form-validation ui component for react",
   "keywords": [
     "react",
@@ -40,7 +40,6 @@
     "expect.js": "~0.3.1",
     "gregorian-calendar": "3.x",
     "gregorian-calendar-format": "^2.1.1",
-    "object-assign": "~2.0.0",
     "precommit-hook": "^1.0.7",
     "rc-calendar": "3.x",
     "rc-server": "3.x",
@@ -51,7 +50,8 @@
     "precommit"
   ],
   "dependencies": {
-    "async-validator": "^1.0.0",
+    "async-validator": "^1.1.5",
+    "object-assign": "~2.0.0",
     "rc-util": "2.x"
   }
 }
