@@ -35,6 +35,7 @@ var Form = React.createClass({
     return {
       status: {
         number: {},
+        blurNumber: {},
         optionalNumber: {},
         name: {},
         email: {},
@@ -44,6 +45,7 @@ var Form = React.createClass({
       },
       formData: {
         number: 0,
+        blurNumber: undefined,
         optionalNumber: undefined,
         name: '',
         must: '',
@@ -156,6 +158,16 @@ var Form = React.createClass({
         {field}
 
         <div className="form-group">
+          <label className="col-sm-2 control-label">required number (validate on blur):</label>
+          <div className="col-sm-10">
+            <Validator trigger="onBlur" rules={[{required: true, type: 'number', transform: toNumber}]}>
+              <input name='blurNumber' className="form-control"  value={formData.blurNumber}/>
+            </Validator>
+            {status.blurNumber.errors ? <span style={errorStyle}> {status.blurNumber.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
           <label className="col-sm-2 control-label">required number:</label>
           <div className="col-sm-10">
             <Validator rules={[{required: true, type: 'number', transform: toNumber}]}>
@@ -168,7 +180,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">optional number:</label>
           <div className="col-sm-10">
-            <Validator rules={[{type: 'number', transform: toNumber}]}>
+            <Validator  rules={[{type: 'number', transform: toNumber}]}>
               <input name='optionalNumber' className="form-control"  value={formData.optionalNumber}/>
             </Validator>
             {status.optionalNumber.errors ? <span style={errorStyle}> {status.optionalNumber.errors.join(', ')}</span> : null}

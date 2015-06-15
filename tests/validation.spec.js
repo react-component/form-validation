@@ -11,6 +11,15 @@ function getInnerText(node) {
   return node.textContent || node.innerText;
 }
 
+function toNumber(v) {
+  var num = Number(v);
+  // num === ' '
+  if (!isNaN(num)) {
+    num = parseInt(v);
+  }
+  return isNaN(num) ? v : num;
+}
+
 describe('validation works', () => {
   var div = document.createElement('div');
   document.body.appendChild(div);
@@ -28,10 +37,12 @@ describe('validation works', () => {
       return {
         formData: {
           name: '',
+          blurNumber: '',
           pass: ''
         },
         status: {
           name: {},
+          blurNumber: {},
           pass: {}
         }
       }
@@ -61,8 +72,12 @@ describe('validation works', () => {
         <Validator rules={[{type: 'string', required: true}]}>
           <input name="pass" value={state.formData.pass}/>
         </Validator>
+        <Validator trigger="onBlur" rules={[{type: 'number', transform: toNumber}]}>
+          <input name="blurNumber" value={state.formData.blurNumber} ref="blurInput" />
+        </Validator>
       {state.status.name.errors ? <div ref='error'>{state.status.name.errors.join(',')}</div> : null}
         {state.status.pass.errors ? <div ref='error2'>{state.status.pass.errors.join(',')}</div> : null}
+         {state.status.blurNumber.errors ? <div ref='error3'>{state.status.blurNumber.errors.join(',')}</div> : null}
       </Validation>;
     }
 
@@ -113,6 +128,28 @@ describe('validation works', () => {
       expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters');
       expect(form.refs.error2).to.be(undefined);
       done();
+    });
+  });
+
+  describe('trigger', ()=> {
+    it('blur works for error', (done)=> {
+      var blurInput = React.findDOMNode(form.refs.blurInput);
+      blurInput.value = 'a';
+      Simulate.change(blurInput);
+      form.refs.validation.validate(()=> {
+        expect(getInnerText(React.findDOMNode(form.refs.error3))).to.be('blurNumber is not a number');
+        done();
+      });
+    });
+
+    it('blur works for ok', (done)=> {
+      var blurInput = React.findDOMNode(form.refs.blurInput);
+      blurInput.value = '1';
+      Simulate.change(blurInput);
+      form.refs.validation.validate(()=> {
+        expect(form.refs.error3).not.to.be.ok();
+        done();
+      });
     });
   });
 });
