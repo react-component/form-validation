@@ -3,11 +3,17 @@
 var React = require('react');
 var createChainedFunction = require('rc-util').createChainedFunction;
 
+function getValueFromEvent(e) {
+  // support custom element
+  return e.target ? e.target.value : e;
+}
+
 class Validator extends React.Component {
   constructor(props) {
     super(props);
     this.reset();
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeSilently = this.handleChangeSilently.bind(this);
   }
 
   reset() {
@@ -22,10 +28,16 @@ class Validator extends React.Component {
     return React.Children.only(this.props.children);
   }
 
+
   handleChange(e) {
-    // support custom element
-    var value = e.target ? e.target.value : e;
-    this.props.handleInputChange(this, value);
+    this.props.handleInputChange(this, getValueFromEvent(e));
+  }
+
+  handleChangeSilently(e) {
+    this.errors = undefined;
+    this.dirty = true;
+    this.isValidating = false;
+    this.props.handleInputChangeSilently(this, getValueFromEvent(e));
   }
 
   getName() {
@@ -41,6 +53,10 @@ class Validator extends React.Component {
     var child = this.getInputElement();
     var trigger = props.trigger;
     var triggerObj = {};
+    // keep model updated
+    if (trigger !== 'onChange') {
+      triggerObj.onChange = createChainedFunction(child.props.onChange, this.handleChangeSilently);
+    }
     triggerObj[trigger] = createChainedFunction(child.props[trigger], this.handleChange);
     return React.cloneElement(child, triggerObj);
   }

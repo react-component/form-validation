@@ -11,7 +11,7 @@ class Validation extends React.Component {
   constructor(props) {
     super(props);
     this.validators = {};
-    ['attachValidator', 'detachValidator', 'handleInputChange'].forEach((m)=> {
+    ['attachValidator', 'detachValidator', 'handleInputChange', 'handleInputChangeSilently'].forEach((m)=> {
       this[m] = this[m].bind(this);
     });
   }
@@ -74,7 +74,8 @@ class Validation extends React.Component {
             return React.cloneElement(child, {
               attachValidator: self.attachValidator,
               detachValidator: self.detachValidator,
-              handleInputChange: self.handleInputChange
+              handleInputChange: self.handleInputChange,
+              handleInputChangeSilently: self.handleInputChangeSilently
             });
           } else if (child.props && child.props.children) {
             return React.cloneElement(child, {}, self.attachValidators(child.props.children));
@@ -84,6 +85,12 @@ class Validation extends React.Component {
       });
     }
     return children;
+  }
+
+  handleInputChangeSilently(validator, value) {
+    var r = this.getValidateResult();
+    r.formData[validator.getName()] = value;
+    this.props.onValidate(r.status, r.formData);
   }
 
   handleInputChange(validator, value, fn) {
