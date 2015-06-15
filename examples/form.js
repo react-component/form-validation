@@ -48,6 +48,7 @@ webpackJsonp([0,1],[
 	    return {
 	      status: {
 	        number: {},
+	        blurNumber: {},
 	        optionalNumber: {},
 	        name: {},
 	        email: {},
@@ -57,6 +58,7 @@ webpackJsonp([0,1],[
 	      },
 	      formData: {
 	        number: 0,
+	        blurNumber: undefined,
 	        optionalNumber: undefined,
 	        name: '',
 	        must: '',
@@ -205,6 +207,30 @@ webpackJsonp([0,1],[
 	          )
 	        ),
 	        field,
+	        React.createElement(
+	          'div',
+	          { className: 'form-group' },
+	          React.createElement(
+	            'label',
+	            { className: 'col-sm-2 control-label' },
+	            'required number (validate on blur):'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-sm-10' },
+	            React.createElement(
+	              Validator,
+	              { trigger: 'onBlur', rules: [{ required: true, type: 'number', transform: toNumber }] },
+	              React.createElement('input', { name: 'blurNumber', className: 'form-control', value: formData.blurNumber })
+	            ),
+	            status.blurNumber.errors ? React.createElement(
+	              'span',
+	              { style: errorStyle },
+	              ' ',
+	              status.blurNumber.errors.join(', ')
+	            ) : null
+	          )
+	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'form-group' },
@@ -7043,7 +7069,7 @@ webpackJsonp([0,1],[
 
 	module.exports = {
 		"name": "rc-form-validation",
-		"version": "2.4.1",
+		"version": "2.4.3",
 		"description": "form-validation ui component for react",
 		"keywords": [
 			"react",
@@ -7170,7 +7196,7 @@ webpackJsonp([0,1],[
 	
 	    _get(Object.getPrototypeOf(Validation.prototype), 'constructor', this).call(this, props);
 	    this.validators = {};
-	    ['attachValidator', 'detachValidator', 'handleInputChange'].forEach(function (m) {
+	    ['attachValidator', 'detachValidator', 'handleInputChange', 'handleInputChangeSilently'].forEach(function (m) {
 	      _this[m] = _this[m].bind(_this);
 	    });
 	  }
@@ -7240,7 +7266,8 @@ webpackJsonp([0,1],[
 	              return React.cloneElement(child, {
 	                attachValidator: self.attachValidator,
 	                detachValidator: self.detachValidator,
-	                handleInputChange: self.handleInputChange
+	                handleInputChange: self.handleInputChange,
+	                handleInputChangeSilently: self.handleInputChangeSilently
 	              });
 	            } else if (child.props && child.props.children) {
 	              return React.cloneElement(child, {}, self.attachValidators(child.props.children));
@@ -7250,6 +7277,13 @@ webpackJsonp([0,1],[
 	        });
 	      }
 	      return children;
+	    }
+	  }, {
+	    key: 'handleInputChangeSilently',
+	    value: function handleInputChangeSilently(validator, value) {
+	      var r = this.getValidateResult();
+	      r.formData[validator.getName()] = value;
+	      this.props.onValidate(r.status, r.formData);
 	    }
 	  }, {
 	    key: 'handleInputChange',
@@ -8534,6 +8568,11 @@ webpackJsonp([0,1],[
 	var React = __webpack_require__(4);
 	var createChainedFunction = __webpack_require__(13).createChainedFunction;
 	
+	function getValueFromEvent(e) {
+	  // support custom element
+	  return e.target ? e.target.value : e;
+	}
+	
 	var Validator = (function (_React$Component) {
 	  function Validator(props) {
 	    _classCallCheck(this, Validator);
@@ -8541,6 +8580,7 @@ webpackJsonp([0,1],[
 	    _get(Object.getPrototypeOf(Validator.prototype), 'constructor', this).call(this, props);
 	    this.reset();
 	    this.handleChange = this.handleChange.bind(this);
+	    this.handleChangeSilently = this.handleChangeSilently.bind(this);
 	  }
 	
 	  _inherits(Validator, _React$Component);
@@ -8562,9 +8602,15 @@ webpackJsonp([0,1],[
 	  }, {
 	    key: 'handleChange',
 	    value: function handleChange(e) {
-	      // support custom element
-	      var value = e.target ? e.target.value : e;
-	      this.props.handleInputChange(this, value);
+	      this.props.handleInputChange(this, getValueFromEvent(e));
+	    }
+	  }, {
+	    key: 'handleChangeSilently',
+	    value: function handleChangeSilently(e) {
+	      this.errors = undefined;
+	      this.dirty = true;
+	      this.isValidating = false;
+	      this.props.handleInputChangeSilently(this, getValueFromEvent(e));
 	    }
 	  }, {
 	    key: 'getName',
@@ -8583,6 +8629,10 @@ webpackJsonp([0,1],[
 	      var child = this.getInputElement();
 	      var trigger = props.trigger;
 	      var triggerObj = {};
+	      // keep model updated
+	      if (trigger !== 'onChange') {
+	        triggerObj.onChange = createChainedFunction(child.props.onChange, this.handleChangeSilently);
+	      }
 	      triggerObj[trigger] = createChainedFunction(child.props[trigger], this.handleChange);
 	      return React.cloneElement(child, triggerObj);
 	    }
