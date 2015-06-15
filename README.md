@@ -102,7 +102,8 @@ Validator 's children must be one component which support trigger handler and va
           <td>rules</td>
           <td>Object|Array</td>
           <td></td>
-          <td>see https://github.com/yiminghe/async-validator,for example: {type:'string',min:4},[{type:'string',whitespace:true,required:true},{validator:validateFn}] </td>
+          <td>see https://github.com/yiminghe/async-validator .
+          for example: {type:'string',min:4},[{type:'string',whitespace:true,required:true},{validator:validateFn}] </td>
         </tr>
         <tr>
           <td>trigger</td>
@@ -113,6 +114,19 @@ Validator 's children must be one component which support trigger handler and va
     </tbody>
 </table>
 
+### mixins
+
+Validation.FieldMixin
+
+provide the following methods:
+
+#### setField
+
+sync individual field which does not need validation
+
+#### handleValidate
+
+used as value for onValidate props of Validation
 
 ## Development
 
