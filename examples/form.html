@@ -283,6 +283,8 @@ var Form = React.createClass({
     if (this.state.formData.pass2) {
       this.refs.validation.forceValidate(['pass2']);
       callback();
+    }else{
+      callback();
     }
   },
 
@@ -373,7 +375,7 @@ var Form = React.createClass({
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>retry password:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass2</span>}]}&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>,<span class="hljs-attribute">message:</span>'<span class="hljs-attribute">retry</span> <span class="hljs-attribute">pass</span> <span class="hljs-attribute">is</span> <span class="hljs-attribute">required</span>'}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass2</span>}]}&gt;</span>
               <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass2'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass2}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
                 {status.pass2.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass2.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}

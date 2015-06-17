@@ -112,6 +112,8 @@ webpackJsonp([0,1],[
 	    if (this.state.formData.pass2) {
 	      this.refs.validation.forceValidate(['pass2']);
 	      callback();
+	    } else {
+	      callback();
 	    }
 	  },
 	
@@ -262,7 +264,7 @@ webpackJsonp([0,1],[
 	            { className: 'col-sm-10' },
 	            React.createElement(
 	              Validator,
-	              { trigger: 'onBlur', rules: [{ required: true, whitespace: true }, { validator: this.checkPass2 }] },
+	              { trigger: 'onBlur', rules: [{ required: true, whitespace: true, message: 'retry pass is required' }, { validator: this.checkPass2 }] },
 	              React.createElement('input', { name: 'pass2', className: 'form-control', value: formData.pass2 })
 	            ),
 	            status.pass2.errors ? React.createElement(
