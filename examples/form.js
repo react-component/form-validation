@@ -98,6 +98,8 @@ var Form = React.createClass({
     if (this.state.formData.pass2) {
       this.refs.validation.forceValidate(['pass2']);
       callback();
+    }else{
+      callback();
     }
   },
 
@@ -188,7 +190,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">retry password:</label>
           <div className="col-sm-10">
-            <Validator trigger="onBlur" rules={[{required: true, whitespace: true}, {validator: this.checkPass2}]}>
+            <Validator trigger="onBlur" rules={[{required: true, whitespace: true,message:'retry pass is required'}, {validator: this.checkPass2}]}>
               <input name='pass2' className="form-control"  value={formData.pass2}/>
             </Validator>
                 {status.pass2.errors ? <span style={errorStyle}> {status.pass2.errors.join(', ')}</span> : null}
