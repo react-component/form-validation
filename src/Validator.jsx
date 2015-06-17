@@ -34,7 +34,7 @@ class Validator extends React.Component {
   }
 
   handleChangeSilently(e) {
-    this.errors = undefined;
+    // keep last error
     this.dirty = true;
     this.isValidating = false;
     this.props.handleInputChangeSilently(this, getValueFromEvent(e));

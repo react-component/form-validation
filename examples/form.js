@@ -35,6 +35,8 @@ var Form = React.createClass({
     return {
       status: {
         number: {},
+        pass: {},
+        pass2: {},
         blurNumber: {},
         optionalNumber: {},
         name: {},
@@ -45,12 +47,14 @@ var Form = React.createClass({
       },
       formData: {
         number: 0,
+        pass: undefined,
+        pass2: undefined,
         blurNumber: undefined,
         optionalNumber: undefined,
-        name: '',
-        must: '',
-        email: '',
-        optional: '',
+        name: undefined,
+        must: undefined,
+        email: undefined,
+        optional: undefined,
         startDate: start,
         endDate: end
       }
@@ -88,6 +92,22 @@ var Form = React.createClass({
         callback();
       }
     }, 1000);
+  },
+
+  checkPass(rule, value, callback) {
+    if (this.state.formData.pass2) {
+      this.refs.validation.forceValidate(['pass2']);
+      callback();
+    }
+  },
+
+
+  checkPass2(rule, value, callback) {
+    if (value !== this.state.formData.pass) {
+      callback('two password are not same!');
+    } else {
+      callback();
+    }
   },
 
   validateDate(rule, value, callback) {
@@ -152,6 +172,26 @@ var Form = React.createClass({
             </Validator>
                 {status.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
                 {status.name.errors ? <span style={errorStyle}> {status.name.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 control-label">password:</label>
+          <div className="col-sm-10">
+            <Validator trigger="onBlur" rules={[{required: true, whitespace: true}, {validator: this.checkPass}]}>
+              <input name='pass' className="form-control"  value={formData.pass}/>
+            </Validator>
+                {status.pass.errors ? <span style={errorStyle}> {status.pass.errors.join(', ')}</span> : null}
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="col-sm-2 control-label">retry password:</label>
+          <div className="col-sm-10">
+            <Validator trigger="onBlur" rules={[{required: true, whitespace: true}, {validator: this.checkPass2}]}>
+              <input name='pass2' className="form-control"  value={formData.pass2}/>
+            </Validator>
+                {status.pass2.errors ? <span style={errorStyle}> {status.pass2.errors.join(', ')}</span> : null}
           </div>
         </div>
 
