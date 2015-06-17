@@ -640,11 +640,11 @@ webpackJsonp([0,1],[
 	        case KeyCode.DOWN:
 	          goWeek.call(this, 1);
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.UP:
 	          goWeek.call(this, -1);
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.LEFT:
 	          if (ctrlKey) {
 	            this.previousYear();
@@ -652,7 +652,7 @@ webpackJsonp([0,1],[
 	            goDay.call(this, -1);
 	          }
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.RIGHT:
 	          if (ctrlKey) {
 	            this.nextYear();
@@ -660,30 +660,30 @@ webpackJsonp([0,1],[
 	            goDay.call(this, 1);
 	          }
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.HOME:
 	          goStartMonth.call(this);
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.END:
 	          goEndMonth.call(this);
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.PAGE_DOWN:
 	          this.nextMonth();
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.PAGE_UP:
 	          this.previousMonth();
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        case KeyCode.ENTER:
 	          this.props.onSelect(this.state.value);
 	          e.preventDefault();
-	          return true;
+	          return 1;
 	        default:
 	          this.props.onKeyDown(e);
-	          return true;
+	          return 1;
 	      }
 	    }
 	  }, {
@@ -4504,6 +4504,7 @@ webpackJsonp([0,1],[
 	var MonthPanel = __webpack_require__(30);
 	var DateTimeFormat = __webpack_require__(5);
 	var YearPanel = __webpack_require__(31);
+	var toFragment = __webpack_require__(13).Children.mapSelf;
 	
 	var CalendarHeader = (function (_React$Component) {
 	  function CalendarHeader(props) {
@@ -4579,7 +4580,7 @@ webpackJsonp([0,1],[
 	      return React.createElement(
 	        'span',
 	        { className: selectClassName },
-	        my
+	        toFragment(my)
 	      );
 	    }
 	  }, {
@@ -5300,6 +5301,7 @@ webpackJsonp([0,1],[
 	
 	var React = __webpack_require__(4);
 	var Time = __webpack_require__(35);
+	var toFragment = __webpack_require__(13).Children.mapSelf;
 	
 	var CalendarFooter = (function (_React$Component) {
 	  function CalendarFooter() {
@@ -5369,7 +5371,7 @@ webpackJsonp([0,1],[
 	          footerBtn = React.createElement(
 	            'span',
 	            { className: prefixClsFn('footer-btn') },
-	            [nowEl, okBtn, clearEl]
+	            toFragment([nowEl, okBtn, clearEl])
 	          );
 	        }
 	        var timeEl;
@@ -5782,6 +5784,7 @@ webpackJsonp([0,1],[
 	var React = __webpack_require__(4);
 	var DateTimeFormat = __webpack_require__(5);
 	var rcUtil = __webpack_require__(13);
+	var toFragment = rcUtil.Children.mapSelf;
 	var KeyCode = rcUtil.KeyCode;
 	var domAlign = __webpack_require__(39);
 	var orientMap = {
@@ -6099,7 +6102,7 @@ webpackJsonp([0,1],[
 	      return React.createElement(
 	        'span',
 	        { className: classes.join(' ') },
-	        [input, calendar, trigger]
+	        toFragment([input, calendar, trigger])
 	      );
 	    }
 	  }]);
@@ -7261,7 +7264,7 @@ webpackJsonp([0,1],[
 			"gregorian-calendar": "3.x",
 			"gregorian-calendar-format": "^2.1.1",
 			"precommit-hook": "^1.0.7",
-			"rc-calendar": "3.x",
+			"rc-calendar": "~3.9.1",
 			"rc-server": "3.x",
 			"rc-tools": "3.x",
 			"react": "~0.13.0"
