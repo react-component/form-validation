@@ -97,12 +97,9 @@ var Form = React.createClass({
   checkPass(rule, value, callback) {
     if (this.state.formData.pass2) {
       this.refs.validation.forceValidate(['pass2']);
-      callback();
-    }else{
-      callback();
     }
+      callback();
   },
-
 
   checkPass2(rule, value, callback) {
     if (value !== this.state.formData.pass) {
@@ -112,34 +109,25 @@ var Form = React.createClass({
     }
   },
 
-  validateDate(rule, value, callback) {
-    var self = this;
-    var formData = this.state.formData;
-    var status = this.state.status;
-    var errors = [];
-    var field = rule.field;
+  validateStartDate(rule, value, callback) {
+    this.refs.validation.forceValidate(['endDate']);
+    callback();
+  },
+
+  checkNow(rule, value, callback) {
+    var errors;
     var now = new GregorianCalendar(zhCn);
     now.setTime(Date.now());
-    var startValue = field === 'startDate' ? value : formData.startDate;
-    var endValue = field === 'endDate' ? value : formData.endDate;
     if (value.getMonth() !== now.getMonth()) {
-      errors.push(new Error('can only select current month'));
+      errors = [new Error('can only select current month')];
     }
-    if (startValue && endValue && startValue.getTime() > endValue.getTime()) {
+    callback(errors);
+  },
+
+  validateEndDate(rule, value, callback) {
+    var errors = [];
+    if (this.state.formData.startDate.getTime() > value.getTime()) {
       errors.push(new Error('start date can not be larger than end date'));
-    }
-// ok
-    if (startValue && endValue && startValue.getTime() <= endValue.getTime()) {
-      if (field === 'startDate' && status.endDate.errors) {
-        setTimeout(function () {
-          self.refs.validation.forceValidate(['endDate']);
-        }, 0);
-      }
-      if (field === 'endDate' && status.startDate.errors) {
-        setTimeout(function () {
-          self.refs.validation.forceValidate(['startDate']);
-        }, 0);
-      }
     }
     callback(errors.length ? errors : undefined);
   },
@@ -190,7 +178,11 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">retry password:</label>
           <div className="col-sm-10">
-            <Validator trigger="onBlur" rules={[{required: true, whitespace: true,message:'retry pass is required'}, {validator: this.checkPass2}]}>
+            <Validator trigger="onBlur" rules={[{
+              required: true,
+              whitespace: true,
+              message: 'retry pass is required'
+            }, {validator: this.checkPass2}]}>
               <input name='pass2' className="form-control"  value={formData.pass2}/>
             </Validator>
                 {status.pass2.errors ? <span style={errorStyle}> {status.pass2.errors.join(', ')}</span> : null}
@@ -249,7 +241,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">start date:</label>
           <div className="col-sm-10">
-            <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
+            <Validator rules={[{validator: this.checkNow}, {validator: this.validateStartDate}]}>
               <DatePicker name='startDate' formatter={this.props.formatter} calendar={<Calendar showTime={false}/>}
                 value={formData.startDate}>
                 <input type="text" className="form-control" style={{
@@ -266,7 +258,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">end date:</label>
           <div className="col-sm-10">
-            <Validator rules={{validator: this.validateDate, message: 'will not effect'}}>
+            <Validator rules={[{validator: this.checkNow}, {validator: this.validateEndDate}]}>
               <DatePicker name='endDate' formatter={this.props.formatter} calendar={<Calendar />}
                 value={formData.endDate}>
                 <input type="text" className="form-control" style={{

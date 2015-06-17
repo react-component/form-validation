@@ -152,31 +152,34 @@ class Validation extends React.Component {
   }
 
   forceValidate(fields, callback) {
-    var self = this;
-    var validators = this.validators;
-    var validator;
-    var doing = 0;
+    // must async to allow state sync
+    setTimeout(()=> {
+      var self = this;
+      var validators = this.validators;
+      var validator;
+      var doing = 0;
 
-    fields = fields || Object.keys(validators);
-    var count = fields.length;
-    if (count === 0) {
-      callback(self.isValid());
-      return;
-    }
+      fields = fields || Object.keys(validators);
+      var count = fields.length;
+      if (count === 0) {
+        callback(self.isValid());
+        return;
+      }
 
-    function track() {
-      doing++;
-      if (doing === count) {
-        if (callback) {
-          callback(self.isValid());
+      function track() {
+        doing++;
+        if (doing === count) {
+          if (callback) {
+            callback(self.isValid());
+          }
         }
       }
-    }
 
-    fields.forEach((name)=> {
-      validator = validators[name];
-      self.handleInputChange(validator, validator.getValue(), track);
-    });
+      fields.forEach((name)=> {
+        validator = validators[name];
+        self.handleInputChange(validator, validator.getValue(), track);
+      });
+    }, 0);
   }
 
   validate(callback) {
