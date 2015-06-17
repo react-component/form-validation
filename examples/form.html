@@ -282,12 +282,9 @@ var Form = React.createClass({
   checkPass(rule, value, callback) {
     if (this.state.formData.pass2) {
       this.refs.validation.forceValidate(['pass2']);
-      callback();
-    }else{
-      callback();
     }
+      callback();
   },
-
 
   checkPass2(rule, value, callback) {
     if (value !== this.state.formData.pass) {
@@ -297,45 +294,36 @@ var Form = React.createClass({
     }
   },
 
-  validateDate(rule, value, callback) {
-    var self = this;
-    var formData = this.state.formData;
-    var status = this.state.status;
-    var errors = [];
-    var field = rule.field;
-    var now = new GregorianCalendar(zhCn);
-    now.setTime(Date.now());
-    var startValue = field === 'startDate' ? value : formData.startDate;
-    var endValue = field === 'endDate' ? value : formData.endDate;
-    if (value.getMonth() !== now.getMonth()) {
-      errors.push(new Error('can only select current month'));
-    }
-    if (startValue &amp;&amp; endValue &amp;&amp; startValue.getTime() &gt; endValue.getTime()) {
-      errors.push(new Error('start date can not be larger than end date'));
-    }
-// ok
-    if (startValue &amp;&amp; endValue &amp;&amp; startValue.getTime() <span class="hljs-tag">&lt;<span class="hljs-title">=</span> <span class="hljs-attribute">endValue.getTime</span>()) {
-      <span class="hljs-attribute">if</span> (<span class="hljs-attribute">field</span> =<span class="hljs-value">==</span> '<span class="hljs-attribute">startDate</span>' &amp;&amp; <span class="hljs-attribute">status.endDate.errors</span>) {
-        <span class="hljs-attribute">setTimeout</span>(<span class="hljs-attribute">function</span> () {
-          <span class="hljs-attribute">self.refs.validation.forceValidate</span>(['<span class="hljs-attribute">endDate</span>']);
-        }, <span class="hljs-attribute">0</span>);
-      }
-      <span class="hljs-attribute">if</span> (<span class="hljs-attribute">field</span> =<span class="hljs-value">==</span> '<span class="hljs-attribute">endDate</span>' &amp;&amp; <span class="hljs-attribute">status.startDate.errors</span>) {
-        <span class="hljs-attribute">setTimeout</span>(<span class="hljs-attribute">function</span> () {
-          <span class="hljs-attribute">self.refs.validation.forceValidate</span>(['<span class="hljs-attribute">startDate</span>']);
-        }, <span class="hljs-attribute">0</span>);
-      }
-    }
-    <span class="hljs-attribute">callback</span>(<span class="hljs-attribute">errors.length</span> ? <span class="hljs-attribute">errors</span> <span class="hljs-attribute">:</span> <span class="hljs-attribute">undefined</span>);
+  validateStartDate(rule, value, callback) {
+    this.refs.validation.forceValidate(['endDate']);
+    callback();
   },
 
-  <span class="hljs-attribute">render</span>() {
-    <span class="hljs-attribute">var</span> <span class="hljs-attribute">formData</span> = <span class="hljs-attribute">this.state.formData</span>;
-    <span class="hljs-attribute">var</span> <span class="hljs-attribute">status</span> = <span class="hljs-attribute">this.state.status</span>;
-    <span class="hljs-attribute">var</span> <span class="hljs-attribute">field</span>;
-    <span class="hljs-attribute">var</span> <span class="hljs-attribute">errorStyle</span> = {<span class="hljs-attribute">color:</span> '<span class="hljs-attribute">red</span>', <span class="hljs-attribute">fontWeight:</span> '<span class="hljs-attribute">bold</span>'};
-    <span class="hljs-attribute">if</span> (!<span class="hljs-attribute">this.state.remove</span>) {
-      <span class="hljs-attribute">field</span> = &lt;<span class="hljs-attribute">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
+  checkNow(rule, value, callback) {
+    var errors;
+    var now = new GregorianCalendar(zhCn);
+    now.setTime(Date.now());
+    if (value.getMonth() !== now.getMonth()) {
+      errors = [new Error('can only select current month')];
+    }
+    callback(errors);
+  },
+
+  validateEndDate(rule, value, callback) {
+    var errors = [];
+    if (this.state.formData.startDate.getTime() &gt; value.getTime()) {
+      errors.push(new Error('start date can not be larger than end date'));
+    }
+    callback(errors.length ? errors : undefined);
+  },
+
+  render() {
+    var formData = this.state.formData;
+    var status = this.state.status;
+    var field;
+    var errorStyle = {color: 'red', fontWeight: 'bold'};
+    if (!this.state.remove) {
+      field = <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>email(validate on blur):<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">type</span>: '<span class="hljs-variable">email</span>', <span class="hljs-variable">message</span>: '错误的 <span class="hljs-variable">email</span> 格式'}}</span><span class="xml"><span class="hljs-tag">
@@ -375,7 +363,11 @@ var Form = React.createClass({
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>retry password:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>,<span class="hljs-attribute">message:</span>'<span class="hljs-attribute">retry</span> <span class="hljs-attribute">pass</span> <span class="hljs-attribute">is</span> <span class="hljs-attribute">required</span>'}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass2</span>}]}&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{</span>
+              <span class="hljs-attribute">required:</span> <span class="hljs-attribute">true</span>,
+              <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>,
+              <span class="hljs-attribute">message:</span> '<span class="hljs-attribute">retry</span> <span class="hljs-attribute">pass</span> <span class="hljs-attribute">is</span> <span class="hljs-attribute">required</span>'
+            }, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass2</span>}]}&gt;</span>
               <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass2'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass2}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
                 {status.pass2.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass2.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
@@ -434,7 +426,7 @@ var Form = React.createClass({
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>start date:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">validator</span>: <span class="hljs-variable">this.validateDate</span>, <span class="hljs-variable">message</span>: '<span class="hljs-variable">will</span> <span class="hljs-variable">not</span> <span class="hljs-variable">effect</span>'}}</span><span class="xml"><span class="hljs-tag">&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{validator:</span> <span class="hljs-attribute">this.checkNow</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.validateStartDate</span>}]}&gt;</span>
               <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'startDate'</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{this.props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> <span class="hljs-attribute">showTime</span>=<span class="hljs-value">{false}</span>/&gt;</span>}
                 value={formData.startDate}&gt;
                 <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">style</span>=</span></span><span class="hljs-expression">{{
@@ -451,7 +443,7 @@ var Form = React.createClass({
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>end date:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">validator</span>: <span class="hljs-variable">this.validateDate</span>, <span class="hljs-variable">message</span>: '<span class="hljs-variable">will</span> <span class="hljs-variable">not</span> <span class="hljs-variable">effect</span>'}}</span><span class="xml"><span class="hljs-tag">&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{validator:</span> <span class="hljs-attribute">this.checkNow</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.validateEndDate</span>}]}&gt;</span>
               <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'endDate'</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{this.props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> /&gt;</span>}
                 value={formData.endDate}&gt;
                 <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">style</span>=</span></span><span class="hljs-expression">{{

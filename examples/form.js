@@ -111,10 +111,8 @@ webpackJsonp([0,1],[
 	  checkPass: function checkPass(rule, value, callback) {
 	    if (this.state.formData.pass2) {
 	      this.refs.validation.forceValidate(['pass2']);
-	      callback();
-	    } else {
-	      callback();
 	    }
+	    callback();
 	  },
 	
 	  checkPass2: function checkPass2(rule, value, callback) {
@@ -125,34 +123,25 @@ webpackJsonp([0,1],[
 	    }
 	  },
 	
-	  validateDate: function validateDate(rule, value, callback) {
-	    var self = this;
-	    var formData = this.state.formData;
-	    var status = this.state.status;
-	    var errors = [];
-	    var field = rule.field;
+	  validateStartDate: function validateStartDate(rule, value, callback) {
+	    this.refs.validation.forceValidate(['endDate']);
+	    callback();
+	  },
+	
+	  checkNow: function checkNow(rule, value, callback) {
+	    var errors;
 	    var now = new GregorianCalendar(zhCn);
 	    now.setTime(Date.now());
-	    var startValue = field === 'startDate' ? value : formData.startDate;
-	    var endValue = field === 'endDate' ? value : formData.endDate;
 	    if (value.getMonth() !== now.getMonth()) {
-	      errors.push(new Error('can only select current month'));
+	      errors = [new Error('can only select current month')];
 	    }
-	    if (startValue && endValue && startValue.getTime() > endValue.getTime()) {
+	    callback(errors);
+	  },
+	
+	  validateEndDate: function validateEndDate(rule, value, callback) {
+	    var errors = [];
+	    if (this.state.formData.startDate.getTime() > value.getTime()) {
 	      errors.push(new Error('start date can not be larger than end date'));
-	    }
-	    // ok
-	    if (startValue && endValue && startValue.getTime() <= endValue.getTime()) {
-	      if (field === 'startDate' && status.endDate.errors) {
-	        setTimeout(function () {
-	          self.refs.validation.forceValidate(['endDate']);
-	        }, 0);
-	      }
-	      if (field === 'endDate' && status.startDate.errors) {
-	        setTimeout(function () {
-	          self.refs.validation.forceValidate(['startDate']);
-	        }, 0);
-	      }
 	    }
 	    callback(errors.length ? errors : undefined);
 	  },
@@ -264,7 +253,11 @@ webpackJsonp([0,1],[
 	            { className: 'col-sm-10' },
 	            React.createElement(
 	              Validator,
-	              { trigger: 'onBlur', rules: [{ required: true, whitespace: true, message: 'retry pass is required' }, { validator: this.checkPass2 }] },
+	              { trigger: 'onBlur', rules: [{
+	                  required: true,
+	                  whitespace: true,
+	                  message: 'retry pass is required'
+	                }, { validator: this.checkPass2 }] },
 	              React.createElement('input', { name: 'pass2', className: 'form-control', value: formData.pass2 })
 	            ),
 	            status.pass2.errors ? React.createElement(
@@ -399,7 +392,7 @@ webpackJsonp([0,1],[
 	            { className: 'col-sm-10' },
 	            React.createElement(
 	              Validator,
-	              { rules: { validator: this.validateDate, message: 'will not effect' } },
+	              { rules: [{ validator: this.checkNow }, { validator: this.validateStartDate }] },
 	              React.createElement(
 	                DatePicker,
 	                { name: 'startDate', formatter: this.props.formatter, calendar: React.createElement(Calendar, { showTime: false }),
@@ -432,7 +425,7 @@ webpackJsonp([0,1],[
 	            { className: 'col-sm-10' },
 	            React.createElement(
 	              Validator,
-	              { rules: { validator: this.validateDate, message: 'will not effect' } },
+	              { rules: [{ validator: this.checkNow }, { validator: this.validateEndDate }] },
 	              React.createElement(
 	                DatePicker,
 	                { name: 'endDate', formatter: this.props.formatter, calendar: React.createElement(Calendar, null),
@@ -7225,7 +7218,7 @@ webpackJsonp([0,1],[
 
 	module.exports = {
 		"name": "rc-form-validation",
-		"version": "2.4.4",
+		"version": "2.4.5",
 		"description": "form-validation ui component for react",
 		"keywords": [
 			"react",
@@ -7504,36 +7497,41 @@ webpackJsonp([0,1],[
 	  }, {
 	    key: 'forceValidate',
 	    value: function forceValidate(fields, callback) {
-	      var self = this;
-	      var validators = this.validators;
-	      var validator;
-	      var doing = 0;
+	      var _this2 = this;
 	
-	      fields = fields || Object.keys(validators);
-	      var count = fields.length;
-	      if (count === 0) {
-	        callback(self.isValid());
-	        return;
-	      }
+	      // must async to allow state sync
+	      setTimeout(function () {
+	        var self = _this2;
+	        var validators = _this2.validators;
+	        var validator;
+	        var doing = 0;
 	
-	      function track() {
-	        doing++;
-	        if (doing === count) {
-	          if (callback) {
-	            callback(self.isValid());
+	        fields = fields || Object.keys(validators);
+	        var count = fields.length;
+	        if (count === 0) {
+	          callback(self.isValid());
+	          return;
+	        }
+	
+	        function track() {
+	          doing++;
+	          if (doing === count) {
+	            if (callback) {
+	              callback(self.isValid());
+	            }
 	          }
 	        }
-	      }
 	
-	      fields.forEach(function (name) {
-	        validator = validators[name];
-	        self.handleInputChange(validator, validator.getValue(), track);
-	      });
+	        fields.forEach(function (name) {
+	          validator = validators[name];
+	          self.handleInputChange(validator, validator.getValue(), track);
+	        });
+	      }, 0);
 	    }
 	  }, {
 	    key: 'validate',
 	    value: function validate(callback) {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var self = this;
 	      var validators = this.validators;
@@ -7563,7 +7561,7 @@ webpackJsonp([0,1],[
 	      Object.keys(validators).forEach(function (name) {
 	        validator = validators[name];
 	        if (validator.dirty) {
-	          _this2.handleInputChange(validator, validator.getValue(), track);
+	          _this3.handleInputChange(validator, validator.getValue(), track);
 	        }
 	      });
 	    }
