@@ -41,7 +41,7 @@
     "gregorian-calendar": "3.x",
     "gregorian-calendar-format": "^2.1.1",
     "precommit-hook": "^1.0.7",
-    "rc-calendar": "3.x",
+    "rc-calendar": "~3.9.1",
     "rc-server": "3.x",
     "rc-tools": "3.x",
     "react": "~0.13.0"
