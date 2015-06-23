@@ -282,7 +282,7 @@ webpackJsonp([0,1],[
 	            { className: 'col-sm-10' },
 	            React.createElement(
 	              Validator,
-	              { trigger: 'onBlur', rules: [{ required: true, type: 'number', transform: toNumber }] },
+	              { trigger: 'onBlur', rules: [{ required: true, message: '不是数字', pattern: /^\d+(\.\d+)?$/ }] },
 	              React.createElement('input', { name: 'blurNumber', className: 'form-control', value: formData.blurNumber })
 	            ),
 	            status.blurNumber.errors ? React.createElement(
