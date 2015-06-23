@@ -194,7 +194,7 @@ var Form = React.createClass({
         <div className="form-group">
           <label className="col-sm-2 control-label">required number (validate on blur):</label>
           <div className="col-sm-10">
-            <Validator trigger="onBlur" rules={[{required: true, type: 'number', transform: toNumber}]}>
+            <Validator trigger="onBlur" rules={[{required: true,message:'不是数字',pattern:/^\d+(\.\d+)?$/}]}>
               <input name='blurNumber' className="form-control"  value={formData.blurNumber}/>
             </Validator>
             {status.blurNumber.errors ? <span style={errorStyle}> {status.blurNumber.errors.join(', ')}</span> : null}
