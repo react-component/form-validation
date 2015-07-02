@@ -68,8 +68,20 @@ class Validation extends React.Component {
   attachValidators(children) {
     var self = this;
     if (children) {
+      // refer: React traverseAllChildrenImpl
+      // bug fix for react 0.13 @2015.07.02
+      // option should not have non-text children
+      // <option>11</option>
+      // React.Children.map(option.props.children,function(c){return c}) => {'.0':'11'}
+      var type = typeof children;
+      if (type === 'boolean') {
+        return children;
+      }
+      if (type === 'string' || type === 'number') {
+        return children;
+      }
       return React.Children.map(children, (child)=> {
-        if (child) {
+        if (React.isValidElement(child)) {
           if (child.type === Validator) {
             return React.cloneElement(child, {
               attachValidator: self.attachValidator,
@@ -77,7 +89,7 @@ class Validation extends React.Component {
               handleInputChange: self.handleInputChange,
               handleInputChangeSilently: self.handleInputChangeSilently
             });
-          } else if (child.props && child.props.children) {
+          } else if (child.props) {
             return React.cloneElement(child, {}, self.attachValidators(child.props.children));
           }
         }

@@ -72,6 +72,9 @@ describe('validation works', () => {
         <Validator rules={[{type: 'string', required: true}]}>
           <input name="pass" value={state.formData.pass}/>
         </Validator>
+        <select>
+          <option ref="option">1</option>
+        </select>
         <Validator trigger="onBlur" rules={[{type: 'number', transform: toNumber}]}>
           <input name="blurNumber" value={state.formData.blurNumber} ref="blurInput" />
         </Validator>
@@ -91,6 +94,10 @@ describe('validation works', () => {
 
   afterEach(()=> {
     React.unmountComponentAtNode(div);
+  });
+
+  it('will not change primary type', function () {
+    expect(form.refs.option.props.children).to.be('1');
   });
 
   it('initial error is not shown', ()=> {
@@ -151,5 +158,7 @@ describe('validation works', () => {
         done();
       });
     });
+
+
   });
 });
