@@ -80,21 +80,28 @@ class Validation extends React.Component {
       if (type === 'string' || type === 'number') {
         return children;
       }
-      return React.Children.map(children, (child)=> {
+      var childrenArray = [];
+      var ret = React.Children.map(children, (child)=> {
         if (React.isValidElement(child)) {
           if (child.type === Validator) {
-            return React.cloneElement(child, {
+            child = React.cloneElement(child, {
               attachValidator: self.attachValidator,
               detachValidator: self.detachValidator,
               handleInputChange: self.handleInputChange,
               handleInputChangeSilently: self.handleInputChangeSilently
             });
           } else if (child.props) {
-            return React.cloneElement(child, {}, self.attachValidators(child.props.children));
+            child = React.cloneElement(child, {}, self.attachValidators(child.props.children));
           }
         }
+        childrenArray.push(child);
         return child;
       });
+      // if only one child, then flatten
+      if (childrenArray.length === 1) {
+        return childrenArray[0];
+      }
+      return ret;
     }
     return children;
   }

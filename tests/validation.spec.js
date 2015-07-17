@@ -20,8 +20,10 @@ function toNumber(v) {
   return isNaN(num) ? v : num;
 }
 
-describe('validation works', () => {
+describe('validation', () => {
   var div = document.createElement('div');
+  document.body.appendChild(div);
+  var div2 = document.createElement('div');
   document.body.appendChild(div);
 
   var validateInput = (rule, value, callback)=> {
@@ -94,6 +96,61 @@ describe('validation works', () => {
 
   afterEach(()=> {
     React.unmountComponentAtNode(div);
+    React.unmountComponentAtNode(div2);
+  });
+
+  it('can contain CustomComponent', function () {
+    var CustomComponent = React.createClass({
+      render() {
+        return this.props.children;
+      }
+    });
+
+    React.render(<Validation>
+      <input />
+      <p>
+        <input />
+      </p>
+      <CustomComponent>
+        <input />
+      </CustomComponent>
+      <p>
+        <CustomComponent>
+          <input />
+        </CustomComponent>
+      </p>
+    </Validation>, div2);
+  });
+
+  it('can contain CustomComponent inside Validator', function () {
+    var CustomComponent = React.createClass({
+      render() {
+        return this.props.children;
+      }
+    });
+
+    React.render(<Validation>
+      <Validator>
+        <input />
+      </Validator>
+      <p>
+        <Validator>
+          <input />
+        </Validator>
+      </p>
+      <Validator>
+        <CustomComponent>
+          <input />
+        </CustomComponent>
+      </Validator>
+      <p>
+        <CustomComponent>
+          <Validator>
+            <input />
+          </Validator>
+        </CustomComponent>
+      </p>
+    </Validation>, div2);
   });
 
   it('will not change primary type', function () {
@@ -158,7 +215,5 @@ describe('validation works', () => {
         done();
       });
     });
-
-
   });
 });
