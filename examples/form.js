@@ -20,11 +20,11 @@ webpackJsonp([0,1],[
 	var React = __webpack_require__(4);
 	var Calendar = __webpack_require__(2);
 	var DatePicker = Calendar.Picker;
-	var DateTimeFormat = __webpack_require__(81);
+	var DateTimeFormat = __webpack_require__(82);
 	var formatter = new DateTimeFormat('yyyy-MM-dd');
-	var assign = __webpack_require__(79);
+	var assign = __webpack_require__(80);
 	var GregorianCalendar = __webpack_require__(7);
-	var zhCn = __webpack_require__(88);
+	var zhCn = __webpack_require__(89);
 	
 	function toNumber(v) {
 	  var num = Number(v);
@@ -154,21 +154,21 @@ webpackJsonp([0,1],[
 	    if (!this.state.remove) {
 	      field = React.createElement(
 	        'div',
-	        { className: 'form-group' },
+	        { className: "form-group" },
 	        React.createElement(
 	          'label',
-	          { className: 'col-sm-2 control-label' },
+	          { className: "col-sm-2 control-label" },
 	          'email(validate on blur):'
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'col-sm-10' },
+	          { className: "col-sm-10" },
 	          React.createElement(
 	            Validator,
 	            { rules: { type: 'email', message: '错误的 email 格式' },
-	              trigger: 'onBlur'
+	              trigger: "onBlur"
 	            },
-	            React.createElement('input', { name: 'email', className: 'form-control', value: formData.email,
+	            React.createElement('input', { name: 'email', className: "form-control", value: formData.email,
 	              onChange: this.setField.bind(this, 'email')
 	            })
 	          ),
@@ -183,25 +183,25 @@ webpackJsonp([0,1],[
 	    }
 	    return React.createElement(
 	      'form',
-	      { onSubmit: this.handleSubmit, className: 'form-horizontal' },
+	      { onSubmit: this.handleSubmit, className: "form-horizontal" },
 	      React.createElement(
 	        Validation,
 	        { ref: 'validation', onValidate: this.handleValidate },
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'name:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
 	              { rules: [{ required: true, min: 5 }, { validator: this.userExists }] },
-	              React.createElement('input', { name: 'name', className: 'form-control', value: formData.name })
+	              React.createElement('input', { name: 'name', className: "form-control", value: formData.name })
 	            ),
 	            status.name.isValidating ? React.createElement(
 	              'span',
@@ -218,19 +218,19 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'password:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
-	              { trigger: 'onBlur', rules: [{ required: true, whitespace: true }, { validator: this.checkPass }] },
-	              React.createElement('input', { name: 'pass', className: 'form-control', value: formData.pass })
+	              { trigger: "onBlur", rules: [{ required: true, whitespace: true }, { validator: this.checkPass }] },
+	              React.createElement('input', { name: 'pass', className: "form-control", value: formData.pass })
 	            ),
 	            status.pass.errors ? React.createElement(
 	              'span',
@@ -242,23 +242,23 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'retry password:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
-	              { trigger: 'onBlur', rules: [{
+	              { trigger: "onBlur", rules: [{
 	                  required: true,
 	                  whitespace: true,
 	                  message: 'retry pass is required'
 	                }, { validator: this.checkPass2 }] },
-	              React.createElement('input', { name: 'pass2', className: 'form-control', value: formData.pass2 })
+	              React.createElement('input', { name: 'pass2', className: "form-control", value: formData.pass2 })
 	            ),
 	            status.pass2.errors ? React.createElement(
 	              'span',
@@ -271,19 +271,19 @@ webpackJsonp([0,1],[
 	        field,
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'required number (validate on blur):'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
-	              { trigger: 'onBlur', rules: [{ required: true, message: '不是数字', pattern: /^\d+(\.\d+)?$/ }] },
-	              React.createElement('input', { name: 'blurNumber', className: 'form-control', value: formData.blurNumber })
+	              { trigger: "onBlur", rules: [{ required: true, message: '不是数字', pattern: /^\d+(\.\d+)?$/ }] },
+	              React.createElement('input', { name: 'blurNumber', className: "form-control", value: formData.blurNumber })
 	            ),
 	            status.blurNumber.errors ? React.createElement(
 	              'span',
@@ -295,19 +295,19 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'required number:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
 	              { rules: [{ required: true, type: 'number', transform: toNumber }] },
-	              React.createElement('input', { name: 'number', className: 'form-control', value: formData.number })
+	              React.createElement('input', { name: 'number', className: "form-control", value: formData.number })
 	            ),
 	            status.number.errors ? React.createElement(
 	              'span',
@@ -319,19 +319,19 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'optional number:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
 	              { rules: [{ type: 'number', transform: toNumber }] },
-	              React.createElement('input', { name: 'optionalNumber', className: 'form-control', value: formData.optionalNumber })
+	              React.createElement('input', { name: 'optionalNumber', className: "form-control", value: formData.optionalNumber })
 	            ),
 	            status.optionalNumber.errors ? React.createElement(
 	              'span',
@@ -343,33 +343,33 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'optional:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
-	            React.createElement('input', { name: 'optional', className: 'form-control', value: formData.optional, onChange: this.setField.bind(this, 'optional') })
+	            { className: "col-sm-10" },
+	            React.createElement('input', { name: 'optional', className: "form-control", value: formData.optional, onChange: this.setField.bind(this, 'optional') })
 	          )
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'required:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
 	              { rules: { required: true } },
-	              React.createElement('input', { name: 'must', className: 'form-control', value: formData.must })
+	              React.createElement('input', { name: 'must', className: "form-control", value: formData.must })
 	            ),
 	            status.must.errors ? React.createElement(
 	              'span',
@@ -381,15 +381,15 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'start date:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
 	              { rules: [{ validator: this.checkNow }, { validator: this.validateStartDate }] },
@@ -397,7 +397,7 @@ webpackJsonp([0,1],[
 	                DatePicker,
 	                { name: 'startDate', formatter: this.props.formatter, calendar: React.createElement(Calendar, { showTime: false }),
 	                  value: formData.startDate },
-	                React.createElement('input', { type: 'text', className: 'form-control', style: {
+	                React.createElement('input', { type: "text", className: "form-control", style: {
 	                    background: 'white',
 	                    color: 'black',
 	                    cursor: 'pointer'
@@ -414,15 +414,15 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'label',
-	            { className: 'col-sm-2 control-label' },
+	            { className: "col-sm-2 control-label" },
 	            'end date:'
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-10' },
+	            { className: "col-sm-10" },
 	            React.createElement(
 	              Validator,
 	              { rules: [{ validator: this.checkNow }, { validator: this.validateEndDate }] },
@@ -430,7 +430,7 @@ webpackJsonp([0,1],[
 	                DatePicker,
 	                { name: 'endDate', formatter: this.props.formatter, calendar: React.createElement(Calendar, null),
 	                  value: formData.endDate },
-	                React.createElement('input', { type: 'text', className: 'form-control', style: {
+	                React.createElement('input', { type: "text", className: "form-control", style: {
 	                    background: 'white',
 	                    color: 'black',
 	                    cursor: 'pointer'
@@ -447,19 +447,19 @@ webpackJsonp([0,1],[
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'form-group' },
+	          { className: "form-group" },
 	          React.createElement(
 	            'div',
-	            { className: 'col-sm-offset-2 col-sm-10' },
+	            { className: "col-sm-offset-2 col-sm-10" },
 	            React.createElement(
 	              'button',
-	              { type: 'submit', className: 'btn btn-default' },
+	              { type: "submit", className: "btn btn-default" },
 	              'submit'
 	            ),
 	            '   ',
 	            React.createElement(
 	              'a',
-	              { href: '#', className: 'btn btn-default', onClick: this.handleReset },
+	              { href: '#', className: "btn btn-default", onClick: this.handleReset },
 	              'reset'
 	            )
 	          )
@@ -7218,7 +7218,7 @@ webpackJsonp([0,1],[
 
 	module.exports = {
 		"name": "rc-form-validation",
-		"version": "2.4.5",
+		"version": "2.4.7",
 		"description": "form-validation ui component for react",
 		"keywords": [
 			"react",
@@ -7288,56 +7288,32 @@ webpackJsonp([0,1],[
 
 	'use strict';
 	
-	var _createClass = (function () {
-	  function defineProperties(target, props) {
-	    for (var i = 0; i < props.length; i++) {
-	      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-	    }
-	  }return function (Constructor, protoProps, staticProps) {
-	    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-	  };
-	})();
+	module.exports = __webpack_require__(55);
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 	
-	var _get = function get(_x, _x2, _x3) {
-	  var _again = true;_function: while (_again) {
-	    var object = _x,
-	        property = _x2,
-	        receiver = _x3;desc = parent = getter = undefined;_again = false;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-	      var parent = Object.getPrototypeOf(object);if (parent === null) {
-	        return undefined;
-	      } else {
-	        _x = parent;_x2 = property;_x3 = receiver;_again = true;continue _function;
-	      }
-	    } else if ('value' in desc) {
-	      return desc.value;
-	    } else {
-	      var getter = desc.get;if (getter === undefined) {
-	        return undefined;
-	      }return getter.call(receiver);
-	    }
-	  }
-	};
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	function _classCallCheck(instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError('Cannot call a class as a function');
-	  }
-	}
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 	
-	function _inherits(subClass, superClass) {
-	  if (typeof superClass !== 'function' && superClass !== null) {
-	    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) subClass.__proto__ = superClass;
-	}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var React = __webpack_require__(4);
-	var AsyncValidate = __webpack_require__(55);
-	var Validator = __webpack_require__(78);
+	var AsyncValidate = __webpack_require__(56);
+	var Validator = __webpack_require__(79);
 	var actionId = 0;
-	var assign = __webpack_require__(79);
+	var assign = __webpack_require__(80);
 	var textInputTypes = ['text', 'password'];
 	
 	var Validation = (function (_React$Component) {
+	  _inherits(Validation, _React$Component);
+	
 	  function Validation(props) {
 	    var _this = this;
 	
@@ -7349,8 +7325,6 @@ webpackJsonp([0,1],[
 	      _this[m] = _this[m].bind(_this);
 	    });
 	  }
-	
-	  _inherits(Validation, _React$Component);
 	
 	  _createClass(Validation, [{
 	    key: 'getSchema',
@@ -7409,21 +7383,40 @@ webpackJsonp([0,1],[
 	    value: function attachValidators(children) {
 	      var self = this;
 	      if (children) {
-	        return React.Children.map(children, function (child) {
-	          if (child) {
+	        // refer: React traverseAllChildrenImpl
+	        // bug fix for react 0.13 @2015.07.02
+	        // option should not have non-text children
+	        // <option>11</option>
+	        // React.Children.map(option.props.children,function(c){return c}) => {'.0':'11'}
+	        var type = typeof children;
+	        if (type === 'boolean') {
+	          return children;
+	        }
+	        if (type === 'string' || type === 'number') {
+	          return children;
+	        }
+	        var childrenArray = [];
+	        var ret = React.Children.map(children, function (child) {
+	          if (React.isValidElement(child)) {
 	            if (child.type === Validator) {
-	              return React.cloneElement(child, {
+	              child = React.cloneElement(child, {
 	                attachValidator: self.attachValidator,
 	                detachValidator: self.detachValidator,
 	                handleInputChange: self.handleInputChange,
 	                handleInputChangeSilently: self.handleInputChangeSilently
 	              });
-	            } else if (child.props && child.props.children) {
-	              return React.cloneElement(child, {}, self.attachValidators(child.props.children));
+	            } else if (child.props) {
+	              child = React.cloneElement(child, {}, self.attachValidators(child.props.children));
 	            }
 	          }
+	          childrenArray.push(child);
 	          return child;
 	        });
+	        // if only one child, then flatten
+	        if (childrenArray.length === 1) {
+	          return childrenArray[0];
+	        }
+	        return ret;
 	      }
 	      return children;
 	    }
@@ -7576,7 +7569,11 @@ webpackJsonp([0,1],[
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      return React.createElement('div', { className: this.props.className }, this.attachValidators(this.props.children));
+	      return React.createElement(
+	        'div',
+	        { className: this.props.className },
+	        this.attachValidators(this.props.children)
+	      );
 	    }
 	  }]);
 	
@@ -7593,20 +7590,20 @@ webpackJsonp([0,1],[
 	
 	Validation.Validator = Validator;
 	
-	Validation.FieldMixin = __webpack_require__(80);
+	Validation.FieldMixin = __webpack_require__(81);
 	
 	module.exports = Validation;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
-	var validators = __webpack_require__(57);
-	var defaultMessages = __webpack_require__(77);
-	var error = __webpack_require__(59).error;
+	var util = __webpack_require__(57);
+	var validators = __webpack_require__(58);
+	var defaultMessages = __webpack_require__(78);
+	var error = __webpack_require__(60).error;
 	
 	function asyncMap(arr, func, callback) {
 	  var results = [];
@@ -7875,7 +7872,7 @@ webpackJsonp([0,1],[
 	module.exports.messages = defaultMessages;
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -7916,35 +7913,35 @@ webpackJsonp([0,1],[
 	};
 
 /***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	module.exports = {
-	  string: __webpack_require__(66),
-	  method: __webpack_require__(67),
-	  number: __webpack_require__(68),
-	  boolean: __webpack_require__(69),
-	  regexp: __webpack_require__(70),
-	  integer: __webpack_require__(71),
-	  'float': __webpack_require__(72),
-	  array: __webpack_require__(58),
-	  object: __webpack_require__(73),
-	  'enum': __webpack_require__(74),
-	  pattern: __webpack_require__(75),
-	  email: __webpack_require__(76),
-	  url: __webpack_require__(76),
-	  hex: __webpack_require__(76)
-	};
-
-/***/ },
 /* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	module.exports = {
+	  string: __webpack_require__(67),
+	  method: __webpack_require__(68),
+	  number: __webpack_require__(69),
+	  boolean: __webpack_require__(70),
+	  regexp: __webpack_require__(71),
+	  integer: __webpack_require__(72),
+	  'float': __webpack_require__(73),
+	  array: __webpack_require__(59),
+	  object: __webpack_require__(74),
+	  'enum': __webpack_require__(75),
+	  pattern: __webpack_require__(76),
+	  email: __webpack_require__(77),
+	  url: __webpack_require__(77),
+	  hex: __webpack_require__(77)
+	};
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates an array.
@@ -7975,27 +7972,27 @@ webpackJsonp([0,1],[
 	module.exports = array;
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	module.exports = {
-	  required: __webpack_require__(61),
-	  whitespace: __webpack_require__(62),
-	  type: __webpack_require__(63),
-	  range: __webpack_require__(60),
-	  'enum': __webpack_require__(64),
-	  pattern: __webpack_require__(65)
-	};
-
-/***/ },
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
+	module.exports = {
+	  required: __webpack_require__(62),
+	  whitespace: __webpack_require__(63),
+	  type: __webpack_require__(64),
+	  range: __webpack_require__(61),
+	  'enum': __webpack_require__(65),
+	  pattern: __webpack_require__(66)
+	};
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var util = __webpack_require__(57);
 	
 	/**
 	 *  Rule for validating minimum and maximum allowed values.
@@ -8049,12 +8046,12 @@ webpackJsonp([0,1],[
 	module.exports = range;
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
+	var util = __webpack_require__(57);
 	
 	/**
 	 *  Rule for validating required fields.
@@ -8076,12 +8073,12 @@ webpackJsonp([0,1],[
 	module.exports = required;
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
+	var util = __webpack_require__(57);
 	
 	/**
 	 *  Rule for validating whitespace.
@@ -8103,12 +8100,12 @@ webpackJsonp([0,1],[
 	module.exports = whitespace;
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
+	var util = __webpack_require__(57);
 	var pattern = {
 	  email: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
 	  url: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
@@ -8192,12 +8189,12 @@ webpackJsonp([0,1],[
 	module.exports = type;
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
+	var util = __webpack_require__(57);
 	var ENUM = 'enum';
 	
 	/**
@@ -8221,12 +8218,12 @@ webpackJsonp([0,1],[
 	module.exports = enumerable;
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var util = __webpack_require__(56);
+	var util = __webpack_require__(57);
 	
 	/**
 	 *  Rule for validating a regular expression pattern.
@@ -8252,12 +8249,12 @@ webpackJsonp([0,1],[
 	module.exports = pattern;
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Performs validation for string types.
@@ -8290,12 +8287,12 @@ webpackJsonp([0,1],[
 	module.exports = string;
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates a function.
@@ -8323,12 +8320,12 @@ webpackJsonp([0,1],[
 	module.exports = method;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates a number.
@@ -8357,12 +8354,12 @@ webpackJsonp([0,1],[
 	module.exports = number;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates a boolean.
@@ -8390,12 +8387,12 @@ webpackJsonp([0,1],[
 	module.exports = boolean;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates the regular expression type.
@@ -8423,12 +8420,12 @@ webpackJsonp([0,1],[
 	module.exports = regexp;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates a number is an integer.
@@ -8459,12 +8456,12 @@ webpackJsonp([0,1],[
 	module.exports = integer;
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates a number is a floating point number.
@@ -8493,12 +8490,12 @@ webpackJsonp([0,1],[
 	module.exports = float;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates an object.
@@ -8528,12 +8525,12 @@ webpackJsonp([0,1],[
 	module.exports = object;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	var ENUM = 'enum';
 	
 	/**
@@ -8562,12 +8559,12 @@ webpackJsonp([0,1],[
 	module.exports = enumerable;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	/**
 	 *  Validates a regular expression pattern.
@@ -8597,12 +8594,12 @@ webpackJsonp([0,1],[
 	module.exports = pattern;
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var rules = __webpack_require__(59);
+	var rules = __webpack_require__(60);
 	
 	var type = function type(rule, value, callback, source, options) {
 	  var errors = [];
@@ -8613,7 +8610,7 @@ webpackJsonp([0,1],[
 	module.exports = type;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8672,52 +8669,18 @@ webpackJsonp([0,1],[
 	module.exports = messages;
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _createClass = (function () {
-	  function defineProperties(target, props) {
-	    for (var i = 0; i < props.length; i++) {
-	      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ('value' in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
-	    }
-	  }return function (Constructor, protoProps, staticProps) {
-	    if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
-	  };
-	})();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
-	var _get = function get(_x, _x2, _x3) {
-	  var _again = true;_function: while (_again) {
-	    var object = _x,
-	        property = _x2,
-	        receiver = _x3;desc = parent = getter = undefined;_again = false;var desc = Object.getOwnPropertyDescriptor(object, property);if (desc === undefined) {
-	      var parent = Object.getPrototypeOf(object);if (parent === null) {
-	        return undefined;
-	      } else {
-	        _x = parent;_x2 = property;_x3 = receiver;_again = true;continue _function;
-	      }
-	    } else if ('value' in desc) {
-	      return desc.value;
-	    } else {
-	      var getter = desc.get;if (getter === undefined) {
-	        return undefined;
-	      }return getter.call(receiver);
-	    }
-	  }
-	};
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 	
-	function _classCallCheck(instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError('Cannot call a class as a function');
-	  }
-	}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	function _inherits(subClass, superClass) {
-	  if (typeof superClass !== 'function' && superClass !== null) {
-	    throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-	  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) subClass.__proto__ = superClass;
-	}
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var React = __webpack_require__(4);
 	var createChainedFunction = __webpack_require__(13).createChainedFunction;
@@ -8728,6 +8691,8 @@ webpackJsonp([0,1],[
 	}
 	
 	var Validator = (function (_React$Component) {
+	  _inherits(Validator, _React$Component);
+	
 	  function Validator(props) {
 	    _classCallCheck(this, Validator);
 	
@@ -8736,8 +8701,6 @@ webpackJsonp([0,1],[
 	    this.handleChange = this.handleChange.bind(this);
 	    this.handleChangeSilently = this.handleChangeSilently.bind(this);
 	  }
-	
-	  _inherits(Validator, _React$Component);
 	
 	  _createClass(Validator, [{
 	    key: 'reset',
@@ -8826,7 +8789,7 @@ webpackJsonp([0,1],[
 	module.exports = Validator;
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8858,7 +8821,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -8898,13 +8861,13 @@ webpackJsonp([0,1],[
 	module.exports = FieldMixin;
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(82);
+	module.exports = __webpack_require__(83);
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8914,7 +8877,7 @@ webpackJsonp([0,1],[
 	 * @author yiminghe@gmail.com
 	 */
 	
-	var GregorianCalendar = __webpack_require__(83);
+	var GregorianCalendar = __webpack_require__(84);
 	var MAX_VALUE = Number.MAX_VALUE,
 	  /**
 	   * date or time style enum
@@ -9735,13 +9698,13 @@ webpackJsonp([0,1],[
 	DateTimeFormat.version = '@VERSION@';
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(84);
+	module.exports = __webpack_require__(85);
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9750,9 +9713,9 @@ webpackJsonp([0,1],[
 	 * @author yiminghe@gmail.com
 	 */
 	var toInt = parseInt;
-	var Utils = __webpack_require__(85);
-	var defaultLocale = __webpack_require__(87);
-	var Const = __webpack_require__(86);
+	var Utils = __webpack_require__(86);
+	var defaultLocale = __webpack_require__(88);
+	var Const = __webpack_require__(87);
 	
 	/**
 	 * GregorianCalendar class.
@@ -11095,7 +11058,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -11104,7 +11067,7 @@ webpackJsonp([0,1],[
 	 * @author yiminghe@gmail.com
 	 */
 	
-	var Const = __webpack_require__(86);
+	var Const = __webpack_require__(87);
 	var floor = Math.floor;
 	var ACCUMULATED_DAYS_IN_MONTH
 	        //   1/1 2/1 3/1 4/1 5/1 6/1 7/1 8/1 9/1 10/1 11/1 12/1
@@ -11226,7 +11189,7 @@ webpackJsonp([0,1],[
 	};
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports) {
 
 	/**
@@ -11353,7 +11316,7 @@ webpackJsonp([0,1],[
 	};
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports) {
 
 	/**
@@ -11384,7 +11347,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports) {
 
 	/**
