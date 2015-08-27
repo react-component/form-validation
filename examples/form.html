@@ -229,12 +229,13 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.js"></script>
 <![endif]-->
     <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.js"></script>
+  <link rel="stylesheet" href="form.css" />
 </head>
 
 <body>
     <div class="container">
         <div class="header">
-            <h1>rc-form-validation@2.4.7</h1>
+            <h1>rc-form-validation@2.4.9</h1>
             <p>form-validation ui component for react</p>
         </div>
         <div class="example" id="__react-content"></div>
@@ -242,20 +243,17 @@
         <script src="form.js?nowrap"></script>
         <div class="highlight"><pre><code><span class="xml">'use strict';
 
-require('bootstrap/dist/css/bootstrap.css');
-require('rc-calendar/assets/bootstrap.css');
+import 'bootstrap/dist/css/bootstrap.css';
+import 'rc-calendar/assets/bootstrap.css';
 
-var pkg = require('../package.json');
-var Validation = require('rc-form-validation');
-var Validator = Validation.Validator;
-var React = require('react');
-var Calendar = require('rc-calendar');
-var DatePicker = Calendar.Picker;
-var DateTimeFormat = require('gregorian-calendar-format');
+import Validation, {Validator} from 'rc-form-validation';
+import React from 'react';
+import Calendar, {Picker as DatePicker} from 'rc-calendar';
+import DateTimeFormat from 'gregorian-calendar-format';
 var formatter = new DateTimeFormat('yyyy-MM-dd');
-var assign = require('object-assign');
-var GregorianCalendar = require('gregorian-calendar');
-var zhCn = require('gregorian-calendar/lib/locale/zh-cn');
+import assign from 'object-assign';
+import GregorianCalendar from 'gregorian-calendar';
+import zhCn from 'gregorian-calendar/lib/locale/zh-cn';
 
 function toNumber(v) {
   var num = Number(v);
@@ -340,7 +338,7 @@ var Form = React.createClass({
     if (this.state.formData.pass2) {
       this.refs.validation.forceValidate(['pass2']);
     }
-      callback();
+    callback();
   },
 
   checkPass2(rule, value, callback) {
@@ -382,52 +380,56 @@ var Form = React.createClass({
     if (!this.state.remove) {
       field = <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>email(validate on blur):<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">type</span>: '<span class="hljs-variable">email</span>', <span class="hljs-variable">message</span>: '错误的 <span class="hljs-variable">email</span> 格式'}}</span><span class="xml"><span class="hljs-tag">
-            <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span>
-          &gt;</span>
+                     <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span>
+            &gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'email'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.email}</span>
-              <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.setField.bind(this,</span> '<span class="hljs-attribute">email</span>')}
-            /&gt;</span>
+                   <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.setField.bind(this,</span> '<span class="hljs-attribute">email</span>')}
+              /&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
-        {status.email.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.email.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+          {status.email.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.email.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;
     }
     return <span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">onSubmit</span>=<span class="hljs-value">{this.handleSubmit}</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-horizontal"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">Validation</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">'validation'</span> <span class="hljs-attribute">onValidate</span>=<span class="hljs-value">{this.handleValidate}</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">Validation</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">'validation'</span> <span class="hljs-attribute">onValidate</span>=<span class="hljs-value">{this.onValidate}</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>name:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">min:</span> <span class="hljs-attribute">5</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.userExists</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'name'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.name}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'name'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.name}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
-                {status.name.isValidating ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">color</span>: '<span class="hljs-variable">green</span>'}}</span><span class="xml"><span class="hljs-tag">&gt;</span> isValidating <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
-                {status.name.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.name.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+            {status.name.isValidating ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">color</span>: '<span class="hljs-variable">green</span>'}}</span><span class="xml"><span class="hljs-tag">&gt;</span> isValidating <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+            {status.name.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.name.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>password:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
-                {status.pass.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+            {status.pass.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>retry password:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{</span>
               <span class="hljs-attribute">required:</span> <span class="hljs-attribute">true</span>,
               <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>,
               <span class="hljs-attribute">message:</span> '<span class="hljs-attribute">retry</span> <span class="hljs-attribute">pass</span> <span class="hljs-attribute">is</span> <span class="hljs-attribute">required</span>'
             }, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass2</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass2'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass2}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass2'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass2}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
-                {status.pass2.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass2.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+            {status.pass2.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass2.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
@@ -435,9 +437,10 @@ var Form = React.createClass({
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>required number (validate on blur):<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>,<span class="hljs-attribute">message:</span>'不是数字',<span class="hljs-attribute">pattern:</span>/^\<span class="hljs-attribute">d</span>+(\<span class="hljs-attribute">.</span>\<span class="hljs-attribute">d</span>+)?$/}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'blurNumber'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.blurNumber}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'blurNumber'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.blurNumber}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.blurNumber.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.blurNumber.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -445,9 +448,10 @@ var Form = React.createClass({
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>required number:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">type:</span> '<span class="hljs-attribute">number</span>', <span class="hljs-attribute">transform:</span> <span class="hljs-attribute">toNumber</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'number'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.number}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'number'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.number}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.number.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.number.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -455,26 +459,31 @@ var Form = React.createClass({
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>optional number:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span>  <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{type:</span> '<span class="hljs-attribute">number</span>', <span class="hljs-attribute">transform:</span> <span class="hljs-attribute">toNumber</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'optionalNumber'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optionalNumber}</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{type:</span> '<span class="hljs-attribute">number</span>', <span class="hljs-attribute">transform:</span> <span class="hljs-attribute">toNumber</span>}]}&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'optionalNumber'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optionalNumber}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
-            {status.optionalNumber.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.optionalNumber.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+            {status.optionalNumber.errors ?
+              <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.optionalNumber.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>optional:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'optional'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optional}</span> <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.setField.bind(this,</span> '<span class="hljs-attribute">optional</span>')}/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'optional'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optional}</span>
+                   <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.setField.bind(this,</span> '<span class="hljs-attribute">optional</span>')}/&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>required:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">required</span>: <span class="hljs-variable">true</span>}}</span><span class="xml"><span class="hljs-tag">&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'must'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span>  <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.must}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'must'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.must}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.must.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.must.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -482,10 +491,11 @@ var Form = React.createClass({
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>start date:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{validator:</span> <span class="hljs-attribute">this.checkNow</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.validateStartDate</span>}]}&gt;</span>
               <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'startDate'</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{this.props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> <span class="hljs-attribute">showTime</span>=<span class="hljs-value">{false}</span>/&gt;</span>}
-                value={formData.startDate}&gt;
+                          value={formData.startDate}&gt;
                 <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">style</span>=</span></span><span class="hljs-expression">{{
                   <span class="hljs-variable">background</span>: '<span class="hljs-variable">white</span>',
                   <span class="hljs-variable">color</span>: '<span class="hljs-variable">black</span>',
@@ -499,10 +509,11 @@ var Form = React.createClass({
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>end date:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{validator:</span> <span class="hljs-attribute">this.checkNow</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.validateEndDate</span>}]}&gt;</span>
               <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'endDate'</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{this.props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> /&gt;</span>}
-                value={formData.endDate}&gt;
+                          value={formData.endDate}&gt;
                 <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">style</span>=</span></span><span class="hljs-expression">{{
                   <span class="hljs-variable">background</span>: '<span class="hljs-variable">white</span>',
                   <span class="hljs-variable">color</span>: '<span class="hljs-variable">black</span>',
@@ -510,14 +521,14 @@ var Form = React.createClass({
                 }}</span><span class="xml"><span class="hljs-tag">/&gt;</span>
               <span class="hljs-tag">&lt;/<span class="hljs-title">DatePicker</span>&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
-                {status.endDate.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.endDate.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
+            {status.endDate.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.endDate.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-offset-2 col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"btn btn-default"</span>&gt;</span>submit<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
-          &amp;nbsp;&amp;nbsp;&amp;nbsp;
+            &amp;nbsp;&amp;nbsp;&amp;nbsp;
             <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">'#'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"btn btn-default"</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.handleReset}</span>&gt;</span>reset<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -527,7 +538,6 @@ var Form = React.createClass({
 });
 
 React.render(<span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>{pkg.name}@{pkg.version}<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-title">Form</span>/&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>
