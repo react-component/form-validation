@@ -1,19 +1,16 @@
 'use strict';
 
-require('bootstrap/dist/css/bootstrap.css');
-require('rc-calendar/assets/bootstrap.css');
+import 'bootstrap/dist/css/bootstrap.css';
+import 'rc-calendar/assets/bootstrap.css';
 
-var pkg = require('../package.json');
-var Validation = require('rc-form-validation');
-var Validator = Validation.Validator;
-var React = require('react');
-var Calendar = require('rc-calendar');
-var DatePicker = Calendar.Picker;
-var DateTimeFormat = require('gregorian-calendar-format');
+import Validation, {Validator} from 'rc-form-validation';
+import React from 'react';
+import Calendar, {Picker as DatePicker} from 'rc-calendar';
+import DateTimeFormat from 'gregorian-calendar-format';
 var formatter = new DateTimeFormat('yyyy-MM-dd');
-var assign = require('object-assign');
-var GregorianCalendar = require('gregorian-calendar');
-var zhCn = require('gregorian-calendar/lib/locale/zh-cn');
+import assign from 'object-assign';
+import GregorianCalendar from 'gregorian-calendar';
+import zhCn from 'gregorian-calendar/lib/locale/zh-cn';
 
 function toNumber(v) {
   var num = Number(v);
@@ -98,7 +95,7 @@ var Form = React.createClass({
     if (this.state.formData.pass2) {
       this.refs.validation.forceValidate(['pass2']);
     }
-      callback();
+    callback();
   },
 
   checkPass2(rule, value, callback) {
@@ -140,52 +137,56 @@ var Form = React.createClass({
     if (!this.state.remove) {
       field = <div className="form-group">
         <label className="col-sm-2 control-label">email(validate on blur):</label>
+
         <div className="col-sm-10">
           <Validator rules={{type: 'email', message: '错误的 email 格式'}}
-            trigger="onBlur"
-          >
+                     trigger="onBlur"
+            >
             <input name='email' className="form-control" value={formData.email}
-              onChange={this.setField.bind(this, 'email')}
-            />
+                   onChange={this.setField.bind(this, 'email')}
+              />
           </Validator>
-        {status.email.errors ? <span style={errorStyle}> {status.email.errors.join(', ')}</span> : null}
+          {status.email.errors ? <span style={errorStyle}> {status.email.errors.join(', ')}</span> : null}
         </div>
       </div>;
     }
     return <form onSubmit={this.handleSubmit} className="form-horizontal">
-      <Validation ref='validation' onValidate={this.handleValidate}>
+      <Validation ref='validation' onValidate={this.onValidate}>
         <div className="form-group">
           <label className="col-sm-2 control-label">name:</label>
+
           <div className="col-sm-10">
             <Validator rules={[{required: true, min: 5}, {validator: this.userExists}]}>
-              <input name='name' className="form-control"  value={formData.name}/>
+              <input name='name' className="form-control" value={formData.name}/>
             </Validator>
-                {status.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
-                {status.name.errors ? <span style={errorStyle}> {status.name.errors.join(', ')}</span> : null}
+            {status.name.isValidating ? <span style={{color: 'green'}}> isValidating </span> : null}
+            {status.name.errors ? <span style={errorStyle}> {status.name.errors.join(', ')}</span> : null}
           </div>
         </div>
 
         <div className="form-group">
           <label className="col-sm-2 control-label">password:</label>
+
           <div className="col-sm-10">
             <Validator trigger="onBlur" rules={[{required: true, whitespace: true}, {validator: this.checkPass}]}>
-              <input name='pass' className="form-control"  value={formData.pass}/>
+              <input name='pass' className="form-control" value={formData.pass}/>
             </Validator>
-                {status.pass.errors ? <span style={errorStyle}> {status.pass.errors.join(', ')}</span> : null}
+            {status.pass.errors ? <span style={errorStyle}> {status.pass.errors.join(', ')}</span> : null}
           </div>
         </div>
 
         <div className="form-group">
           <label className="col-sm-2 control-label">retry password:</label>
+
           <div className="col-sm-10">
             <Validator trigger="onBlur" rules={[{
               required: true,
               whitespace: true,
               message: 'retry pass is required'
             }, {validator: this.checkPass2}]}>
-              <input name='pass2' className="form-control"  value={formData.pass2}/>
+              <input name='pass2' className="form-control" value={formData.pass2}/>
             </Validator>
-                {status.pass2.errors ? <span style={errorStyle}> {status.pass2.errors.join(', ')}</span> : null}
+            {status.pass2.errors ? <span style={errorStyle}> {status.pass2.errors.join(', ')}</span> : null}
           </div>
         </div>
 
@@ -193,9 +194,10 @@ var Form = React.createClass({
 
         <div className="form-group">
           <label className="col-sm-2 control-label">required number (validate on blur):</label>
+
           <div className="col-sm-10">
             <Validator trigger="onBlur" rules={[{required: true,message:'不是数字',pattern:/^\d+(\.\d+)?$/}]}>
-              <input name='blurNumber' className="form-control"  value={formData.blurNumber}/>
+              <input name='blurNumber' className="form-control" value={formData.blurNumber}/>
             </Validator>
             {status.blurNumber.errors ? <span style={errorStyle}> {status.blurNumber.errors.join(', ')}</span> : null}
           </div>
@@ -203,9 +205,10 @@ var Form = React.createClass({
 
         <div className="form-group">
           <label className="col-sm-2 control-label">required number:</label>
+
           <div className="col-sm-10">
             <Validator rules={[{required: true, type: 'number', transform: toNumber}]}>
-              <input name='number' className="form-control"  value={formData.number}/>
+              <input name='number' className="form-control" value={formData.number}/>
             </Validator>
             {status.number.errors ? <span style={errorStyle}> {status.number.errors.join(', ')}</span> : null}
           </div>
@@ -213,26 +216,31 @@ var Form = React.createClass({
 
         <div className="form-group">
           <label className="col-sm-2 control-label">optional number:</label>
+
           <div className="col-sm-10">
-            <Validator  rules={[{type: 'number', transform: toNumber}]}>
-              <input name='optionalNumber' className="form-control"  value={formData.optionalNumber}/>
+            <Validator rules={[{type: 'number', transform: toNumber}]}>
+              <input name='optionalNumber' className="form-control" value={formData.optionalNumber}/>
             </Validator>
-            {status.optionalNumber.errors ? <span style={errorStyle}> {status.optionalNumber.errors.join(', ')}</span> : null}
+            {status.optionalNumber.errors ?
+              <span style={errorStyle}> {status.optionalNumber.errors.join(', ')}</span> : null}
           </div>
         </div>
 
         <div className="form-group">
           <label className="col-sm-2 control-label">optional:</label>
+
           <div className="col-sm-10">
-            <input name='optional' className="form-control"  value={formData.optional} onChange={this.setField.bind(this, 'optional')}/>
+            <input name='optional' className="form-control" value={formData.optional}
+                   onChange={this.setField.bind(this, 'optional')}/>
           </div>
         </div>
 
         <div className="form-group">
           <label className="col-sm-2 control-label">required:</label>
+
           <div className="col-sm-10">
             <Validator rules={{required: true}}>
-              <input name='must' className="form-control"  value={formData.must}/>
+              <input name='must' className="form-control" value={formData.must}/>
             </Validator>
             {status.must.errors ? <span style={errorStyle}> {status.must.errors.join(', ')}</span> : null}
           </div>
@@ -240,10 +248,11 @@ var Form = React.createClass({
 
         <div className="form-group">
           <label className="col-sm-2 control-label">start date:</label>
+
           <div className="col-sm-10">
             <Validator rules={[{validator: this.checkNow}, {validator: this.validateStartDate}]}>
               <DatePicker name='startDate' formatter={this.props.formatter} calendar={<Calendar showTime={false}/>}
-                value={formData.startDate}>
+                          value={formData.startDate}>
                 <input type="text" className="form-control" style={{
                   background: 'white',
                   color: 'black',
@@ -257,10 +266,11 @@ var Form = React.createClass({
 
         <div className="form-group">
           <label className="col-sm-2 control-label">end date:</label>
+
           <div className="col-sm-10">
             <Validator rules={[{validator: this.checkNow}, {validator: this.validateEndDate}]}>
               <DatePicker name='endDate' formatter={this.props.formatter} calendar={<Calendar />}
-                value={formData.endDate}>
+                          value={formData.endDate}>
                 <input type="text" className="form-control" style={{
                   background: 'white',
                   color: 'black',
@@ -268,14 +278,14 @@ var Form = React.createClass({
                 }}/>
               </DatePicker>
             </Validator>
-                {status.endDate.errors ? <span style={errorStyle}> {status.endDate.errors.join(', ')}</span> : null}
+            {status.endDate.errors ? <span style={errorStyle}> {status.endDate.errors.join(', ')}</span> : null}
           </div>
         </div>
 
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
             <button type="submit" className="btn btn-default">submit</button>
-          &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
             <a href='#' className="btn btn-default" onClick={this.handleReset}>reset</a>
           </div>
         </div>
@@ -285,6 +295,5 @@ var Form = React.createClass({
 });
 
 React.render(<div>
-  <h1>{pkg.name}@{pkg.version}</h1>
   <Form/>
 </div>, document.getElementById('__react-content'));

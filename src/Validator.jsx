@@ -1,7 +1,7 @@
-'use strict';
 
-var React = require('react');
-var createChainedFunction = require('rc-util').createChainedFunction;
+
+import React from 'react';
+import {createChainedFunction} from 'rc-util';
 
 function getValueFromEvent(e) {
   // support custom element
@@ -12,8 +12,8 @@ class Validator extends React.Component {
   constructor(props) {
     super(props);
     this.reset();
-    this.handleChange = this.handleChange.bind(this);
-    this.handleChangeSilently = this.handleChangeSilently.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onChangeSilently = this.onChangeSilently.bind(this);
   }
 
   reset() {
@@ -29,15 +29,15 @@ class Validator extends React.Component {
   }
 
 
-  handleChange(e) {
-    this.props.handleInputChange(this, getValueFromEvent(e));
+  onChange(e) {
+    this.props.onInputChange(this, getValueFromEvent(e));
   }
 
-  handleChangeSilently(e) {
+  onChangeSilently(e) {
     // keep last error
     this.dirty = true;
     this.isValidating = false;
-    this.props.handleInputChangeSilently(this, getValueFromEvent(e));
+    this.props.onInputChangeSilently(this, getValueFromEvent(e));
   }
 
   getName() {
@@ -49,21 +49,20 @@ class Validator extends React.Component {
   }
 
   render() {
-    var props = this.props;
-    var child = this.getInputElement();
-    var trigger = props.trigger;
-    var triggerObj = {};
+    const props = this.props;
+    const child = this.getInputElement();
+    const trigger = props.trigger;
+    const triggerObj = {};
     // keep model updated
     if (trigger !== 'onChange') {
-      triggerObj.onChange = createChainedFunction(child.props.onChange, this.handleChangeSilently);
+      triggerObj.onChange = createChainedFunction(child.props.onChange, this.onChangeSilently);
     }
-    triggerObj[trigger] = createChainedFunction(child.props[trigger], this.handleChange);
+    triggerObj[trigger] = createChainedFunction(child.props[trigger], this.onChange);
     return React.cloneElement(child, triggerObj);
   }
 
   componentDidMount() {
     this.props.attachValidator(this);
-    //console.log(this.getName()+' mount');
   }
 
   componentDidUpdate() {
@@ -72,19 +71,19 @@ class Validator extends React.Component {
 
   componentWillUnmount() {
     this.props.detachValidator(this);
-    //console.log(this.getName()+' unmount');
   }
 }
 
 Validator.defaultProps = {
-  trigger: 'onChange'
+  trigger: 'onChange',
 };
 
 Validator.propTypes = {
   attachValidator: React.PropTypes.func,
   detachValidator: React.PropTypes.func,
-  handleInputChange: React.PropTypes.func,
-  trigger: React.PropTypes.string
+  onInputChange: React.PropTypes.func,
+  onInputChangeSilently: React.PropTypes.func,
+  trigger: React.PropTypes.string,
 };
 
-module.exports = Validator;
+export default Validator;

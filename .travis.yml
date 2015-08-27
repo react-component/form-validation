@@ -34,3 +34,8 @@ env:
   global:
   - secure: S7tamfHhEH1/pNU+g5JZ5njRJAQaHjflrM8uTAcr9m5Ji+V0kdSu8/Jz5fMAwoF3P4g0e+mN/sJvOCXEmb80cLFC/rZ78DJSvCi1V7vDt2xurX7dpTl+FocdH47zM0VUVV7hqt/Nipy5OnXFFX/Or3TUgPrlFwZakCUBNuYqVIk=
   - secure: VcFksmiJIF85l8kvXUAH6mqHfa5n61i1yWf4ZOjueRR1wmdsElPD95fYQfQJSuNojiughnob+qTPY8MaLkLewfeW8xc7TtqR/C0h6UgC7ZfrqOcTemWtwlTP/VZMJ2Ewo0uyOBZKcZR2YwBzXV3TW+qNoDJXuU7EhzP5NN78Br0=
+
+
+matrix:
+  allow_failures:
+  - env: "TEST_TYPE=saucelabs"

@@ -1,8 +1,6 @@
-'use strict';
-
 function merge() {
-  var ret = {};
-  var args = [].slice.call(arguments, 0);
+  const ret = {};
+  const args = [].slice.call(arguments, 0);
   args.forEach((a)=> {
     Object.keys(a).forEach((k)=> {
       ret[k] = a[k];
@@ -11,25 +9,29 @@ function merge() {
   return ret;
 }
 
-var FieldMixin = {
+const FieldMixin = {
   setField(field, e) {
-    var v = e;
+    let v = e;
     if (e && e.target) {
       v = e.target.value;
     }
-    var newFormData = {};
+    const newFormData = {};
     newFormData[field] = v;
     this.setState({
-      formData: merge(this.state.formData, newFormData)
+      formData: merge(this.state.formData, newFormData),
     });
   },
 
   handleValidate(status, formData) {
+    this.onValidate(status, formData);
+  },
+
+  onValidate(status, formData) {
     this.setState({
       status: merge(this.state.status, status),
-      formData: merge(this.state.formData, formData)
+      formData: merge(this.state.formData, formData),
     });
-  }
+  },
 };
 
-module.exports = FieldMixin;
+export default FieldMixin;

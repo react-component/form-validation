@@ -1,24 +1,74 @@
-'use strict';
 
-var React = require('react');
-var AsyncValidate = require('async-validator');
-var Validator = require('./Validator');
-var actionId = 0;
-var assign = require('object-assign');
-var textInputTypes = ['text', 'password'];
+
+import React from 'react';
+import AsyncValidate from 'async-validator';
+import Validator from './Validator';
+import assign from 'object-assign';
+
+let actionId = 0;
 
 class Validation extends React.Component {
   constructor(props) {
     super(props);
     this.validators = {};
-    ['attachValidator', 'detachValidator', 'handleInputChange', 'handleInputChangeSilently'].forEach((m)=> {
+    ['attachValidator', 'detachValidator', 'onInputChange', 'onInputChangeSilently'].forEach((m)=> {
       this[m] = this[m].bind(this);
     });
   }
 
+  onInputChangeSilently(validator, value) {
+    const r = this.getValidateResult();
+    r.formData[validator.getName()] = value;
+    this.props.onValidate(r.status, r.formData);
+  }
+
+  onInputChange(validator, v, fn) {
+    let value = v;
+    const name = validator.getName();
+    const schema = this.getSchema(validator);
+    const rules = schema[name];
+    rules.forEach((rule, index) => {
+      if (rule.transform) {
+        value = rule.transform(value);
+        const newRule = assign({}, rule);
+        newRule.transform = null;
+        rules[index] = newRule;
+      }
+    });
+    const values = {};
+    values[name] = value;
+    validator.errors = undefined;
+    validator.isValidating = true;
+    validator.dirty = true;
+    const currentActionId = actionId;
+    validator.actionId = currentActionId;
+    actionId++;
+    const result = this.getValidateResult();
+    result.formData[name] = value;
+    this.props.onValidate(result.status, result.formData);
+    const self = this;
+    new AsyncValidate(schema).validate(values, (errors)=> {
+      const validators = self.validators;
+      // in case component is unmount and remount
+      const nowValidator = validators[name];
+      // prevent concurrency call
+      if (nowValidator && nowValidator.actionId === currentActionId) {
+        validator.errors = errors;
+        validator.isValidating = false;
+        validator.dirty = false;
+        const r = self.getValidateResult();
+        r.formData[name] = value;
+        self.props.onValidate(r.status, r.formData);
+        if (fn) {
+          fn();
+        }
+      }
+    });
+  }
+
   getSchema(validator) {
-    var ret = {};
-    var rules = validator.props.rules;
+    const ret = {};
+    let rules = validator.props.rules;
     if (Array.isArray(rules)) {
       rules = rules.concat();
     } else {
@@ -29,12 +79,12 @@ class Validation extends React.Component {
   }
 
   getValidateResult() {
-    var formData = {};
-    var status = {};
-    var validators = this.validators;
+    const formData = {};
+    const status = {};
+    const validators = this.validators;
     Object.keys(validators).forEach((name)=> {
-      var validator = validators[name];
-      var errors;
+      const validator = validators[name];
+      let errors;
       if (validator.errors) {
         errors = validator.errors.map((e)=> {
           return e.message;
@@ -45,18 +95,22 @@ class Validation extends React.Component {
       }
       status[name] = {
         errors: errors,
-        isValidating: validator.isValidating
+        isValidating: validator.isValidating,
       };
       formData[name] = validator.getValue();
     });
     return {
       formData: formData,
-      status: status
+      status: status,
     };
   }
 
+  render() {
+    return <div className={this.props.className}>{this.attachValidators(this.props.children)}</div>;
+  }
+
   isValid() {
-    var result = this.getValidateResult().status;
+    const result = this.getValidateResult().status;
     return Object.keys(result).every((name)=> {
       if (result[name].isValidating || result[name].errors) {
         return false;
@@ -66,29 +120,30 @@ class Validation extends React.Component {
   }
 
   attachValidators(children) {
-    var self = this;
+    const self = this;
     if (children) {
       // refer: React traverseAllChildrenImpl
       // bug fix for react 0.13 @2015.07.02
       // option should not have non-text children
       // <option>11</option>
       // React.Children.map(option.props.children,function(c){return c}) => {'.0':'11'}
-      var type = typeof children;
+      const type = typeof children;
       if (type === 'boolean') {
         return children;
       }
       if (type === 'string' || type === 'number') {
         return children;
       }
-      var childrenArray = [];
-      var ret = React.Children.map(children, (child)=> {
+      const childrenArray = [];
+      const ret = React.Children.map(children, (c)=> {
+        let child = c;
         if (React.isValidElement(child)) {
           if (child.type === Validator) {
             child = React.cloneElement(child, {
               attachValidator: self.attachValidator,
               detachValidator: self.detachValidator,
-              handleInputChange: self.handleInputChange,
-              handleInputChangeSilently: self.handleInputChangeSilently
+              onInputChange: self.onInputChange,
+              onInputChangeSilently: self.onInputChangeSilently,
             });
           } else if (child.props) {
             child = React.cloneElement(child, {}, self.attachValidators(child.props.children));
@@ -106,63 +161,8 @@ class Validation extends React.Component {
     return children;
   }
 
-  handleInputChangeSilently(validator, value) {
-    var r = this.getValidateResult();
-    r.formData[validator.getName()] = value;
-    this.props.onValidate(r.status, r.formData);
-  }
-
-  handleInputChange(validator, value, fn) {
-    var inputElement = validator.getInputElement();
-    var isTextField = inputElement.type === 'input' &&
-      (!inputElement.props.type || textInputTypes.indexOf(inputElement.props.type) !== -1);
-    if (isTextField && value === '') {
-      value = undefined;
-    }
-    var name = validator.getName();
-    var schema = this.getSchema(validator);
-    var rules = schema[name];
-    rules.forEach(function (rule, index) {
-      if (rule.transform) {
-        value = rule.transform(value);
-        var newRule = assign({}, rule);
-        newRule.transform = null;
-        rules[index] = newRule;
-      }
-    });
-    var values = {};
-    values[name] = value;
-    validator.errors = undefined;
-    validator.isValidating = true;
-    validator.dirty = true;
-    var currentActionId = actionId;
-    validator.actionId = currentActionId;
-    actionId++;
-    var result = this.getValidateResult();
-    result.formData[name] = value;
-    this.props.onValidate(result.status, result.formData);
-    var self = this;
-    new AsyncValidate(schema).validate(values, (errors)=> {
-      var validators = self.validators;
-      // in case component is unmount and remount
-      var nowValidator = validators[name];
-      // prevent concurrency call
-      if (nowValidator && nowValidator.actionId === currentActionId) {
-        validator.errors = errors;
-        validator.isValidating = false;
-        validator.dirty = false;
-        var r = self.getValidateResult();
-        r.formData[name] = value;
-        self.props.onValidate(r.status, r.formData);
-        if (fn) {
-          fn();
-        }
-      }
-    });
-  }
-
   attachValidator(validator) {
-    var name = validator.getName();
+    const name = validator.getName();
     this.validators[name] = validator;
   }
 
@@ -170,16 +170,17 @@ class Validation extends React.Component {
     delete this.validators[validator.getName()];
   }
 
-  forceValidate(fields, callback) {
+  forceValidate(fs, callback) {
+    let fields = fs;
     // must async to allow state sync
     setTimeout(()=> {
-      var self = this;
-      var validators = this.validators;
-      var validator;
-      var doing = 0;
+      const self = this;
+      const validators = this.validators;
+      let validator;
+      let doing = 0;
 
       fields = fields || Object.keys(validators);
-      var count = fields.length;
+      const count = fields.length;
       if (count === 0) {
         callback(self.isValid());
         return;
@@ -196,17 +197,17 @@ class Validation extends React.Component {
 
       fields.forEach((name)=> {
         validator = validators[name];
-        self.handleInputChange(validator, validator.getValue(), track);
+        self.onInputChange(validator, validator.getValue(), track);
       });
     }, 0);
   }
 
   validate(callback) {
-    var self = this;
-    var validators = this.validators;
-    var count = 0;
-    var validator;
-    var doing = 0;
+    const self = this;
+    const validators = this.validators;
+    let count = 0;
+    let validator;
+    let doing = 0;
 
     Object.keys(validators).forEach((name)=> {
       validator = validators[name];
@@ -230,34 +231,35 @@ class Validation extends React.Component {
     Object.keys(validators).forEach((name)=> {
       validator = validators[name];
       if (validator.dirty) {
-        this.handleInputChange(validator, validator.getValue(), track);
+        this.onInputChange(validator, validator.getValue(), track);
       }
     });
   }
 
   reset() {
-    var validators = this.validators;
+    const validators = this.validators;
     Object.keys(validators).forEach((name)=> {
       validators[name].reset();
     });
   }
-
-  render() {
-    return <div className={this.props.className}>{this.attachValidators(this.props.children)}</div>;
-  }
 }
 
 Validation.propTypes = {
-  onChange: React.PropTypes.func
+  onChange: React.PropTypes.func,
+  onValidate: React.PropTypes.func,
+  className: React.PropTypes.string,
+  children: React.PropTypes.any,
 };
 
 Validation.defaultProps = {
   onValidate() {
-  }
+  },
 };
 
 Validation.Validator = Validator;
 
-Validation.FieldMixin = require('./FieldMixin');
+import FieldMixin from './FieldMixin';
 
-module.exports = Validation;
+Validation.FieldMixin = FieldMixin;
+
+export default Validation;

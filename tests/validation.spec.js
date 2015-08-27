@@ -164,7 +164,7 @@ describe('validation', () => {
   it('onValidate works', ()=> {
     var nativeInput = React.findDOMNode(form.refs.input);
     Simulate.change(nativeInput);
-    expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name is required');
+    expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name is required,name must be between 5 and 10 characters');
     nativeInput.value = '1111';
     Simulate.change(nativeInput);
     expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters,junk');
