@@ -12,8 +12,14 @@ function merge() {
 const FieldMixin = {
   setField(field, e) {
     let v = e;
-    if (e && e.target) {
-      v = e.target.value;
+    const target = e && e.target;
+    if (target) {
+      if ((target.nodeName + '').toLowerCase() === 'input' &&
+        (target.type === 'checkbox') || (target.type === 'radio')) {
+        v = target.checked;
+      } else {
+        v = e.target.value;
+      }
     }
     const newFormData = {};
     newFormData[field] = v;
