@@ -3188,9 +3188,9 @@ webpackJsonp([0,1],[
 /* 46 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
 	function merge() {
@@ -3207,8 +3207,13 @@ webpackJsonp([0,1],[
 	var FieldMixin = {
 	  setField: function setField(field, e) {
 	    var v = e;
-	    if (e && e.target) {
-	      v = e.target.value;
+	    var target = e && e.target;
+	    if (target) {
+	      if ((target.nodeName + '').toLowerCase() === 'input' && target.type === 'checkbox' || target.type === 'radio') {
+	        v = target.checked;
+	      } else {
+	        v = e.target.value;
+	      }
 	    }
 	    var newFormData = {};
 	    newFormData[field] = v;
@@ -3229,8 +3234,8 @@ webpackJsonp([0,1],[
 	  }
 	};
 	
-	exports["default"] = FieldMixin;
-	module.exports = exports["default"];
+	exports['default'] = FieldMixin;
+	module.exports = exports['default'];
 
 /***/ },
 /* 47 */
