@@ -3209,7 +3209,8 @@ webpackJsonp([0,1],[
 	    var v = e;
 	    var target = e && e.target;
 	    if (target) {
-	      if ((target.nodeName + '').toLowerCase() === 'input' && target.type === 'checkbox' || target.type === 'radio') {
+	      // no radio
+	      if ((target.nodeName + '').toLowerCase() === 'input' && target.type === 'checkbox') {
 	        v = target.checked;
 	      } else {
 	        v = e.target.value;
