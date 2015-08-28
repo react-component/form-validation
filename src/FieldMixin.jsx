@@ -14,8 +14,9 @@ const FieldMixin = {
     let v = e;
     const target = e && e.target;
     if (target) {
+      // no radio
       if ((target.nodeName + '').toLowerCase() === 'input' &&
-        (target.type === 'checkbox') || (target.type === 'radio')) {
+        target.type === 'checkbox') {
         v = target.checked;
       } else {
         v = e.target.value;
