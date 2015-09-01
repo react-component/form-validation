@@ -8,7 +8,9 @@
     "react-form-validation",
     "form-validation"
   ],
-  "files":["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "./lib/index",
   "homepage": "http://github.com/react-component/form-validation",
   "author": "yiminghe@gmail.com",
@@ -37,10 +39,10 @@
   "devDependencies": {
     "bootstrap": "^3.3.2",
     "expect.js": "~0.3.1",
-    "gregorian-calendar": "3.x",
-    "gregorian-calendar-format": "^2.1.1",
+    "gregorian-calendar": "~3.0.0",
+    "gregorian-calendar-format": "~3.0.1",
     "precommit-hook": "^1.0.7",
-    "rc-calendar": "~3.9.1",
+    "rc-calendar": "~3.16.1",
     "rc-server": "3.x",
     "rc-tools": "4.x",
     "react": "~0.13.0"
