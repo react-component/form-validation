@@ -13,6 +13,9 @@ import GregorianCalendar from 'gregorian-calendar';
 import zhCn from 'gregorian-calendar/lib/locale/zh-cn';
 
 function toNumber(v) {
+  if (!v || !v.trim()) {
+    return undefined;
+  }
   var num = Number(v);
   // num === ' '
   if (!isNaN(num)) {
