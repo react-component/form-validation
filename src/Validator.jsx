@@ -1,11 +1,21 @@
-
-
 import React from 'react';
 import {createChainedFunction} from 'rc-util';
 
 function getValueFromEvent(e) {
   // support custom element
   return e.target ? e.target.value : e;
+}
+
+function hasPlaceholder(child) {
+  return child.type === 'input' && !!child.props.placeholder;
+}
+
+function ieGT9() {
+  if (typeof document === undefined) {
+    return false;
+  }
+  const documentMode = document.documentMode || 0;
+  return documentMode > 9;
 }
 
 class Validator extends React.Component {
@@ -52,13 +62,17 @@ class Validator extends React.Component {
     const props = this.props;
     const child = this.getInputElement();
     const trigger = props.trigger;
-    const triggerObj = {};
+    const extraProps = {};
     // keep model updated
     if (trigger !== 'onChange') {
-      triggerObj.onChange = createChainedFunction(child.props.onChange, this.onChangeSilently);
+      extraProps.onChange = createChainedFunction(child.props.onChange, this.onChangeSilently);
     }
-    triggerObj[trigger] = createChainedFunction(child.props[trigger], this.onChange);
-    return React.cloneElement(child, triggerObj);
+    extraProps[trigger] = createChainedFunction(child.props[trigger], this.onChange);
+    if (hasPlaceholder(child) && ieGT9()) {
+      // https://github.com/react-component/form-validation/issues/13
+      extraProps.placeholder = undefined;
+    }
+    return React.cloneElement(child, extraProps);
   }
 
   componentDidMount() {

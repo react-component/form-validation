@@ -243,7 +243,7 @@ var Form = React.createClass({
 
           <div className="col-sm-10">
             <Validator rules={{required: true}}>
-              <input name='must' className="form-control" value={formData.must}/>
+              <input name='must' className="form-control" value={formData.must} placeholder="必须"/>
             </Validator>
             {status.must.errors ? <span style={errorStyle}> {status.must.errors.join(', ')}</span> : null}
           </div>
