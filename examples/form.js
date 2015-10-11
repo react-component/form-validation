@@ -394,7 +394,7 @@ webpackJsonp([0,1],[
 	            _react2['default'].createElement(
 	              _rcFormValidation.Validator,
 	              { rules: { required: true } },
-	              _react2['default'].createElement('input', { name: 'must', className: 'form-control', value: formData.must })
+	              _react2['default'].createElement('input', { name: 'must', className: 'form-control', value: formData.must, placeholder: '必须' })
 	            ),
 	            status.must.errors ? _react2['default'].createElement(
 	              'span',
@@ -22589,6 +22589,18 @@ webpackJsonp([0,1],[
 	  return e.target ? e.target.value : e;
 	}
 	
+	function hasPlaceholder(child) {
+	  return child.type === 'input' && !!child.props.placeholder;
+	}
+	
+	function ieGT9() {
+	  if (typeof document === undefined) {
+	    return false;
+	  }
+	  var documentMode = document.documentMode || 0;
+	  return documentMode > 9;
+	}
+	
 	var Validator = (function (_React$Component) {
 	  _inherits(Validator, _React$Component);
 	
@@ -22644,13 +22656,17 @@ webpackJsonp([0,1],[
 	      var props = this.props;
 	      var child = this.getInputElement();
 	      var trigger = props.trigger;
-	      var triggerObj = {};
+	      var extraProps = {};
 	      // keep model updated
 	      if (trigger !== 'onChange') {
-	        triggerObj.onChange = (0, _rcUtil.createChainedFunction)(child.props.onChange, this.onChangeSilently);
+	        extraProps.onChange = (0, _rcUtil.createChainedFunction)(child.props.onChange, this.onChangeSilently);
 	      }
-	      triggerObj[trigger] = (0, _rcUtil.createChainedFunction)(child.props[trigger], this.onChange);
-	      return _react2['default'].cloneElement(child, triggerObj);
+	      extraProps[trigger] = (0, _rcUtil.createChainedFunction)(child.props[trigger], this.onChange);
+	      if (hasPlaceholder(child) && ieGT9()) {
+	        // https://github.com/react-component/form-validation/issues/13
+	        extraProps.placeholder = undefined;
+	      }
+	      return _react2['default'].cloneElement(child, extraProps);
 	    }
 	  }, {
 	    key: 'componentDidMount',
