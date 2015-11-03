@@ -5,12 +5,12 @@ import 'rc-calendar/assets/bootstrap.css';
 
 import Validation, {Validator} from 'rc-form-validation';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Calendar, {Picker as DatePicker} from 'rc-calendar';
 import DateTimeFormat from 'gregorian-calendar-format';
 var formatter = new DateTimeFormat('yyyy-MM-dd');
 import assign from 'object-assign';
 import GregorianCalendar from 'gregorian-calendar';
-import zhCn from 'gregorian-calendar/lib/locale/zh-cn';
 
 function toNumber(v) {
   if (!v || !v.trim()) {
@@ -28,7 +28,7 @@ var Form = React.createClass({
   mixins: [Validation.FieldMixin],
 
   getInitialState() {
-    var start = new GregorianCalendar(zhCn);
+    var start = new GregorianCalendar();
     start.setTime(Date.now());
     var end = start.clone();
     start.addDayOfMonth(-3);
@@ -116,7 +116,7 @@ var Form = React.createClass({
 
   checkNow(rule, value, callback) {
     var errors;
-    var now = new GregorianCalendar(zhCn);
+    var now = new GregorianCalendar();
     now.setTime(Date.now());
     if (value.getMonth() !== now.getMonth()) {
       errors = [new Error('can only select current month')];
@@ -297,6 +297,6 @@ var Form = React.createClass({
   }
 });
 
-React.render(<div>
+ReactDOM.render(<div>
   <Form/>
 </div>, document.getElementById('__react-content'));

@@ -105,10 +105,6 @@ class Validation extends React.Component {
     };
   }
 
-  render() {
-    return <div className={this.props.className}>{this.attachValidators(this.props.children)}</div>;
-  }
-
   isValid() {
     const result = this.getValidateResult().status;
     return Object.keys(result).every((name)=> {
@@ -241,6 +237,10 @@ class Validation extends React.Component {
     Object.keys(validators).forEach((name)=> {
       validators[name].reset();
     });
+  }
+
+  render() {
+    return <div className={this.props.className}>{this.attachValidators(this.props.children)}</div>;
   }
 }
 

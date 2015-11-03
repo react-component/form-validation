@@ -3,8 +3,9 @@
 var Validation = require('../');
 var Validator = Validation.Validator;
 var expect = require('expect.js');
-var React = require('react/addons');
-var TestUtils = React.addons.TestUtils;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var TestUtils = require('react-addons-test-utils');
 var Simulate = TestUtils.Simulate;
 
 function getInnerText(node) {
@@ -91,12 +92,12 @@ describe('validation', () => {
   var form;
 
   beforeEach(()=> {
-    form = React.render(<Form/>, div);
+    form = ReactDOM.render(<Form/>, div);
   });
 
   afterEach(()=> {
-    React.unmountComponentAtNode(div);
-    React.unmountComponentAtNode(div2);
+    ReactDOM.unmountComponentAtNode(div);
+    ReactDOM.unmountComponentAtNode(div2);
   });
 
   it('can contain CustomComponent', function () {
@@ -106,7 +107,7 @@ describe('validation', () => {
       }
     });
 
-    React.render(<Validation>
+    ReactDOM.render(<Validation>
       <input />
       <p>
         <input />
@@ -129,7 +130,7 @@ describe('validation', () => {
       }
     });
 
-    React.render(<Validation>
+    ReactDOM.render(<Validation>
       <Validator>
         <input />
       </Validator>
@@ -154,7 +155,7 @@ describe('validation', () => {
   });
 
   it('will not change primary type', function () {
-    expect(form.refs.option.props.children).to.be('1');
+    expect(form.refs.option.innerHTML).to.be('1');
   });
 
   it('initial error is not shown', ()=> {
@@ -162,34 +163,34 @@ describe('validation', () => {
   });
 
   it('onValidate works', ()=> {
-    var nativeInput = React.findDOMNode(form.refs.input);
+    var nativeInput = (form.refs.input);
     Simulate.change(nativeInput);
-    expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name is required');
+    expect(getInnerText((form.refs.error))).to.be('name is required');
     nativeInput.value = '1111';
     Simulate.change(nativeInput);
-    expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters,junk');
+    expect(getInnerText((form.refs.error))).to.be('name must be between 5 and 10 characters,junk');
     nativeInput.value = '11111';
     Simulate.change(nativeInput);
     expect(form.refs.error).to.be(undefined);
   });
 
   it('validate method works', (done)=> {
-    var nativeInput = React.findDOMNode(form.refs.input);
+    var nativeInput = (form.refs.input);
     nativeInput.value = 1;
     Simulate.change(nativeInput);
     form.refs.validation.validate(()=> {
-      expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters');
-      expect(getInnerText(React.findDOMNode(form.refs.error2))).to.be('pass is required');
+      expect(getInnerText((form.refs.error))).to.be('name must be between 5 and 10 characters');
+      expect(getInnerText((form.refs.error2))).to.be('pass is required');
       done();
     });
   });
 
   it('forceValidate works', (done)=> {
-    var nativeInput = React.findDOMNode(form.refs.input);
+    var nativeInput = (form.refs.input);
     nativeInput.value = 1;
     Simulate.change(nativeInput);
     form.refs.validation.forceValidate(['name'], ()=> {
-      expect(getInnerText(React.findDOMNode(form.refs.error))).to.be('name must be between 5 and 10 characters');
+      expect(getInnerText((form.refs.error))).to.be('name must be between 5 and 10 characters');
       expect(form.refs.error2).to.be(undefined);
       done();
     });
@@ -197,17 +198,17 @@ describe('validation', () => {
 
   describe('trigger', ()=> {
     it('blur works for error', (done)=> {
-      var blurInput = React.findDOMNode(form.refs.blurInput);
+      var blurInput = (form.refs.blurInput);
       blurInput.value = 'a';
       Simulate.change(blurInput);
       form.refs.validation.validate(()=> {
-        expect(getInnerText(React.findDOMNode(form.refs.error3))).to.be('blurNumber is not a number');
+        expect(getInnerText((form.refs.error3))).to.be('blurNumber is not a number');
         done();
       });
     });
 
     it('blur works for ok', (done)=> {
-      var blurInput = React.findDOMNode(form.refs.blurInput);
+      var blurInput = (form.refs.blurInput);
       blurInput.value = '1';
       Simulate.change(blurInput);
       form.refs.validation.validate(()=> {

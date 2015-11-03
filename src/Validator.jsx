@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {createChainedFunction} from 'rc-util';
 
 function getValueFromEvent(e) {
   // support custom element
-  return e.target ? e.target.value : e;
+  return e && e.target ? e.target.value : e;
 }
 
 function hasPlaceholder(child) {
@@ -26,18 +26,17 @@ class Validator extends React.Component {
     this.onChangeSilently = this.onChangeSilently.bind(this);
   }
 
-  reset() {
-    this.errors = undefined;
-    this.dirty = true;
-    this.isValidating = false;
-    // in case component is unmount and remount
-    this.actionId = -1;
+  componentDidMount() {
+    this.props.attachValidator(this);
   }
 
-  getInputElement() {
-    return React.Children.only(this.props.children);
+  componentDidUpdate() {
+    this.props.attachValidator(this);
   }
 
+  componentWillUnmount() {
+    this.props.detachValidator(this);
+  }
 
   onChange(e) {
     this.props.onInputChange(this, getValueFromEvent(e));
@@ -50,12 +49,24 @@ class Validator extends React.Component {
     this.props.onInputChangeSilently(this, getValueFromEvent(e));
   }
 
+  getInputElement() {
+    return React.Children.only(this.props.children);
+  }
+
   getName() {
     return this.getInputElement().props.name;
   }
 
   getValue() {
     return this.getInputElement().props.value;
+  }
+
+  reset() {
+    this.errors = undefined;
+    this.dirty = true;
+    this.isValidating = false;
+    // in case component is unmount and remount
+    this.actionId = -1;
   }
 
   render() {
@@ -74,18 +85,6 @@ class Validator extends React.Component {
     }
     return React.cloneElement(child, extraProps);
   }
-
-  componentDidMount() {
-    this.props.attachValidator(this);
-  }
-
-  componentDidUpdate() {
-    this.props.attachValidator(this);
-  }
-
-  componentWillUnmount() {
-    this.props.detachValidator(this);
-  }
 }
 
 Validator.defaultProps = {
@@ -93,11 +92,12 @@ Validator.defaultProps = {
 };
 
 Validator.propTypes = {
-  attachValidator: React.PropTypes.func,
-  detachValidator: React.PropTypes.func,
-  onInputChange: React.PropTypes.func,
-  onInputChangeSilently: React.PropTypes.func,
-  trigger: React.PropTypes.string,
+  attachValidator: PropTypes.func,
+  detachValidator: PropTypes.func,
+  onInputChange: PropTypes.func,
+  children: PropTypes.any,
+  onInputChangeSilently: PropTypes.func,
+  trigger: PropTypes.string,
 };
 
 export default Validator;

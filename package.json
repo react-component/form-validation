@@ -1,6 +1,6 @@
 {
   "name": "rc-form-validation",
-  "version": "2.4.13",
+  "version": "2.4.14",
   "description": "form-validation ui component for react",
   "keywords": [
     "react",
@@ -39,15 +39,17 @@
   "devDependencies": {
     "bootstrap": "^3.3.2",
     "expect.js": "~0.3.1",
-    "gregorian-calendar": "~3.0.0",
-    "gregorian-calendar-format": "~3.0.1",
-    "precommit-hook": "^1.0.7",
+    "gregorian-calendar": "3.x",
+    "gregorian-calendar-format": "3.x",
+    "pre-commit": "1.x",
     "rc-calendar": "~3.16.1",
     "rc-server": "3.x",
     "rc-tools": "4.x",
-    "react": "~0.13.0"
+    "react-addons-test-utils": "~0.14.0",
+    "react": "~0.14.0",
+    "react-dom":"~0.14.0"
   },
-  "precommit": [
+  "pre-commit": [
     "lint"
   ],
   "dependencies": {
