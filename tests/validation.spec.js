@@ -1,33 +1,31 @@
-'use strict';
-
-var Validation = require('../');
-var Validator = Validation.Validator;
-var expect = require('expect.js');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var TestUtils = require('react-addons-test-utils');
-var Simulate = TestUtils.Simulate;
+const Validation = require('../');
+const Validator = Validation.Validator;
+const expect = require('expect.js');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const TestUtils = require('react-addons-test-utils');
+const Simulate = TestUtils.Simulate;
 
 function getInnerText(node) {
   return node.textContent || node.innerText;
 }
 
 function toNumber(v) {
-  var num = Number(v);
+  let num = Number(v);
   // num === ' '
   if (!isNaN(num)) {
-    num = parseInt(v);
+    num = parseInt(v, 10);
   }
   return isNaN(num) ? v : num;
 }
 
 describe('validation', () => {
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   document.body.appendChild(div);
-  var div2 = document.createElement('div');
+  const div2 = document.createElement('div');
   document.body.appendChild(div);
 
-  var validateInput = (rule, value, callback)=> {
+  const validateInput = (rule, value, callback)=> {
     if (value === '1111') {
       callback('junk');
     } else {
@@ -35,26 +33,26 @@ describe('validation', () => {
     }
   };
 
-  var Form = React.createClass({
+  const Form = React.createClass({
     getInitialState() {
       return {
         formData: {
           name: '',
           blurNumber: '',
-          pass: ''
+          pass: '',
         },
         status: {
           name: {},
           blurNumber: {},
-          pass: {}
-        }
-      }
+          pass: {},
+        },
+      };
     },
 
     onValidate(status, formData) {
       this.setState({
         formData: formData,
-        status: status
+        status: status,
       });
     },
 
@@ -62,13 +60,13 @@ describe('validation', () => {
     },
 
     render() {
-      var state = this.state;
-      return <Validation ref='validation' onValidate={this.onValidate}>
-        <Validator ref='validator' rules={[{
+      const state = this.state;
+      return (<Validation ref="validation" onValidate={this.onValidate}>
+        <Validator ref="validator" rules={[{
           type: 'string',
           min: 5,
           max: 10,
-          required: true
+          required: true,
         }, {validator: validateInput}]}>
           <input name="name" value={state.formData.name} ref="input" onChange={this.onInputChange}/>
         </Validator>
@@ -81,15 +79,14 @@ describe('validation', () => {
         <Validator trigger="onBlur" rules={[{type: 'number', transform: toNumber}]}>
           <input name="blurNumber" value={state.formData.blurNumber} ref="blurInput" />
         </Validator>
-      {state.status.name.errors ? <div ref='error'>{state.status.name.errors.join(',')}</div> : null}
-        {state.status.pass.errors ? <div ref='error2'>{state.status.pass.errors.join(',')}</div> : null}
-         {state.status.blurNumber.errors ? <div ref='error3'>{state.status.blurNumber.errors.join(',')}</div> : null}
-      </Validation>;
-    }
-
+        {state.status.name.errors ? <div ref="error">{state.status.name.errors.join(',')}</div> : null}
+        {state.status.pass.errors ? <div ref="error2">{state.status.pass.errors.join(',')}</div> : null}
+        {state.status.blurNumber.errors ? <div ref="error3">{state.status.blurNumber.errors.join(',')}</div> : null}
+      </Validation>);
+    },
   });
 
-  var form;
+  let form;
 
   beforeEach(()=> {
     form = ReactDOM.render(<Form/>, div);
@@ -100,11 +97,12 @@ describe('validation', () => {
     ReactDOM.unmountComponentAtNode(div2);
   });
 
-  it('can contain CustomComponent', function () {
-    var CustomComponent = React.createClass({
+  it('can contain CustomComponent', function() {
+    const CustomComponent = React.createClass({
       render() {
-        return this.props.children;
-      }
+        const props = this.props;
+        return props.children;
+      },
     });
 
     ReactDOM.render(<Validation>
@@ -123,11 +121,12 @@ describe('validation', () => {
     </Validation>, div2);
   });
 
-  it('can contain CustomComponent inside Validator', function () {
-    var CustomComponent = React.createClass({
+  it('can contain CustomComponent inside Validator', function() {
+    const CustomComponent = React.createClass({
       render() {
-        return this.props.children;
-      }
+        const props = this.props;
+        return props.children;
+      },
     });
 
     ReactDOM.render(<Validation>
@@ -154,7 +153,7 @@ describe('validation', () => {
     </Validation>, div2);
   });
 
-  it('will not change primary type', function () {
+  it('will not change primary type', function() {
     expect(form.refs.option.innerHTML).to.be('1');
   });
 
@@ -163,7 +162,7 @@ describe('validation', () => {
   });
 
   it('onValidate works', ()=> {
-    var nativeInput = (form.refs.input);
+    const nativeInput = (form.refs.input);
     Simulate.change(nativeInput);
     expect(getInnerText((form.refs.error))).to.be('name is required');
     nativeInput.value = '1111';
@@ -175,7 +174,7 @@ describe('validation', () => {
   });
 
   it('validate method works', (done)=> {
-    var nativeInput = (form.refs.input);
+    const nativeInput = (form.refs.input);
     nativeInput.value = 1;
     Simulate.change(nativeInput);
     form.refs.validation.validate(()=> {
@@ -186,7 +185,7 @@ describe('validation', () => {
   });
 
   it('forceValidate works', (done)=> {
-    var nativeInput = (form.refs.input);
+    const nativeInput = (form.refs.input);
     nativeInput.value = 1;
     Simulate.change(nativeInput);
     form.refs.validation.forceValidate(['name'], ()=> {
@@ -198,7 +197,7 @@ describe('validation', () => {
 
   describe('trigger', ()=> {
     it('blur works for error', (done)=> {
-      var blurInput = (form.refs.blurInput);
+      const blurInput = (form.refs.blurInput);
       blurInput.value = 'a';
       Simulate.change(blurInput);
       form.refs.validation.validate(()=> {
@@ -208,7 +207,7 @@ describe('validation', () => {
     });
 
     it('blur works for ok', (done)=> {
-      var blurInput = (form.refs.blurInput);
+      const blurInput = (form.refs.blurInput);
       blurInput.value = '1';
       Simulate.change(blurInput);
       form.refs.validation.validate(()=> {
