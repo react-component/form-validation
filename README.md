@@ -3,6 +3,9 @@
 
 FormValidation For React.
 
+<span style="color:red;">This project is obseleted,
+you can try <a href="http://react-component.github.io/form/">rc-form</a></span>.
+
 [![NPM version][npm-image]][npm-url]
 [![SPM version](http://spmjs.io/badge/rc-form-validation)](http://spmjs.io/package/rc-form-validation)
 [![build status][travis-image]][travis-url]
