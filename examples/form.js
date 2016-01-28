@@ -33,19 +33,9 @@ webpackJsonp([0,1],[
 	
 	var _rcCalendar2 = _interopRequireDefault(_rcCalendar);
 	
-	var _gregorianCalendarFormat = __webpack_require__(206);
-	
-	var _gregorianCalendarFormat2 = _interopRequireDefault(_gregorianCalendarFormat);
-	
-	var _objectAssign = __webpack_require__(201);
-	
-	var _objectAssign2 = _interopRequireDefault(_objectAssign);
-	
 	var _gregorianCalendar = __webpack_require__(208);
 	
 	var _gregorianCalendar2 = _interopRequireDefault(_gregorianCalendar);
-	
-	var formatter = new _gregorianCalendarFormat2['default']('yyyy-MM-dd');
 	
 	function toNumber(v) {
 	  if (!v || !v.trim()) {
@@ -54,7 +44,7 @@ webpackJsonp([0,1],[
 	  var num = Number(v);
 	  // num === ' '
 	  if (!isNaN(num)) {
-	    num = parseInt(v);
+	    num = parseInt(v, 10);
 	  }
 	  return isNaN(num) ? v : num;
 	}
@@ -113,9 +103,8 @@ webpackJsonp([0,1],[
 	      if (!valid) {
 	        console.log('error in form');
 	        return;
-	      } else {
-	        console.log('submit');
 	      }
+	      console.log('submit');
 	      console.log(_this.state.formData);
 	    });
 	  },
@@ -153,7 +142,7 @@ webpackJsonp([0,1],[
 	  },
 	
 	  checkNow: function checkNow(rule, value, callback) {
-	    var errors;
+	    var errors = undefined;
 	    var now = new _gregorianCalendar2['default']();
 	    now.setTime(Date.now());
 	    if (value.getMonth() !== now.getMonth()) {
@@ -173,7 +162,8 @@ webpackJsonp([0,1],[
 	  render: function render() {
 	    var formData = this.state.formData;
 	    var status = this.state.status;
-	    var field;
+	    var props = this.props;
+	    var field = undefined;
 	    var errorStyle = { color: 'red', fontWeight: 'bold' };
 	    if (!this.state.remove) {
 	      field = _react2['default'].createElement(
@@ -420,7 +410,7 @@ webpackJsonp([0,1],[
 	              { rules: [{ validator: this.checkNow }, { validator: this.validateStartDate }] },
 	              _react2['default'].createElement(
 	                _rcCalendar.Picker,
-	                { name: 'startDate', formatter: this.props.formatter, calendar: _react2['default'].createElement(_rcCalendar2['default'], { showTime: false }),
+	                { name: 'startDate', formatter: props.formatter, calendar: _react2['default'].createElement(_rcCalendar2['default'], { showTime: false }),
 	                  value: formData.startDate },
 	                _react2['default'].createElement('input', { type: 'text', className: 'form-control', style: {
 	                    background: 'white',
@@ -453,7 +443,7 @@ webpackJsonp([0,1],[
 	              { rules: [{ validator: this.checkNow }, { validator: this.validateEndDate }] },
 	              _react2['default'].createElement(
 	                _rcCalendar.Picker,
-	                { name: 'endDate', formatter: this.props.formatter, calendar: _react2['default'].createElement(_rcCalendar2['default'], null),
+	                { name: 'endDate', formatter: props.formatter, calendar: _react2['default'].createElement(_rcCalendar2['default'], null),
 	                  value: formData.endDate },
 	                _react2['default'].createElement('input', { type: 'text', className: 'form-control', style: {
 	                    background: 'white',
@@ -21793,7 +21783,7 @@ webpackJsonp([0,1],[
 	}
 	
 	function ieGT9() {
-	  if (typeof document === undefined) {
+	  if (typeof document === 'undefined') {
 	    return false;
 	  }
 	  var documentMode = document.documentMode || 0;

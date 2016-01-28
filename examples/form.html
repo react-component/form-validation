@@ -264,39 +264,34 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   <div class="example" id="__react-content"></div>
   <script src="common.js?nowrap"></script>
   <script src="form.js?nowrap"></script>
-  <div class="highlight"><pre><code language="js"><span class="hljs-pi">'use strict'</span>;
-
-<span class="hljs-keyword">import</span> <span class="hljs-string">'bootstrap/dist/css/bootstrap.css'</span>;
+  <div class="highlight"><pre><code language="js"><span class="hljs-keyword">import</span> <span class="hljs-string">'bootstrap/dist/css/bootstrap.css'</span>;
 <span class="hljs-keyword">import</span> <span class="hljs-string">'rc-calendar/assets/bootstrap.css'</span>;
 
 <span class="hljs-keyword">import</span> Validation, {Validator} <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-form-validation'</span>;
 <span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
 <span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
 <span class="hljs-keyword">import</span> Calendar, {Picker <span class="hljs-keyword">as</span> DatePicker} <span class="hljs-keyword">from</span> <span class="hljs-string">'rc-calendar'</span>;
-<span class="hljs-keyword">import</span> DateTimeFormat <span class="hljs-keyword">from</span> <span class="hljs-string">'gregorian-calendar-format'</span>;
-<span class="hljs-keyword">var</span> formatter = <span class="hljs-keyword">new</span> DateTimeFormat(<span class="hljs-string">'yyyy-MM-dd'</span>);
-<span class="hljs-keyword">import</span> assign <span class="hljs-keyword">from</span> <span class="hljs-string">'object-assign'</span>;
 <span class="hljs-keyword">import</span> GregorianCalendar <span class="hljs-keyword">from</span> <span class="hljs-string">'gregorian-calendar'</span>;
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toNumber</span>(<span class="hljs-params">v</span>) </span>{
   <span class="hljs-keyword">if</span> (!v || !v.trim()) {
     <span class="hljs-keyword">return</span> <span class="hljs-literal">undefined</span>;
   }
-  <span class="hljs-keyword">var</span> num = <span class="hljs-built_in">Number</span>(v);
+  <span class="hljs-keyword">let</span> num = <span class="hljs-built_in">Number</span>(v);
   <span class="hljs-comment">// num === ' '</span>
   <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">isNaN</span>(num)) {
-    num = <span class="hljs-built_in">parseInt</span>(v);
+    num = <span class="hljs-built_in">parseInt</span>(v, <span class="hljs-number">10</span>);
   }
   <span class="hljs-keyword">return</span> <span class="hljs-built_in">isNaN</span>(num) ? v : num;
 }
 
-<span class="hljs-keyword">var</span> Form = React.createClass({
+<span class="hljs-keyword">const</span> Form = React.createClass({
   mixins: [Validation.FieldMixin],
 
   getInitialState() {
-    <span class="hljs-keyword">var</span> start = <span class="hljs-keyword">new</span> GregorianCalendar();
+    <span class="hljs-keyword">const</span> start = <span class="hljs-keyword">new</span> GregorianCalendar();
     start.setTime(<span class="hljs-built_in">Date</span>.now());
-    <span class="hljs-keyword">var</span> end = start.clone();
+    <span class="hljs-keyword">const</span> end = start.clone();
     start.addDayOfMonth(-<span class="hljs-number">3</span>);
     <span class="hljs-keyword">return</span> {
       status: {
@@ -309,7 +304,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
         email: {},
         startDate: {},
         endDate: {},
-        must: {}
+        must: {},
       },
       formData: {
         number: <span class="hljs-number">0</span>,
@@ -322,8 +317,8 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
         email: <span class="hljs-literal">undefined</span>,
         optional: <span class="hljs-literal">undefined</span>,
         startDate: start,
-        endDate: end
-      }
+        endDate: end,
+      },
     };
   },
 
@@ -335,24 +330,22 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
   handleSubmit(e) {
     e.preventDefault();
-    <span class="hljs-keyword">var</span> validation = <span class="hljs-keyword">this</span>.refs.validation;
+    <span class="hljs-keyword">const</span> validation = <span class="hljs-keyword">this</span>.refs.validation;
     validation.validate((valid) =&gt; {
       <span class="hljs-keyword">if</span> (!valid) {
         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'error in form'</span>);
         <span class="hljs-keyword">return</span>;
-      } <span class="hljs-keyword">else</span> {
-        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'submit'</span>);
       }
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'submit'</span>);
       <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.formData);
     });
   },
 
   userExists(rule, value, callback) {
-    setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
       <span class="hljs-keyword">if</span> (value === <span class="hljs-string">'1'</span>) {
         callback([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'are you kidding?'</span>)]);
-      }
-      <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value === <span class="hljs-string">'yiminghe'</span>) {
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (value === <span class="hljs-string">'yiminghe'</span>) {
         callback([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'forbid yiminghe'</span>)]);
       } <span class="hljs-keyword">else</span> {
         callback();
@@ -381,8 +374,8 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   },
 
   checkNow(rule, value, callback) {
-    <span class="hljs-keyword">var</span> errors;
-    <span class="hljs-keyword">var</span> now = <span class="hljs-keyword">new</span> GregorianCalendar();
+    <span class="hljs-keyword">let</span> errors;
+    <span class="hljs-keyword">const</span> now = <span class="hljs-keyword">new</span> GregorianCalendar();
     now.setTime(<span class="hljs-built_in">Date</span>.now());
     <span class="hljs-keyword">if</span> (value.getMonth() !== now.getMonth()) {
       errors = [<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'can only select current month'</span>)];
@@ -391,7 +384,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   },
 
   validateEndDate(rule, value, callback) {
-    <span class="hljs-keyword">var</span> errors = [];
+    <span class="hljs-keyword">const</span> errors = [];
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.formData.startDate.getTime() &gt; value.getTime()) {
       errors.push(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'start date can not be larger than end date'</span>));
     }
@@ -399,34 +392,35 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   },
 
   render() {
-    <span class="hljs-keyword">var</span> formData = <span class="hljs-keyword">this</span>.state.formData;
-    <span class="hljs-keyword">var</span> status = <span class="hljs-keyword">this</span>.state.status;
-    <span class="hljs-keyword">var</span> field;
-    <span class="hljs-keyword">var</span> errorStyle = {color: <span class="hljs-string">'red'</span>, fontWeight: <span class="hljs-string">'bold'</span>};
+    <span class="hljs-keyword">const</span> formData = <span class="hljs-keyword">this</span>.state.formData;
+    <span class="hljs-keyword">const</span> status = <span class="hljs-keyword">this</span>.state.status;
+    <span class="hljs-keyword">const</span> props = <span class="hljs-keyword">this</span>.props;
+    <span class="hljs-keyword">let</span> field;
+    <span class="hljs-keyword">const</span> errorStyle = {color: <span class="hljs-string">'red'</span>, fontWeight: <span class="hljs-string">'bold'</span>};
     <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.state.remove) {
-      field = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
+      field = (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>email(validate on blur):<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
 
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{{type:</span> '<span class="hljs-attribute">email</span>', <span class="hljs-attribute">message:</span> '错误的 <span class="hljs-attribute">email</span> 格式'}}
                      <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span>
             &gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'email'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.email}</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"email"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.email}</span>
                    <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.setField.bind(this,</span> '<span class="hljs-attribute">email</span>')}
               /&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
           {status.email.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.email.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>)</span>;
     }
-    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">onSubmit</span>=<span class="hljs-value">{this.handleSubmit}</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-horizontal"</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">Validation</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">'validation'</span> <span class="hljs-attribute">onValidate</span>=<span class="hljs-value">{this.onValidate}</span>&gt;</span>
+    <span class="hljs-keyword">return</span> (<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">onSubmit</span>=<span class="hljs-value">{this.handleSubmit}</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-horizontal"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">Validation</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"validation"</span> <span class="hljs-attribute">onValidate</span>=<span class="hljs-value">{this.onValidate}</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-group"</span>&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>name:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">min:</span> <span class="hljs-attribute">5</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.userExists</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'name'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.name}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"name"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.name}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.name.isValidating ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{color:</span> '<span class="hljs-attribute">green</span>'}}&gt;</span> isValidating <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
             {status.name.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.name.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
@@ -438,7 +432,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"pass"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.pass.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -451,9 +445,9 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{</span>
               <span class="hljs-attribute">required:</span> <span class="hljs-attribute">true</span>,
               <span class="hljs-attribute">whitespace:</span> <span class="hljs-attribute">true</span>,
-              <span class="hljs-attribute">message:</span> '<span class="hljs-attribute">retry</span> <span class="hljs-attribute">pass</span> <span class="hljs-attribute">is</span> <span class="hljs-attribute">required</span>'
+              <span class="hljs-attribute">message:</span> '<span class="hljs-attribute">retry</span> <span class="hljs-attribute">pass</span> <span class="hljs-attribute">is</span> <span class="hljs-attribute">required</span>',
             }, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.checkPass2</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'pass2'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass2}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"pass2"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.pass2}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.pass2.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.pass2.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -465,8 +459,8 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>required number (validate on blur):<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>,<span class="hljs-attribute">message:</span>'不是数字',<span class="hljs-attribute">pattern:</span>/^\<span class="hljs-attribute">d</span>+(\<span class="hljs-attribute">.</span>\<span class="hljs-attribute">d</span>+)?$/}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'blurNumber'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.blurNumber}</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">trigger</span>=<span class="hljs-value">"onBlur"</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">message:</span> '不是数字', <span class="hljs-attribute">pattern:</span> /^\<span class="hljs-attribute">d</span>+(\<span class="hljs-attribute">.</span>\<span class="hljs-attribute">d</span>+)?$/}]}&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"blurNumber"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.blurNumber}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.blurNumber.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.blurNumber.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -477,7 +471,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{required:</span> <span class="hljs-attribute">true</span>, <span class="hljs-attribute">type:</span> '<span class="hljs-attribute">number</span>', <span class="hljs-attribute">transform:</span> <span class="hljs-attribute">toNumber</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'number'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.number}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"number"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.number}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.number.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.number.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -488,7 +482,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{type:</span> '<span class="hljs-attribute">number</span>', <span class="hljs-attribute">transform:</span> <span class="hljs-attribute">toNumber</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'optionalNumber'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optionalNumber}</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"optionalNumber"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optionalNumber}</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.optionalNumber.errors ?
               <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.optionalNumber.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
@@ -499,7 +493,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
           <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-2 control-label"</span>&gt;</span>optional:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
-            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'optional'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optional}</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"optional"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.optional}</span>
                    <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{this.setField.bind(this,</span> '<span class="hljs-attribute">optional</span>')}/&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -509,7 +503,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{{required:</span> <span class="hljs-attribute">true</span>}}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'must'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.must}</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"必须"</span>/&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"must"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">{formData.must}</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"必须"</span>/&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
             {status.must.errors ? <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{errorStyle}</span>&gt;</span> {status.must.errors.join(', ')}<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> : null}
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
@@ -520,12 +514,12 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{validator:</span> <span class="hljs-attribute">this.checkNow</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.validateStartDate</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'startDate'</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{this.props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> <span class="hljs-attribute">showTime</span>=<span class="hljs-value">{false}</span>/&gt;</span>}
+              <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"startDate"</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> <span class="hljs-attribute">showTime</span>=<span class="hljs-value">{false}</span>/&gt;</span>}
                           value={formData.startDate}&gt;
                 <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
                   <span class="hljs-attribute">background:</span> '<span class="hljs-attribute">white</span>',
                   <span class="hljs-attribute">color:</span> '<span class="hljs-attribute">black</span>',
-                  <span class="hljs-attribute">cursor:</span> '<span class="hljs-attribute">pointer</span>'
+                  <span class="hljs-attribute">cursor:</span> '<span class="hljs-attribute">pointer</span>',
                 }}/&gt;</span>
               <span class="hljs-tag">&lt;/<span class="hljs-title">DatePicker</span>&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
@@ -538,12 +532,12 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">Validator</span> <span class="hljs-attribute">rules</span>=<span class="hljs-value">{[{validator:</span> <span class="hljs-attribute">this.checkNow</span>}, {<span class="hljs-attribute">validator:</span> <span class="hljs-attribute">this.validateEndDate</span>}]}&gt;</span>
-              <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">'endDate'</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{this.props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> /&gt;</span>}
+              <span class="hljs-tag">&lt;<span class="hljs-title">DatePicker</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"endDate"</span> <span class="hljs-attribute">formatter</span>=<span class="hljs-value">{props.formatter}</span> <span class="hljs-attribute">calendar</span>=<span class="hljs-value">{&lt;Calendar</span> /&gt;</span>}
                           value={formData.endDate}&gt;
                 <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"form-control"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span>
                   <span class="hljs-attribute">background:</span> '<span class="hljs-attribute">white</span>',
                   <span class="hljs-attribute">color:</span> '<span class="hljs-attribute">black</span>',
-                  <span class="hljs-attribute">cursor:</span> '<span class="hljs-attribute">pointer</span>'
+                  <span class="hljs-attribute">cursor:</span> '<span class="hljs-attribute">pointer</span>',
                 }}/&gt;</span>
               <span class="hljs-tag">&lt;/<span class="hljs-title">DatePicker</span>&gt;</span>
             <span class="hljs-tag">&lt;/<span class="hljs-title">Validator</span>&gt;</span>
@@ -555,12 +549,12 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
           <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"col-sm-offset-2 col-sm-10"</span>&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"btn btn-default"</span>&gt;</span>submit<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
             &amp;nbsp;&amp;nbsp;&amp;nbsp;
-            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">'#'</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"btn btn-default"</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.handleReset}</span>&gt;</span>reset<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"#"</span> <span class="hljs-attribute">className</span>=<span class="hljs-value">"btn btn-default"</span> <span class="hljs-attribute">onClick</span>=<span class="hljs-value">{this.handleReset}</span>&gt;</span>reset<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
           <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-title">Validation</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span>;</span>
-  }
+    <span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span>)</span>;
+  },
 });
 
 ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
