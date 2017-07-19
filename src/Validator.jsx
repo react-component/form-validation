@@ -100,6 +100,7 @@ Validator.propTypes = {
   children: PropTypes.any,
   onInputChangeSilently: PropTypes.func,
   trigger: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default Validator;
