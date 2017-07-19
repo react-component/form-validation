@@ -83,7 +83,9 @@ class Validator extends React.Component {
       // https://github.com/react-component/form-validation/issues/13
       extraProps.placeholder = undefined;
     }
-    return React.cloneElement(child, extraProps);
+    return (<div className={this.props.className}>
+        {React.cloneElement(child, extraProps)}
+      </div>);
   }
 }
 
@@ -98,6 +100,7 @@ Validator.propTypes = {
   children: PropTypes.any,
   onInputChangeSilently: PropTypes.func,
   trigger: PropTypes.string,
+  className: PropTypes.string
 };
 
 export default Validator;
