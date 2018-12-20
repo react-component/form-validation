@@ -40,7 +40,7 @@
     "bootstrap": "^3.3.2",
     "expect.js": "~0.3.1",
     "gregorian-calendar": "3.x",
-    "gregorian-calendar-format": "3.x",
+    "gregorian-calendar-format": "4.x",
     "pre-commit": "1.x",
     "rc-calendar": "~3.16.1",
     "rc-server": "3.x",
