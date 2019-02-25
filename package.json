@@ -42,7 +42,7 @@
     "gregorian-calendar": "3.x",
     "gregorian-calendar-format": "3.x",
     "pre-commit": "1.x",
-    "rc-calendar": "~3.16.1",
+    "rc-calendar": "~9.10.10",
     "rc-server": "3.x",
     "rc-tools": "4.x",
     "react-addons-test-utils": "~0.14.0",
