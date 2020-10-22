@@ -47,7 +47,7 @@
     "rc-tools": "4.x",
     "react-addons-test-utils": "~0.14.0",
     "react": "~0.14.0",
-    "react-dom":"~0.14.0"
+    "react-dom":"~17.0.0"
   },
   "pre-commit": [
     "lint"
