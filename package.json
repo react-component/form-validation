@@ -37,7 +37,7 @@
     "browser-test-cover": "rc-tools run browser-test-cover"
   },
   "devDependencies": {
-    "bootstrap": "^3.3.2",
+    "bootstrap": "^5.0.0",
     "expect.js": "~0.3.1",
     "gregorian-calendar": "3.x",
     "gregorian-calendar-format": "3.x",
